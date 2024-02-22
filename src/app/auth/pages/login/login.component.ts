@@ -26,14 +26,12 @@ export class LoginComponent implements OnInit {
   visibleE: boolean = false;
   visibleDel: boolean = false;
   visibleVar: boolean = false;
+  valup: number = 0;
+  
   categorias = [
-    { categoria: 'DC Comics' },
-    { categoria: 'Marvel Comic' },
-    { categoria: 'Otros' },
-  ]
-  generos = [
-    { genero: 'Hombre' },
-    { genero: 'Mujer' }
+     'DC Comics' ,
+     'Marvel Comics',
+     'TMNT',
   ]
 
   Formulario: FormGroup = this.fb.group({
@@ -64,11 +62,15 @@ export class LoginComponent implements OnInit {
   showDialog() {
     this.visible = true;
   }
-
+  showDVDialog() {
+    this.visibleVar = true;
+  }
+  showDDialog(id: any) {
+    this.visibleDel = true;
+    return id;
+  }
 
   deleteSelected() {
-
-    this.visibleVar = true;
   }
 
   getOne(id: any) {
@@ -92,18 +94,35 @@ export class LoginComponent implements OnInit {
 
   delete(id: any) {
 
-    this.visibleDel = true;
-
     this.service.delete('delete/' + id).subscribe((dato: any) => {
 
-      if (dato.estatus) {
-        
+      if (dato.estatus == true) {
+        alert("Registro eliminado");
+        window.location.reload();
+        this.visibleDel = false; 
       }
     });
 
   }
 
-  save() {
+  update() {
+
+    console.log(this.Formulario2.value);
+
+    this.service.put('update/'+ this.Formulario2.controls['id'].value, this.Formulario2.value).subscribe((dato: any) => {
+
+      if (dato.estatus == true) {
+        alert("Registro actualizado");
+        this.visible = false;
+        window.location.reload();
+      }
+      else {
+        alert("Resgistro incorrecto");
+        this.visible = false;
+
+      };
+
+    });
 
   }
 
@@ -119,7 +138,7 @@ export class LoginComponent implements OnInit {
         window.location.reload();
       }
       else {
-        alert("Resgistro incorrecto");
+        alert("Registro incorrecto");
         this.visible = false;
 
       };
