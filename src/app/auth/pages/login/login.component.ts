@@ -14,89 +14,121 @@ import { TableLazyLoadEvent } from 'primeng/table';
 export class LoginComponent implements OnInit {
 
   products: any = [];
-
   productDialog: boolean = false;
-
   product: any;
-
   selectedProducts: any;
-
   submitted: boolean = false;
-
   loading = true;
-
   modelo = 'login';
-
   date: any;
-
   total = 0;
-
+  visible: boolean = false;
+  visibleE: boolean = false;
+  visibleDel: boolean = false;
+  visibleVar: boolean = false;
+  categorias = [
+    { categoria: 'DC Comics' },
+    { categoria: 'Marvel Comic' },
+    { categoria: 'Otros' },
+  ]
+  generos = [
+    { genero: 'Hombre' },
+    { genero: 'Mujer' }
+  ]
 
   Formulario: FormGroup = this.fb.group({
-    email: ['', Validators.required],
-    password: ['', Validators.required]
+    nombre: [, Validators.required],
+    descripcion: [, Validators.required],
+    categoria: [, Validators.required],
+    genero: [, Validators.required],
+    url: [, Validators.required],
   });
 
-  constructor(public router: Router, private fb: FormBuilder, public service: ServicioService) {
-    this.CrearFormulario();
-  }
+  Formulario2: FormGroup = this.fb.group({
+    id: [],
+    nombre: [, Validators.required],
+    descripcion: [, Validators.required],
+    categoria: [, Validators.required],
+    genero: [, Validators.required],
+    url: [, Validators.required],
+  });
+
+
+  constructor(public router: Router, private fb: FormBuilder, public service: ServicioService) { }
 
   ngOnInit() {
 
   }
 
-  onLoggedin() {
-    // this.submitted = true;
-    // if (this.Formulario.invalid) {
-    //   return;
-    // }
-    // console.log(this.Formulario.value);
 
-    // this.service.post(this.modelo, this.Formulario.value, 'login').subscribe((data: any) => {
-    //   console.log(data);
-    //   if (data) {
-    //     console.log('Loggeado');
-    //     this.router.navigate(['/principal']);
-    //   } else {
-    //     console.log('Error');
-    //   }
-    // });
+  showDialog() {
+    this.visible = true;
+  }
+
+
+  deleteSelected() {
+
+    this.visibleVar = true;
+  }
+
+  getOne(id: any) {
+    this.visibleE = true;
+
+    this.service.get('getOne/' + id).subscribe((dato: any) => {
+
+      if (dato.data) {
+        this.Formulario2.patchValue({
+          id: dato.data.id,
+          nombre: dato.data.nombre,
+          descripcion: dato.data.descripcion,
+          categoria: dato.data.categoria,
+          genero: dato.data.genero,
+          url: dato.data.url
+        });
+      }
+    });
 
   }
 
-  CrearFormulario() {
-    this.Formulario = this.fb.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required]
+  delete(id: any) {
+
+    this.visibleDel = true;
+
+    this.service.delete('delete/' + id).subscribe((dato: any) => {
+
+      if (dato.estatus) {
+        
+      }
+    });
+
+  }
+
+  save() {
+
+  }
+
+  add() {
+
+    console.log(this.Formulario.value);
+
+    this.service.post('insert', this.Formulario.value).subscribe((dato: any) => {
+
+      if (dato.estatus == true) {
+        alert("Registro agregado");
+        this.visible = false;
+        window.location.reload();
+      }
+      else {
+        alert("Resgistro incorrecto");
+        this.visible = false;
+
+      };
+
     });
   }
 
-  openNew() {
-    this.product = {};
-    this.submitted = false;
-    this.productDialog = true;
-  }
-
-  deleteSelectedProducts() {
-
-  }
-
-  editProduct(product: any) {
-    this.product = { ...product };
-    this.productDialog = true;
-  }
-
-  deleteProduct(puduct: any) {
-
-  }
-
-  hideDialog() {
-    this.productDialog = false;
-    this.submitted = false;
-  }
-
-  saveProduct() {
-
+  info() {
+    console.log(this.Formulario.value);
   }
 
   findIndexById(id: string): number {
@@ -107,17 +139,7 @@ export class LoginComponent implements OnInit {
         break;
       }
     }
-
     return index;
-  }
-
-  createId(): string {
-    let id = '';
-    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (var i = 0; i < 5; i++) {
-      id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return id;
   }
 
   filterSearch(event: any) {
@@ -126,17 +148,16 @@ export class LoginComponent implements OnInit {
     console.log(event.target.value);
   }
 
-
   getInfo(event: TableLazyLoadEvent) {
-    
-    this.service.post('productos/all', event).subscribe((dato: any) => {
+
+    this.service.post('getAll', event).subscribe((dato: any) => {
       console.log(dato);
 
       if (dato) {
         this.products = dato.data;
         this.total = dato.data.total;
         this.loading = false;
-      }else{
+      } else {
         console.log("error");
       }
     });

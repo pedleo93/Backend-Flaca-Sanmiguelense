@@ -13,11 +13,17 @@ import { RatingModule } from 'primeng/rating';
 import { ButtonModule } from 'primeng/button';
 import { ToolbarModule } from 'primeng/toolbar';
 import { FileUploadModule } from 'primeng/fileupload';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { DropdownModule } from 'primeng/dropdown';
+import { DialogEComponent } from './pages/dialog-e/dialog-e.component';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
     LoginComponent,
-    RegistroComponent
+    RegistroComponent,
+    DialogEComponent
   ],
   imports: [
     CommonModule,
@@ -25,13 +31,17 @@ import { FileUploadModule } from 'primeng/fileupload';
     ReactiveFormsModule,
     AuthRoutingModule,
     DialogModule,
+    RadioButtonModule,
     TableModule,
     RatingModule,
+    ToastModule,
+    DropdownModule,
     InputTextModule,
     TagModule,
     ButtonModule,
     ToolbarModule,
-    FileUploadModule
+    FileUploadModule,
+    InputTextareaModule
   ]
 })
 export class AuthModule { }
