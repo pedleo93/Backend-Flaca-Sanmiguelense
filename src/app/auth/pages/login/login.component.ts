@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
   visibleE: boolean = false;
   visibleDel: boolean = false;
   visibleVar: boolean = false;
-  valup: number = 0;
+  IDd: number = 0;
   
   categorias = [
      'DC Comics' ,
@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit {
   }
   showDDialog(id: any) {
     this.visibleDel = true;
-    return id;
+    this.IDd = id;
   }
 
   deleteSelected() {
@@ -92,9 +92,9 @@ export class LoginComponent implements OnInit {
 
   }
 
-  delete(id: any) {
+  delete() {
 
-    this.service.delete('delete/' + id).subscribe((dato: any) => {
+    this.service.delete('delete/' + this.IDd).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
         alert("Registro eliminado");
@@ -174,7 +174,7 @@ export class LoginComponent implements OnInit {
 
       if (dato) {
         this.products = dato.data;
-        this.total = dato.data.total;
+        this.total = dato.count;
         this.loading = false;
       } else {
         console.log("error");

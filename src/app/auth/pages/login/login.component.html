@@ -58,8 +58,7 @@
                 <td>{{product.categoria}}</td>
                 <td>
                     <button (click)="getOne(product.id)"  pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" style="right:10px"></button>
-                    <!-- <button (click)="showDDialog(product.id)" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button> -->
-                    <button (click)="delete(product.id)" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
+                    <button (click)="showDDialog(product.id)" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
                 </td>
             </tr>
         </ng-template>
@@ -166,7 +165,7 @@
 
     <ng-template pTemplate="footer">
         <p-button icon="pi pi-times" (click)="visibleDel = false" label="Cancel" styleClass="p-button-text"></p-button>
-        <p-button icon="pi pi-check" (click)="delete(product.id)" label="Ok" styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" (click)="delete()" label="Ok" styleClass="p-button-text"></p-button>
     </ng-template>
 </p-dialog>
 
