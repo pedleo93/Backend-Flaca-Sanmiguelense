@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   products: any = [];
   productDialog: boolean = false;
   product: any;
-  selectedProducts: any;
+  selectedProducts: any = [];
   submitted: boolean = false;
   loading = true;
   modelo = 'login';
@@ -64,6 +64,9 @@ export class LoginComponent implements OnInit {
   }
   showDVDialog() {
     this.visibleVar = true;
+
+    console.log(this.selectedProducts);
+    
   }
   showDDialog(id: any) {
     this.visibleDel = true;
@@ -71,6 +74,17 @@ export class LoginComponent implements OnInit {
   }
 
   deleteSelected() {
+
+    console.log(this.selectedProducts);
+    
+    this.selectedProducts.forEach((product: any) => {
+      this.service.delete('delete/' + product.id).subscribe((dato: any) => {
+      });
+      
+    });
+    alert("Registros eliminados");
+    window.location.reload();
+    this.visibleDel = false; 
   }
 
   getOne(id: any) {
