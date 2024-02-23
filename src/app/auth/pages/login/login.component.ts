@@ -27,11 +27,15 @@ export class LoginComponent implements OnInit {
   visibleDel: boolean = false;
   visibleVar: boolean = false;
   IDd: number = 0;
-  
+  disableA: boolean = false;
+  disableU: boolean = false;
+  disableD: boolean = false;
+  disableDV: boolean = false;
+
   categorias = [
-     'DC Comics' ,
-     'Marvel Comics',
-     'TMNT',
+    'DC Comics',
+    'Marvel Comics',
+    'TMNT',
   ]
 
   Formulario: FormGroup = this.fb.group({
@@ -66,7 +70,7 @@ export class LoginComponent implements OnInit {
     this.visibleVar = true;
 
     console.log(this.selectedProducts);
-    
+
   }
   showDDialog(id: any) {
     this.visibleDel = true;
@@ -74,17 +78,18 @@ export class LoginComponent implements OnInit {
   }
 
   deleteSelected() {
+    this.disableDV = true;
 
     console.log(this.selectedProducts);
-    
+
     this.selectedProducts.forEach((product: any) => {
       this.service.delete('delete/' + product.id).subscribe((dato: any) => {
       });
-      
+
     });
     alert("Registros eliminados");
     window.location.reload();
-    this.visibleDel = false; 
+    this.disableDV = false;
   }
 
   getOne(id: any) {
@@ -107,33 +112,40 @@ export class LoginComponent implements OnInit {
   }
 
   delete() {
+    this.disableD = true;
 
     this.service.delete('delete/' + this.IDd).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
         alert("Registro eliminado");
         window.location.reload();
-        this.visibleDel = false; 
+        this.disableD = false;
+      }else{
+        alert("No se ha podido eliminar el registro");
+        this.disableD = false;
       }
     });
 
   }
 
   update() {
+    this.disableU = true;
 
     console.log(this.Formulario2.value);
 
-    this.service.put('update/'+ this.Formulario2.controls['id'].value, this.Formulario2.value).subscribe((dato: any) => {
+    this.service.put('update/' + this.Formulario2.controls['id'].value, this.Formulario2.value).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
         alert("Registro actualizado");
         this.visible = false;
         window.location.reload();
+        this.disableU = false;
+
       }
       else {
-        alert("Resgistro incorrecto");
+        alert("Registro no actualizado");
         this.visible = false;
-
+        this.disableU = false;
       };
 
     });
@@ -141,6 +153,7 @@ export class LoginComponent implements OnInit {
   }
 
   add() {
+    this.disableA = true
 
     console.log(this.Formulario.value);
 
@@ -149,20 +162,20 @@ export class LoginComponent implements OnInit {
       if (dato.estatus == true) {
         alert("Registro agregado");
         this.visible = false;
+        this.disableA = false;
         window.location.reload();
       }
       else {
         alert("Registro incorrecto");
         this.visible = false;
+        this.disableA = false;
 
       };
 
     });
+
   }
 
-  info() {
-    console.log(this.Formulario.value);
-  }
 
   findIndexById(id: string): number {
     let index = -1;
@@ -191,9 +204,17 @@ export class LoginComponent implements OnInit {
         this.total = dato.count;
         this.loading = false;
       } else {
-        console.log("error");
+        alert("Esta tabla es vacia");
       }
     });
 
+  }
+
+  campoValido(campo: string) {
+    return this.Formulario.controls[campo].errors && this.Formulario.controls[campo].touched;
+  };
+
+  campoValido2(campo: string) {
+    return this.Formulario2.controls[campo].errors && this.Formulario2.controls[campo].touched;
   }
 }

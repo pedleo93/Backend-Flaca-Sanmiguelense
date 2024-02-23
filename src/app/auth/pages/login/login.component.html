@@ -78,16 +78,17 @@
 
         <label>Nombre</label>
         <input pInputText [style]="{ width: '20vw'}" formControlName="nombre" />
-
+        <p style="font-size:10px; color:red;" *ngIf="campoValido('nombre')">Ingrese un nombre</p>
 
         <label>Descripción</label>
         <textarea rows="5" cols="29" pInputTextarea formControlName="descripcion"></textarea>
-
+        <p style="font-size:10px; color:red;" *ngIf="campoValido('descripcion')">Ingrese una descripcion</p>
 
         <label>Categoria</label>
         <p-dropdown [options]="categorias" placeholder="Categoría" [style]="{ width: '20vw'}"
             formControlName="categoria">
         </p-dropdown>
+        <p style="font-size:10px; color:red;" *ngIf="campoValido('categoria')">Seleccione una categoria</p>
 
         <label>Genero</label>
         <div>
@@ -96,13 +97,16 @@
             <p-radioButton  value="mujer" formControlName="genero"></p-radioButton>
             <label>Mujer</label>
         </div>
+        <p style="font-size:10px; color:red;" *ngIf="campoValido('genero')">Seleccione un genero</p>
+
 
         <label>URL Imagen</label>
         <input pInputText [style]="{ width: '20vw'}" formControlName="url" />
+        <p style="font-size:10px; color:red;" *ngIf="campoValido('url')">Ingrese una URL</p>
 
         <ng-template pTemplate="footer">
             <p-button icon="pi pi-times" (click)="visible = false" label="Cancel" styleClass="p-button-text"></p-button>
-            <p-button icon="pi pi-check" (click)="add()" label="Ok" styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-check" [disabled]="!Formulario.valid" (click)="add()" label="Ok" styleClass="p-button-text"></p-button>
         </ng-template>
     </p-dialog>
 
@@ -119,17 +123,22 @@
 
         <label>Nombre</label>
         <input pInputText [style]="{ width: '20vw'}" formControlName="nombre" />
+        <p style="font-size:10px; color:red;" *ngIf="campoValido2('nombre')">Ingrese un nombre</p>
+
 
 
         <label>Descripción</label>
         <textarea rows="5" cols="29" pInputTextarea formControlName="descripcion"></textarea>
+        <p style="font-size:10px; color:red;" *ngIf="campoValido2('descripcion')">Ingrese una descripcion</p>
+
 
 
         <label>Categoria</label>
-
         <p-dropdown [options]="categorias" placeholder="Categoría" [style]="{ width: '20vw'}"
             formControlName="categoria">
         </p-dropdown>
+        <p style="font-size:10px; color:red;" *ngIf="campoValido2('categoria')">Seleccione una categoria</p>
+
 
         <label>Genero</label>
         <div>
@@ -138,13 +147,16 @@
             <p-radioButton  value="mujer" formControlName="genero"></p-radioButton>
             <label>Mujer</label>
         </div>
+        <p style="font-size:10px; color:red;" *ngIf="campoValido2('genero')">Seleccione un genero</p>
+
 
         <label>URL Imagen</label>
         <input pInputText [style]="{ width: '20vw'}" formControlName="url" />
+        <p style="font-size:10px; color:red;" *ngIf="campoValido2('url')">Ingrese una URL</p>
 
         <ng-template pTemplate="footer" [value]="product">
             <p-button icon="pi pi-times" (click)="visibleE = false" label="Cancel" styleClass="p-button-text"></p-button>
-            <p-button icon="pi pi-check" (click)="update()" label="Ok" styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-check" [disabled]="!Formulario2.valid" (click)="update()" label="Ok" styleClass="p-button-text"></p-button>
         </ng-template>
     </p-dialog>
 
@@ -161,7 +173,7 @@
 
     <ng-template pTemplate="footer">
         <p-button icon="pi pi-times" (click)="visibleDel = false" label="Cancel" styleClass="p-button-text"></p-button>
-        <p-button icon="pi pi-check" (click)="delete()" label="Ok" styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" [disabled]="disableD" (click)="delete()" label="Ok" styleClass="p-button-text"></p-button>
     </ng-template>
 </p-dialog>
 
@@ -177,6 +189,6 @@
 
     <ng-template pTemplate="footer">
         <p-button icon="pi pi-times" (click)="visibleVar = false" label="Cancel" styleClass="p-button-text"></p-button>
-        <p-button icon="pi pi-check" (click)="deleteSelected()" label="Ok" styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" [disabled]="disableDV" (click)="deleteSelected()" label="Ok" styleClass="p-button-text"></p-button>
     </ng-template>
 </p-dialog>
