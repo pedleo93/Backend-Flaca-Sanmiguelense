@@ -1,13 +1,14 @@
-
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ServicioService } from '../../../provider/servicio.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { TableLazyLoadEvent } from 'primeng/table';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html'
+  templateUrl: './login.component.html',
+  providers: [MessageService]
 })
 
 
@@ -18,9 +19,7 @@ export class LoginComponent implements OnInit {
   product: any;
   selectedProducts: any = [];
   submitted: boolean = false;
-  loading = true;
-  modelo = 'login';
-  date: any;
+  loading = false;
   total = 0;
   visible: boolean = false;
   visibleE: boolean = false;
@@ -56,7 +55,7 @@ export class LoginComponent implements OnInit {
   });
 
 
-  constructor(public router: Router, private fb: FormBuilder, public service: ServicioService) { }
+  constructor(public router: Router, private fb: FormBuilder, public service: ServicioService, private message: MessageService) { }
 
   ngOnInit() {
 
@@ -87,9 +86,12 @@ export class LoginComponent implements OnInit {
       });
 
     });
-    alert("Registros eliminados");
-    window.location.reload();
-    this.disableDV = false;
+    this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Eliminados con exito' });
+    setTimeout(() => {
+      location.reload();
+      this.disableDV = false;
+    }, 2000);
+    
   }
 
   getOne(id: any) {
@@ -117,11 +119,13 @@ export class LoginComponent implements OnInit {
     this.service.delete('delete/' + this.IDd).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
-        alert("Registro eliminado");
-        window.location.reload();
-        this.disableD = false;
-      }else{
-        alert("No se ha podido eliminar el registro");
+        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Elimando con exito' });
+        setTimeout(() => {
+          location.reload();
+          this.disableD = false;
+        }, 750);
+      } else {
+        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el registro' });
         this.disableD = false;
       }
     });
@@ -136,14 +140,16 @@ export class LoginComponent implements OnInit {
     this.service.put('update/' + this.Formulario2.controls['id'].value, this.Formulario2.value).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
-        alert("Registro actualizado");
+        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Actualizado con exito' });
         this.visible = false;
-        window.location.reload();
-        this.disableU = false;
+        setTimeout(() => {
+          location.reload();
+          this.disableU = false;
+        }, 750);
 
       }
       else {
-        alert("Registro no actualizado");
+        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actializar el registro' });
         this.visible = false;
         this.disableU = false;
       };
@@ -160,13 +166,14 @@ export class LoginComponent implements OnInit {
     this.service.post('insert', this.Formulario.value).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
-        alert("Registro agregado");
+        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Agregado con exito' });
         this.visible = false;
-        this.disableA = false;
-        window.location.reload();
-      }
+        setTimeout(() => {
+          location.reload();
+          this.disableA = false;
+        }, 750);      }
       else {
-        alert("Registro incorrecto");
+        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo agregar el registro' });
         this.visible = false;
         this.disableA = false;
 
@@ -195,7 +202,7 @@ export class LoginComponent implements OnInit {
   }
 
   getInfo(event: TableLazyLoadEvent) {
-
+    this.loading = true;
     this.service.post('getAll', event).subscribe((dato: any) => {
       console.log(dato);
 
@@ -203,8 +210,9 @@ export class LoginComponent implements OnInit {
         this.products = dato.data;
         this.total = dato.count;
         this.loading = false;
+
       } else {
-        alert("Esta tabla es vacia");
+        this.message.add({ severity: 'warn', summary: 'Ups', detail: 'tabla vacia' });
       }
     });
 

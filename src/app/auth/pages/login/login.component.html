@@ -6,6 +6,9 @@
 
 </p-toolbar>
 
+
+<p-toast position="top-center"></p-toast>
+
 <div class="card">
 
     <p-table
@@ -59,7 +62,9 @@
                 </td>
             </tr>
         </ng-template>
-
+        <ng-template pTemplate="emptymessage">
+            <div class="flex align-items-center justify-content-between">No productos</div>
+        </ng-template>
         <ng-template pTemplate="summary">
             <div class="flex align-items-center justify-content-between">In total there are {{ products ? products.length : 0 }} products.</div>
         </ng-template>
@@ -106,7 +111,7 @@
 
         <ng-template pTemplate="footer">
             <p-button icon="pi pi-times" (click)="visible = false" label="Cancel" styleClass="p-button-text"></p-button>
-            <p-button icon="pi pi-check" [disabled]="!Formulario.valid" (click)="add()" label="Ok" styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-check" [disabled]="!Formulario.valid || disableA" (click)="add()" label="Ok" styleClass="p-button-text"></p-button>
         </ng-template>
     </p-dialog>
 
@@ -156,7 +161,7 @@
 
         <ng-template pTemplate="footer" [value]="product">
             <p-button icon="pi pi-times" (click)="visibleE = false" label="Cancel" styleClass="p-button-text"></p-button>
-            <p-button icon="pi pi-check" [disabled]="!Formulario2.valid" (click)="update()" label="Ok" styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-check" [disabled]="!Formulario2.valid || disableU" (click)="update()" label="Ok" styleClass="p-button-text"></p-button>
         </ng-template>
     </p-dialog>
 

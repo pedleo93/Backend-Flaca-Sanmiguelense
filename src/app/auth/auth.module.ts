@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { LoginComponent } from './pages/login/login.component';
 import { RegistroComponent } from './pages/registro/registro.component';
 import { AuthRoutingModule } from './auth-routing.module';
@@ -15,15 +14,13 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
-import { DialogEComponent } from './pages/dialog-e/dialog-e.component';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
     LoginComponent,
-    RegistroComponent,
-    DialogEComponent
+    RegistroComponent
   ],
   imports: [
     CommonModule,
