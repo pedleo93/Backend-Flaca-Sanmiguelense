@@ -2,6 +2,7 @@
     <ng-template pTemplate="left">
         <button pButton pRipple label="Agregar" icon="pi pi-plus" class="p-button-success mr-2" (click)="showDialog()" style="right:10px" ></button>
         <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDVDialog()" [disabled]="!selectedProducts || !selectedProducts.length"></button>
+        <button pButton pRipple label="Ver Permisos" icon="pi pi-star" class="p-button-help ml-2" [routerLink]="['/login/permisos']"  style="left:20px"></button>
     </ng-template>
 
 </p-toolbar>

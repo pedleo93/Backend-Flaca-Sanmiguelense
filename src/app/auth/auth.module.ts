@@ -17,12 +17,14 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToastModule } from 'primeng/toast';
 import { ListaComponent } from './pages/lista/lista.component';
+import { GestorPermisosComponent } from './pages/gestor-permisos/gestor-permisos.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
     RegistroComponent,
-    ListaComponent
+    ListaComponent,
+    GestorPermisosComponent
   ],
   imports: [
     CommonModule,

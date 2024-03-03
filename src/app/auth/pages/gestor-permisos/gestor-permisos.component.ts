@@ -6,16 +6,16 @@ import { TableLazyLoadEvent } from 'primeng/table';
 import { ServicioService } from 'src/app/provider/servicio.service';
 
 @Component({
-  selector: 'app-lista',
-  templateUrl: './lista.component.html',
+  selector: 'app-gestor-permisos',
+  templateUrl: './gestor-permisos.component.html',
   providers: [MessageService]
 })
-export class ListaComponent {
+export class GestorPermisosComponent {
 
-  products: any = [];
-  productDialog: boolean = false;
-  product: any;
-  selectedProducts: any = [];
+  permisos: any = [];
+  permisoDialog: boolean = false;
+  permiso: any;
+  selectedPermisos: any = [];
   submitted: boolean = false;
   loading = false;
   total = 0;
@@ -29,27 +29,17 @@ export class ListaComponent {
   disableD: boolean = false;
   disableDV: boolean = false;
 
-  categorias = [
-    'DC Comics',
-    'Marvel Comics',
-    'TMNT',
-  ]
-
   Formulario: FormGroup = this.fb.group({
     nombre: [, Validators.required],
-    descripcion: [, Validators.required],
-    categoria: [, Validators.required],
-    genero: [, Validators.required],
-    url: [, Validators.required],
+    clave: [, Validators.required],
+    accion: [, Validators.required]
   });
 
   Formulario2: FormGroup = this.fb.group({
     id: [],
     nombre: [, Validators.required],
-    descripcion: [, Validators.required],
-    categoria: [, Validators.required],
-    genero: [, Validators.required],
-    url: [, Validators.required],
+    clave: [, Validators.required],
+    accion: [, Validators.required]
   });
 
 
@@ -66,7 +56,7 @@ export class ListaComponent {
   showDVDialog() {
     this.visibleVar = true;
 
-    console.log(this.selectedProducts);
+    console.log(this.selectedPermisos);
 
   }
   showDDialog(id: any) {
@@ -77,10 +67,12 @@ export class ListaComponent {
   deleteSelected() {
     this.disableDV = true;
 
-    console.log(this.selectedProducts);
+    console.log(this.selectedPermisos);
 
-    this.selectedProducts.forEach((product: any) => {
-      this.service.delete('productos/delete/' + product.id).subscribe((dato: any) => {
+    this.selectedPermisos.forEach((permiso: any) => {
+      this.service.delete('permisos/delete/' + permiso.id).subscribe((dato: any) => {
+        console.log(permiso.id);
+
       });
 
     });
@@ -89,22 +81,20 @@ export class ListaComponent {
       location.reload();
       this.disableDV = false;
     }, 3000);
-    
+
   }
 
   getOne(id: any) {
     this.visibleE = true;
 
-    this.service.get('productos/getOne/' + id).subscribe((dato: any) => {
+    this.service.get('permisos/getOne/' + id).subscribe((dato: any) => {
 
       if (dato.data) {
         this.Formulario2.patchValue({
           id: dato.data.id,
           nombre: dato.data.nombre,
-          descripcion: dato.data.descripcion,
-          categoria: dato.data.categoria,
-          genero: dato.data.genero,
-          url: dato.data.url
+          clave: dato.data.clave,
+          accion: dato.data.accion,
         });
       }
     });
@@ -114,10 +104,10 @@ export class ListaComponent {
   delete() {
     this.disableD = true;
 
-    this.service.delete('productos/delete/' + this.IDd).subscribe((dato: any) => {
+    this.service.delete('permisos/delete/' + this.IDd).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
-        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Elimando con exito' });
+        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Eliminado con exito' });
         setTimeout(() => {
           location.reload();
           this.disableD = false;
@@ -135,7 +125,7 @@ export class ListaComponent {
 
     console.log(this.Formulario2.value);
 
-    this.service.put('productos/update/' + this.Formulario2.controls['id'].value, this.Formulario2.value).subscribe((dato: any) => {
+    this.service.put('permisos/update/' + this.Formulario2.controls['id'].value, this.Formulario2.value).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
         this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Actualizado con exito' });
@@ -161,7 +151,7 @@ export class ListaComponent {
 
     console.log(this.Formulario.value);
 
-    this.service.post('productos/insert', this.Formulario.value).subscribe((dato: any) => {
+    this.service.post('permisos/insert', this.Formulario.value).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
         this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Agregado con exito' });
@@ -169,7 +159,8 @@ export class ListaComponent {
         setTimeout(() => {
           location.reload();
           this.disableA = false;
-        }, 750);      }
+        }, 750);
+      }
       else {
         this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo agregar el registro' });
         this.visible = false;
@@ -184,8 +175,8 @@ export class ListaComponent {
 
   findIndexById(id: string): number {
     let index = -1;
-    for (let i = 0; i < this.products.length; i++) {
-      if (this.products[i].id === id) {
+    for (let i = 0; i < this.permisos.length; i++) {
+      if (this.permisos[i].id === id) {
         index = i;
         break;
       }
@@ -194,18 +185,18 @@ export class ListaComponent {
   }
 
   filterSearch(event: any) {
-    console.log(this.selectedProducts);
+    console.log(this.selectedPermisos);
     return event.target.value;
     console.log(event.target.value);
   }
 
   getInfo(event: TableLazyLoadEvent) {
     this.loading = true;
-    this.service.post('productos/getAll', event).subscribe((dato: any) => {
+    this.service.post('permisos/getAll', event).subscribe((dato: any) => {
       console.log(dato);
 
       if (dato) {
-        this.products = dato.data;
+        this.permisos = dato.data;
         this.total = dato.count;
         this.loading = false;
 
@@ -222,6 +213,26 @@ export class ListaComponent {
 
   campoValido2(campo: string) {
     return this.Formulario2.controls[campo].errors && this.Formulario2.controls[campo].touched;
+  }
+
+  getSeverity() {
+
+    var random = Math.floor(Math.random() * 4) + 1;
+    switch (random) {
+      case 1:
+        return 'success';
+      case 2:
+        return 'info';
+      case 3:
+        return 'warning';
+      case 4:
+        return 'danger';
+
+      default:
+        return 'info';
+
+    }
+
   }
 
 }

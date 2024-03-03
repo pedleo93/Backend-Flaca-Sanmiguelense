@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 
 export class ServicioService {
-  public api = 'http://127.0.0.1:8000/api/productos/';
+  public api = 'http://127.0.0.1:8000/api/';
 
   public httpOptions = {
     headers: new HttpHeaders({
