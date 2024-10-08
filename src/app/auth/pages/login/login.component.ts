@@ -30,19 +30,8 @@ export class LoginComponent implements OnInit {
 
   login() {
 
-    // this.service.post('', this.Formulario.value).subscribe((dato: any) => {
+    this.router.navigate(['/login/lista']);
 
-    //   if (dato == true) {
-        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Iniciando sesión' });
-        setTimeout(() => {
-          this.router.navigate(['/login/lista']);
-        }, 750);
-      // }
-    //   else {
-    //     this.message.add({ severity: 'error', summary: 'Error', detail: 'Usuario no encontrado' });
-    //   };
-
-    // });
 
   }
 
