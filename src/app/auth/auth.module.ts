@@ -18,6 +18,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToastModule } from 'primeng/toast';
 import { ListaComponent } from './pages/lista/lista.component';
 import { GestorPermisosComponent } from './pages/gestor-permisos/gestor-permisos.component';
+import { NavComponent } from '../nav/nav.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { GestorPermisosComponent } from './pages/gestor-permisos/gestor-permisos
     ButtonModule,
     ToolbarModule,
     FileUploadModule,
-    InputTextareaModule
+    InputTextareaModule,
+    NavComponent
   ]
 })
 export class AuthModule { }

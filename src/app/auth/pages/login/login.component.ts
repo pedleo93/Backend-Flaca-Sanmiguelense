@@ -4,12 +4,10 @@ import { ServicioService } from '../../../provider/servicio.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  providers: [MessageService],
-
+  providers: [MessageService]
 })
 
 
