@@ -9,7 +9,7 @@ import { MessageService } from 'primeng/api';
   selector: 'app-login',
   templateUrl: './login.component.html',
   providers: [MessageService],
-
+  styleUrls: ['./login.component.css']
 })
 
 
@@ -21,18 +21,15 @@ export class LoginComponent implements OnInit {
   });
 
   constructor(public router: Router, private fb: FormBuilder, public service: ServicioService, private message: MessageService) {
-
+    localStorage.clear();
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   login() {
-
     this.router.navigate(['/login/lista']);
-
-
+    
+    localStorage.setItem("usuario", this.Formulario.controls['email'].value);
   }
 
   campoValido(campo: string) {
