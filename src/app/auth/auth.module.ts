@@ -18,6 +18,7 @@ import { ToastModule } from 'primeng/toast';
 import { PanelModule } from 'primeng/panel';
 import { ListaComponent } from './pages/lista/lista.component';
 import { GestorPermisosComponent } from './pages/gestor-permisos/gestor-permisos.component';
+import { NavComponent } from '../nav/nav.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { GestorPermisosComponent } from './pages/gestor-permisos/gestor-permisos
     ToolbarModule,
     FileUploadModule,
     InputTextareaModule,
-    PanelModule
+    PanelModule,
+    NavComponent
   ]
 })
 export class AuthModule { }
