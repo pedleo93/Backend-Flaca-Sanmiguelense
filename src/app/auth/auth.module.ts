@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from './pages/login/login.component';
-import { RegistroComponent } from './pages/registro/registro.component';
 import { AuthRoutingModule } from './auth-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
@@ -16,6 +15,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToastModule } from 'primeng/toast';
+import { PanelModule } from 'primeng/panel';
 import { ListaComponent } from './pages/lista/lista.component';
 import { GestorPermisosComponent } from './pages/gestor-permisos/gestor-permisos.component';
 import { NavComponent } from '../nav/nav.component';
@@ -23,7 +23,6 @@ import { NavComponent } from '../nav/nav.component';
 @NgModule({
   declarations: [
     LoginComponent,
-    RegistroComponent,
     ListaComponent,
     GestorPermisosComponent
   ],
@@ -44,6 +43,7 @@ import { NavComponent } from '../nav/nav.component';
     ToolbarModule,
     FileUploadModule,
     InputTextareaModule,
+    PanelModule,
     NavComponent
   ]
 })

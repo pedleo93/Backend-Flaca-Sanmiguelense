@@ -1,21 +1,35 @@
+<form [formGroup]="Formulario" (ngSubmit)="login()" role="form">
 <app-nav></app-nav>
-
 <p-toast position="top-center"></p-toast>
 
+    <div class="login-container">
 
-<form [formGroup]="Formulario" (ngSubmit)="login()" role="form">
-    <div>
-        <div>
-            <input type="email" formControlName="email" placeholder="Correo electronico">
+        <div class="logo-container">
+            <img src="https://seeklogo.com/images/A/angular-icon-logo-5FC0C40EAC-seeklogo.com.png" alt="Flaca Sanmiguelense" class="app-logo" />
+            <h2 class="app-name" style="color: white;">Flaca Sanmiguelense</h2>
         </div>
-        <p style="font-size:10px; color:red;" *ngIf="campoValido('email')">Ingrese su correo electronico</p>
 
-        <div>
-            <input type="password" formControlName="password" placeholder="Contraseña">
+        <div class="login-panel">
+
+            <div class="login-form">
+
+                <div class="p-field">
+                    <h2>Inicio de sesión</h2>
+                </div>
+
+                <div class="p-field">
+                    <label>Correo Electrónico</label>
+                    <input type="email" pInputText placeholder="Ingresa tu correo" formControlName="email" />
+                </div>
+
+                <div class="p-field">
+                    <label>Contraseña</label>
+                    <input type="password" pInputText placeholder="Ingresa tu contraseña" formControlName="password" />
+                </div>
+
+                <button pButton label="Ingresar" class="p-button-rounded" type="submit"></button>
+            </div>
+
         </div>
-        <p style="font-size:10px; color:red;" *ngIf="campoValido('password')">Ingrese su contraseña</p>
-
     </div>
-    <button type="submit">Login</button>
-    <button type="button">Registrarse</button>
 </form>

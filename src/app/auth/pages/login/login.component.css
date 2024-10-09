@@ -1,0 +1,59 @@
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    background-image: url('https://img.freepik.com/vector-gratis/fondo-dia-muertos-dibujado-mano_23-2149731815.jpg?t=st=1728511302~exp=1728514902~hmac=18242e2eae844f08959d813bb1ef290a8716160eea25693637f72f5e7794ed5e&w=1060');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    text-align: center;
+}
+
+.app-logo {
+    width: 100px;
+    height: 100px;
+}
+
+.app-name {
+    font-size: 24px;
+    color: #333;
+    margin-top: 10px;
+}
+
+.login-panel {
+    width: 350px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.p-field {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.p-field label {
+    display: block;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.p-field input {
+    width: 100%;
+}
+
+button {
+    width: 100%;
+}
