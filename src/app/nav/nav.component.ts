@@ -48,7 +48,7 @@ export class NavComponent {
                     label: 'Nueva',
                     icon: 'pi pi-fw pi-plus'
                 },
-                { label: 'Lista', url: 'faq' }
+                { label: 'Lista', url: '/login/faq' }
                 ]
             },
             {
