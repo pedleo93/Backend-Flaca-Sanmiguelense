@@ -27,12 +27,23 @@ export class NavComponent {
             },
             {
                 label: 'Registros',
-                replaceUrl: true, 
+                replaceUrl: true,
+                routerLink: '/auth/registro-convocatorias' 
+            },
+            {
+                label: 'Patrocinadores',
+                replaceUrl: true,
+                routerLink: '/auth/patrocinadores' 
             },
             {
                 label: 'FAQs',
                 replaceUrl: true, 
                 routerLink: '/auth/faq'
+            },
+            {
+                label: 'Galeria',
+                replaceUrl: true,
+                routerLink: '/auth/galeria' 
             },
             {
                 label: 'Salir',
