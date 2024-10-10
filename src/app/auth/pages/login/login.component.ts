@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {}
 
   login() {
-    this.router.navigate(['/login/lista']);
+    this.router.navigate(['/auth/lista']);
     
     localStorage.setItem("usuario", this.Formulario.controls['email'].value);
   }
