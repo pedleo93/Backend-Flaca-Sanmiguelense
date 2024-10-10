@@ -1,19 +1,16 @@
 <form [formGroup]="Formulario" (ngSubmit)="login()" role="form">
-<p-toast position="top-center"></p-toast>
+    <p-toast position="top-center"></p-toast>
 
     <div class="login-container">
-
-        <div class="logo-container">
-            <img src="assets/flacas.png" alt="Flaca Sanmiguelense" class="app-logo" />
-            <h2 class="app-name" style="color: white;">Flaca Sanmiguelense</h2>
-        </div>
 
         <div class="login-panel">
 
             <div class="login-form">
 
                 <div class="p-field">
-                    <h2>Inicio de sesión</h2>
+                    <img src="assets/logo.svg" alt="Flaca Sanmiguelense" class="app-logo" />
+                    <h2 class="app-name">Flaca Sanmiguelense</h2>
+                    <h3>Inicio de sesión</h3>
                 </div>
 
                 <div class="p-field">
@@ -25,8 +22,7 @@
                     <label>Contraseña</label>
                     <input type="password" pInputText placeholder="Ingresa tu contraseña" formControlName="password" />
                 </div>
-
-                <button pButton label="Ingresar" class="p-button-rounded" type="submit"></button>
+                <button pButton pRipple label="Ingresar" class="p-button-help ml-2" type="submit"></button>
             </div>
 
         </div>

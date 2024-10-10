@@ -14,7 +14,7 @@ body {
     height: 100vh;
     width: 100vw;
     text-align: center;
-    background-image: url('../../../../assets/portadaCalacas.png');
+    background-image: url('../../../../assets/papelPicado.jpg');
     background-size: cover;
     background-position: center;
     background-repeat:space;
@@ -29,7 +29,6 @@ body {
 .app-name {
     font-size: 24px;
     color: #333;
-    margin-top: 10px;
 }
 
 .login-panel {
