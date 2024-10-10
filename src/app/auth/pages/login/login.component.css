@@ -1,3 +1,11 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
 .login-container {
     display: flex;
     flex-direction: column;
@@ -5,13 +13,13 @@
     justify-content: center;
     height: 100vh;
     width: 100vw;
-    background-image: url('https://img.freepik.com/vector-gratis/fondo-dia-muertos-dibujado-mano_23-2149731815.jpg?t=st=1728511302~exp=1728514902~hmac=18242e2eae844f08959d813bb1ef290a8716160eea25693637f72f5e7794ed5e&w=1060');
-    background-repeat: no-repeat;
+    text-align: center;
+    background-image: url('../../../../assets/portadaCalacas.png');
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
-    text-align: center;
+    background-repeat:space;
 }
+
 
 .app-logo {
     width: 100px;

@@ -19,12 +19,24 @@ import { PanelModule } from 'primeng/panel';
 import { ListaComponent } from './pages/lista/lista.component';
 import { GestorPermisosComponent } from './pages/gestor-permisos/gestor-permisos.component';
 import { NavComponent } from '../nav/nav.component';
+import { FaqComponent } from './pages/faq/faq.component';
+import { GaleriaComponent } from './pages/galeria/galeria.component';
+import { AgendaComponent } from './pages/agenda/agenda.component';
+import { PatrocinadoresComponent } from './pages/patrocinadores/patrocinadores.component';
+import { ConvocatoriasComponent } from './pages/convocatorias/convocatorias.component';
+import { RegistroConvocatoriasComponent } from './pages/registro-convocatorias/registro-convocatorias.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
     ListaComponent,
-    GestorPermisosComponent
+    GestorPermisosComponent,
+    FaqComponent,
+    GaleriaComponent,
+    AgendaComponent,
+    PatrocinadoresComponent,
+    ConvocatoriasComponent,
+    RegistroConvocatoriasComponent
   ],
   imports: [
     CommonModule,
