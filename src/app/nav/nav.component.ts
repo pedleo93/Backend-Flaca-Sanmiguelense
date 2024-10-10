@@ -21,7 +21,7 @@ export class NavComponent {
                     label: 'Nueva',
                     icon: 'pi pi-fw pi-plus'
                 },
-                { label: 'Lista',  url: 'google.com'}
+                { label: 'Lista',  url: '/login/convocatorias'}
                 ]
             },
             {
@@ -30,7 +30,7 @@ export class NavComponent {
                     label: 'Nueva',
                     icon: 'pi pi-fw pi-plus'
                 },
-                { label: 'Lista' }
+                { label: 'Lista', url: '/login/agenda' }
                 ]
             },
             {
@@ -39,7 +39,7 @@ export class NavComponent {
                     label: 'Nueva',
                     icon: 'pi pi-fw pi-plus'
                 },
-                { label: 'Lista' }
+                { label: 'Lista', url: '/login/registro-convocatorias' }
                 ]
             },
             {
@@ -48,7 +48,7 @@ export class NavComponent {
                     label: 'Nueva',
                     icon: 'pi pi-fw pi-plus'
                 },
-                { label: 'Lista' }
+                { label: 'Lista', url: '/login/faq' }
                 ]
             },
             {
