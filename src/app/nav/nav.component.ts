@@ -17,42 +17,27 @@ export class NavComponent {
         this.items = [
             {
                 label: 'Convocatorias',
-                items: [{
-                    label: 'Nueva',
-                    icon: 'pi pi-fw pi-plus'
-                },
-                { label: 'Lista',  url: '/login/convocatorias'}
-                ]
+                replaceUrl: true,
+                routerLink: '/auth/convocatorias'
             },
             {
                 label: 'Agenda',
-                items: [{
-                    label: 'Nueva',
-                    icon: 'pi pi-fw pi-plus'
-                },
-                { label: 'Lista', url: '/login/agenda' }
-                ]
+                replaceUrl: true, 
+                routerLink: '/auth/agenda'
             },
             {
                 label: 'Registros',
-                items: [{
-                    label: 'Nueva',
-                    icon: 'pi pi-fw pi-plus'
-                },
-                { label: 'Lista', url: '/login/registro-convocatorias' }
-                ]
+                replaceUrl: true, 
             },
             {
                 label: 'FAQs',
-                items: [{
-                    label: 'Nueva',
-                    icon: 'pi pi-fw pi-plus'
-                },
-                { label: 'Lista', url: '/login/faq' }
-                ]
+                replaceUrl: true, 
+                routerLink: '/auth/faq'
             },
             {
-                label: 'Salir'
+                label: 'Salir',
+                replaceUrl: true, 
+                routerLink: '/auth'
             },
         ];
     }
