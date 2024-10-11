@@ -55,20 +55,17 @@ export class ListaComponent {
 
   constructor(public router: Router, private fb: FormBuilder, public service: ServicioService, private message: MessageService) { }
 
-  ngOnInit() {
-
-  }
-
+  ngOnInit() {}
 
   showDialog() {
     this.visible = true;
   }
+
   showDVDialog() {
     this.visibleVar = true;
-
     console.log(this.selectedProducts);
-
   }
+
   showDDialog(id: any) {
     this.visibleDel = true;
     this.IDd = id;
@@ -84,12 +81,31 @@ export class ListaComponent {
       });
 
     });
-    this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Eliminados con exito' });
+    this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Preguntas eliminadas con exito' });
     setTimeout(() => {
       location.reload();
       this.disableDV = false;
     }, 3000);
     
+  }
+
+  delete() {
+    this.disableD = true;
+
+    this.service.delete('productos/delete/' + this.IDd).subscribe((dato: any) => {
+
+      if (dato.estatus == true) {
+        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Pregunta eliminada con exito' });
+        setTimeout(() => {
+          location.reload();
+          this.disableD = false;
+        }, 750);
+      } else {
+        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se ha podido eliminar la pregunta'});
+        this.disableD = false;
+      }
+    });
+
   }
 
   getOne(id: any) {
@@ -111,24 +127,6 @@ export class ListaComponent {
 
   }
 
-  delete() {
-    this.disableD = true;
-
-    this.service.delete('productos/delete/' + this.IDd).subscribe((dato: any) => {
-
-      if (dato.estatus == true) {
-        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Elimando con exito' });
-        setTimeout(() => {
-          location.reload();
-          this.disableD = false;
-        }, 750);
-      } else {
-        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el registro' });
-        this.disableD = false;
-      }
-    });
-
-  }
 
   update() {
     this.disableU = true;
@@ -138,7 +136,7 @@ export class ListaComponent {
     this.service.put('productos/update/' + this.Formulario2.controls['id'].value, this.Formulario2.value).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
-        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Actualizado con exito' });
+        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Pregunta actualizada con exito' });
         this.visible = false;
         setTimeout(() => {
           location.reload();
@@ -147,7 +145,7 @@ export class ListaComponent {
 
       }
       else {
-        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actializar el registro' });
+        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se ha podido actualizar la pregunta' });
         this.visible = false;
         this.disableU = false;
       };
@@ -164,14 +162,14 @@ export class ListaComponent {
     this.service.post('productos/insert', this.Formulario.value).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
-        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Agregado con exito' });
+        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Pregunta agregada con exito' });
         this.visible = false;
         setTimeout(() => {
           location.reload();
           this.disableA = false;
         }, 750);      }
       else {
-        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo agregar el registro' });
+        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se ha podido agregar la pregunta' });
         this.visible = false;
         this.disableA = false;
 
@@ -210,7 +208,7 @@ export class ListaComponent {
         this.loading = false;
 
       } else {
-        this.message.add({ severity: 'warn', summary: 'Ups', detail: 'tabla vacia' });
+        this.message.add({ severity: 'warn', summary: 'Ups', detail: 'Tabla vacia' });
       }
     });
 
