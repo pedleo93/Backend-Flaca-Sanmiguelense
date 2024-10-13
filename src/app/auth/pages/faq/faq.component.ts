@@ -13,29 +13,31 @@ import { ServicioService } from 'src/app/provider/servicio.service';
 })
 export class FaqComponent {
 
-  products: any = [];
+  questions: any = [];
   productDialog: boolean = false;
-  product: any;
-  selectedProducts: any = [];
+  question: any;
+  selectedQuestions: any = [];
   submitted: boolean = false;
   loading = false;
   total = 0;
-  visible: boolean = false;
-  visibleE: boolean = false;
-  visibleDel: boolean = false;
-  visibleVar: boolean = false;
-  IDd: number = 0;
-  disableA: boolean = false;
-  disableU: boolean = false;
-  disableD: boolean = false;
-  disableDV: boolean = false;
 
-  Formulario: FormGroup = this.fb.group({
+  visibleAdd: boolean = false;
+  visibleUpdate: boolean = false;
+  visibleDelete: boolean = false;
+  visibleDelMany: boolean = false;
+
+  idDelete: number = 0;
+  disableAdd: boolean = false;
+  disableUpdate: boolean = false;
+  disableDelete: boolean = false;
+  disableDeleteMany: boolean = false;
+
+  FormAdd: FormGroup = this.fb.group({
     pregunta: [, Validators.required],
     respuesta: [, Validators.required]
   });
 
-  Formulario2: FormGroup = this.fb.group({
+  FormUpdate: FormGroup = this.fb.group({
     id: [],
     pregunta: [, Validators.required],
     respuesta: [, Validators.required]
@@ -44,98 +46,113 @@ export class FaqComponent {
 
   constructor(public router: Router, private fb: FormBuilder, public service: ServicioService, private message: MessageService) { }
 
-  ngOnInit() {
+  ngOnInit() {}
 
+  showDialogAdd() {
+    this.visibleAdd = true;
+  }
+  
+  showDialogDelMany() {
+    this.visibleDelMany = true;
+    console.log(this.selectedQuestions);
   }
 
-
-  showDialog() {
-    this.visible = true;
-  }
-  showDVDialog() {
-    this.visibleVar = true;
-
-    console.log(this.selectedProducts);
-
-  }
-  showDDialog(id: any) {
-    this.visibleDel = true;
-    this.IDd = id;
+  showDialogDelete(id: any) {
+    this.visibleDelete = true;
+    this.idDelete = id;
   }
 
   deleteSelected() {
-    this.disableDV = true;
+    this.disableDeleteMany = true;
 
-    console.log(this.selectedProducts);
+    console.log(this.selectedQuestions);
 
-    this.selectedProducts.forEach((product: any) => {
-      this.service.delete('productos/delete/' + product.id).subscribe((dato: any) => {
+    this.selectedQuestions.forEach((product: any) => {
+      this.service.delete('faqs/' + product.id).subscribe((info: any) => {
       });
 
     });
     this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Eliminados con exito' });
     setTimeout(() => {
       location.reload();
-      this.disableDV = false;
+      this.disableDeleteMany = false;
     }, 3000);
     
   }
 
+  delete() {
+    this.disableDelete = true;
+
+    this.service.delete('faqs/' + this.idDelete).subscribe((info: any) => {
+
+      if (info.estatus == true) {
+        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Elimando con exito' });
+        setTimeout(() => {
+          location.reload();
+          this.disableDelete = false;
+        }, 750);
+      } else {
+        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el registro' });
+        this.disableDelete = false;
+      }
+    });
+  }
+
+  getAll(event: TableLazyLoadEvent) {
+    this.loading = true;
+    // this.service.post('faqs', event).subscribe((info: any) => {
+    this.service.get('faqs').subscribe((info: any) => {
+      console.log(info);
+      this.questions = info      
+
+      // if (info) {
+      //   this.questions = info.data;
+      //   this.total = info.count;
+      //   this.loading = false;
+
+      // } else {
+      //   this.message.add({ severity: 'warn', summary: 'Ups', detail: 'tabla vacia' });
+      // }
+    });
+
+  }
+
   getOne(id: any) {
-    this.visibleE = true;
+    this.visibleUpdate = true;
 
-    this.service.get('productos/getOne/' + id).subscribe((dato: any) => {
+    this.service.get('faqs/' + id).subscribe((info: any) => {
 
-      if (dato.data) {
-        this.Formulario2.patchValue({
-          id: dato.data.id,
-          pregunta: dato.data.nombre,
-          respuesta: dato.data.descripcion
+      if (info.data) {
+        this.FormUpdate.patchValue({
+          id: info.id,
+          pregunta: info.pregunta,
+          respuesta: info.respuesta
         });
       }
     });
 
   }
 
-  delete() {
-    this.disableD = true;
-
-    this.service.delete('productos/delete/' + this.IDd).subscribe((dato: any) => {
-
-      if (dato.estatus == true) {
-        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Elimando con exito' });
-        setTimeout(() => {
-          location.reload();
-          this.disableD = false;
-        }, 750);
-      } else {
-        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el registro' });
-        this.disableD = false;
-      }
-    });
-
-  }
-
   update() {
-    this.disableU = true;
+    this.disableUpdate = true;
 
-    console.log(this.Formulario2.value);
+    console.log(this.FormUpdate.value);
 
-    this.service.put('productos/update/' + this.Formulario2.controls['id'].value, this.Formulario2.value).subscribe((dato: any) => {
+    this.service.patch('faqs' + this.FormUpdate.controls['id'].value, this.FormUpdate.value).subscribe((info: any) => {
 
-      if (dato.estatus == true) {
+      if (info.estatus == true) {
         this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Actualizado con exito' });
-        this.visible = false;
+        this.visibleAdd = false;
         setTimeout(() => {
           location.reload();
-          this.disableU = false;
+          this.disableUpdate = false;
         }, 750);
 
       }
       else {
         this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actializar el registro' });
-        this.visible = false;
-        this.disableU = false;
+        this.visibleAdd = false;
+        this.disableUpdate = false;
       };
 
     });
@@ -143,23 +160,21 @@ export class FaqComponent {
   }
 
   add() {
-    this.disableA = true
+    this.disableAdd = true
 
-    console.log(this.Formulario.value);
+    this.service.post('faqs', this.FormAdd.value).subscribe((info: any) => {
 
-    this.service.post('productos/insert', this.Formulario.value).subscribe((dato: any) => {
-
-      if (dato.estatus == true) {
+      if (info.estatus == true) {
         this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Agregado con exito' });
-        this.visible = false;
+        this.visibleAdd = false;
         setTimeout(() => {
           location.reload();
-          this.disableA = false;
+          this.disableAdd = false;
         }, 750);      }
       else {
         this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo agregar el registro' });
-        this.visible = false;
-        this.disableA = false;
+        this.visibleAdd = false;
+        this.disableAdd = false;
 
       };
 
@@ -170,8 +185,8 @@ export class FaqComponent {
 
   findIndexById(id: string): number {
     let index = -1;
-    for (let i = 0; i < this.products.length; i++) {
-      if (this.products[i].id === id) {
+    for (let i = 0; i < this.questions.length; i++) {
+      if (this.questions[i].id === id) {
         index = i;
         break;
       }
@@ -180,34 +195,18 @@ export class FaqComponent {
   }
 
   filterSearch(event: any) {
-    console.log(this.selectedProducts);
+    console.log(this.selectedQuestions);
     return event.target.value;
     console.log(event.target.value);
   }
 
-  getInfo(event: TableLazyLoadEvent) {
-    this.loading = true;
-    this.service.post('productos/getAll', event).subscribe((dato: any) => {
-      console.log(dato);
 
-      if (dato) {
-        this.products = dato.data;
-        this.total = dato.count;
-        this.loading = false;
-
-      } else {
-        this.message.add({ severity: 'warn', summary: 'Ups', detail: 'tabla vacia' });
-      }
-    });
-
-  }
-
-  campoValido(campo: string) {
-    return this.Formulario.controls[campo].errors && this.Formulario.controls[campo].touched;
+  validateFormAdd(campo: string) {
+    return this.FormAdd.controls[campo].errors && this.FormAdd.controls[campo].touched;
   };
 
-  campoValido2(campo: string) {
-    return this.Formulario2.controls[campo].errors && this.Formulario2.controls[campo].touched;
+  validateFormUpdate(campo: string) {
+    return this.FormUpdate.controls[campo].errors && this.FormUpdate.controls[campo].touched;
   }
 
 }

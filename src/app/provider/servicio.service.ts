@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 
 export class ServicioService {
-  public api = 'http://127.0.0.1:8000/api/';
+  public api = 'https://fsws.bananasoft.mx/api/';
 
   public httpOptions = {
     headers: new HttpHeaders({
@@ -16,15 +16,19 @@ export class ServicioService {
 
   constructor(public http: HttpClient) {
   }
-  
-    post(model: string, data:any) {
-      return this.http.post(this.api + model, data);
-    }
-  
-    put(model: string, data:any) {
-      return this.http.put(this.api + model, data);
-    }
-  
+
+  post(model: string, data: any) {
+    return this.http.post(this.api + model, data);
+  }
+
+  put(model: string, data: any) {
+    return this.http.put(this.api + model, data);
+  }
+
+  patch(model: string, data: any) {
+    return this.http.put(this.api + model, data);
+  }
+
   get(model: string) {
     return this.http.get(this.api + model);
   }
