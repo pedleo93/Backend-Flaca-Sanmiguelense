@@ -104,18 +104,16 @@ export class FaqComponent {
 
     console.log(event)
     this.loading = false;
-    // this.service.post('faqs', event).subscribe((info: any) => {
     this.service.get('faqs').subscribe((info: any) => {
-      this.questions = info
+      
+      if (info) {
+        this.questions = info
+        this.total = info.length;
+        // this.loading = false;
 
-      // if (info) {
-      //   this.questions = info.data;
-      //   this.total = info.count;
-      //   this.loading = false;
-
-      // } else {
-      //   this.message.add({ severity: 'warn', summary: 'Ups', detail: 'tabla vacia' });
-      // }
+      } else {
+        this.message.add({ severity: 'warn', summary: 'Ups', detail: 'tabla vacia' });
+      }
     });
 
   }
@@ -124,12 +122,12 @@ export class FaqComponent {
     this.visibleUpdate = true;
 
     this.service.get('faqs/' + id).subscribe((info: any) => {
-
+      
       if (info) {
         this.FormUpdate.patchValue({
-          id: info.id,
-          pregunta: info.pregunta,
-          respuesta: info.respuesta
+          id: info.data.id,
+          pregunta: info.data.pregunta,
+          respuesta: info.data.respuesta
         });
       }
     });
@@ -149,7 +147,7 @@ export class FaqComponent {
         setTimeout(() => {
           location.reload();
           this.disableUpdate = false;
-        }, 750);
+        }, 1000);
 
       }
       else {
@@ -165,7 +163,7 @@ export class FaqComponent {
   add() {
     this.disableAdd = true
 
-    this.service.post('faqs', this.FormAdd.value).subscribe((info: any) => {
+    this.service.post('faqs', this.FormAdd.value).subscribe((info: any) => {      
 
       if (info.estatus == true) {
         this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Agregado con exito' });
@@ -173,7 +171,7 @@ export class FaqComponent {
         setTimeout(() => {
           location.reload();
           this.disableAdd = false;
-        }, 750);
+        }, 1000);
       }
       else {
         this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo agregar el registro' });
@@ -201,7 +199,6 @@ export class FaqComponent {
   filterSearch(event: any) {
     console.log(this.selectedQuestions);
     return event.target.value;
-    console.log(event.target.value);
   }
 
 

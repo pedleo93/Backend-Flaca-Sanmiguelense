@@ -2,8 +2,10 @@
 
 <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-        <button pButton pRipple label="Agregar Registro" icon="pi pi-plus" class="p-button-success mr-2" (click)="showDialogAdd()" style="right:10px"></button>
-        <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDialogDelMany()" [disabled]="!selectedQuestions || !selectedQuestions.length"></button>
+        <button pButton pRipple label="Agregar Registro" icon="pi pi-plus" class="p-button-success mr-2"
+            (click)="showDialogAdd()" style="right:10px"></button>
+        <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDialogDelMany()"
+            [disabled]="!selectedQuestions || !selectedQuestions.length"></button>
     </ng-template>
 
 </p-toolbar>
@@ -12,14 +14,19 @@
 
 <div class="card">
 
-    <p-table #dt [value]="questions" [rows]="5" [paginator]="true" [globalFilterFields]="['pregunta', 'respuesta']" [tableStyle]="{ 'min-width': '75rem' }" [(selection)]="selectedQuestions" [rowHover]="true" dataKey="id" [lazy]="true" (onLazyLoad)="getAll($event)"
-        [loading]="loading" [rowHover]="true" [totalRecords]="total" currentPageReportTemplate="Mostrando {first} hasta {last} de {totalRecords} preguntas" [showCurrentPageReport]="true">
+    <p-table #dt [value]="questions" [rows]="5" [paginator]="true" [globalFilterFields]="['pregunta', 'respuesta']"
+        [tableStyle]="{ 'min-width': '75rem' }" [(selection)]="selectedQuestions" [rowHover]="true" dataKey="id"
+        [lazy]="true" (onLazyLoad)="getAll($event)" [loading]="loading" [rowHover]="true" [totalRecords]="total"
+        currentPageReportTemplate="Mostrando {first} hasta {last} de {totalRecords} preguntas"
+        [showCurrentPageReport]="true">
+
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
                 <h5 class="m-0">Lista de preguntas y respuestas</h5>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="dt.filterGlobal(filterSearch($event), 'contains')" placeholder="Buscar pregunta..." />
+                    <input pInputText type="text" (input)="dt.filterGlobal(filterSearch($event), 'contains')"
+                        placeholder="Buscar pregunta..." />
                 </span>
             </div>
         </ng-template>
@@ -48,8 +55,10 @@
                 <td>{{ question.respuesta}}</td>
 
                 <td style="width:10rem">
-                    <button (click)="getOne(question.id)" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" style="right:10px"></button>
-                    <button (click)="showDialogDelete(question.id)" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
+                    <button (click)="getOne(question.id)" pButton pRipple icon="pi pi-pencil"
+                        class="p-button-rounded p-button-success mr-2" style="right:10px"></button>
+                    <button (click)="showDialogDelete(question.id)" pButton pRipple icon="pi pi-trash"
+                        class="p-button-rounded p-button-danger"></button>
                 </td>
             </tr>
         </ng-template>
@@ -57,7 +66,8 @@
             <div class="flex align-items-center justify-content-between">No hay preguntas</div>
         </ng-template>
         <ng-template pTemplate="summary">
-            <div class="flex align-items-center justify-content-between">En total existen {{ questions ? questions.length : 0 }} preguntas.</div>
+            <div class="flex align-items-center justify-content-between">En total existen {{ questions ?
+                questions.length : 0 }} preguntas.</div>
         </ng-template>
     </p-table>
 </div>
@@ -66,24 +76,33 @@
 
 <form [formGroup]="FormAdd">
 
-    <p-dialog header="Header" [(visible)]="visibleAdd" [style]="{ width: '25vw', height:'800px' }" class="flex flex-column flex-wrap">
+    <p-dialog header="Header" [(visible)]="visibleAdd" [style]="{width: '800px', height: 'auto'}"
+        class="flex flex-column flex-wrap">
 
         <ng-template pTemplate="header">
             <span class="text-xl font-bold">Formulario de pregunta</span>
         </ng-template>
 
-        <label>Pregunta</label>
-        <textarea rows="5" cols="28" pInputTextarea formControlName="pregunta"></textarea>
-        <p style="font-size:10px; color:red;" *ngIf="validateFormAdd('pregunta')">Ingrese una pregunta</p>
+        <div class="p-fluid">
 
-        <label>Respuesta</label>
-        <textarea rows="5" cols="28" pInputTextarea formControlName="respuesta"></textarea>
-        <p style="font-size:10px; color:red;" *ngIf="validateFormAdd('respuesta')">Ingrese una respuesta</p>
+            <div class="p-field">
+                <label>Pregunta</label>
+                <textarea rows="5" cols="28" pInputTextarea formControlName="pregunta"></textarea>
+                <p style="font-size:10px; color:red;" *ngIf="validateFormAdd('pregunta')">Ingrese una pregunta</p>
+            </div>
 
+            <div class="p-field">
+                <label>Respuesta</label>
+                <textarea rows="5" cols="28" pInputTextarea formControlName="respuesta"></textarea>
+                <p style="font-size:10px; color:red;" *ngIf="validateFormAdd('respuesta')">Ingrese una respuesta</p>
+            </div>
+        </div>
 
         <ng-template pTemplate="footer">
-            <p-button icon="pi pi-times" (click)="visibleAdd = false" label="Cancelar" styleClass="p-button-text"></p-button>
-            <p-button icon="pi pi-check" [disabled]="!FormAdd.valid || disableAdd" (click)="add()" label="Aceptar" styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-times" (click)="visibleAdd = false" label="Cancelar"
+                styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-check" [disabled]="!FormAdd.valid || disableAdd" (click)="add()" label="Aceptar"
+                styleClass="p-button-text"></p-button>
         </ng-template>
     </p-dialog>
 
@@ -92,23 +111,33 @@
 
 <form [formGroup]="FormUpdate">
 
-    <p-dialog header="Header" [(visible)]="visibleUpdate" [style]="{ width: '25vw', height:'800px' }" class="flex flex-column flex-wrap">
+    <p-dialog header="Header" [(visible)]="visibleUpdate" [style]="{width: '800px', height: 'auto'}"
+        class="flex flex-column flex-wrap">
 
         <ng-template pTemplate="header">
             <span class="text-xl font-bold">Formulario de pregunta</span>
         </ng-template>
 
-        <label>Pregunta</label>
-        <textarea rows="5" cols="28" pInputTextarea formControlName="pregunta"></textarea>
-        <p style="font-size:10px; color:red;" *ngIf="validateFormUpdate('pregunta')">Ingrese una pregunta</p>
+        <div class="p-fluid">
 
-        <label>Respuesta</label>
-        <textarea rows="5" cols="28" pInputTextarea formControlName="respuesta"></textarea>
-        <p style="font-size:10px; color:red;" *ngIf="validateFormUpdate('respuesta')">Ingrese una respuesta</p>
+            <div class="p-field">
+                <label>Pregunta</label>
+                <textarea rows="5" cols="28" pInputTextarea formControlName="pregunta"></textarea>
+                <p style="font-size:10px; color:red;" *ngIf="validateFormUpdate('pregunta')">Ingrese una pregunta</p>
+            </div>
+
+            <div class="p-field">
+                <label>Respuesta</label>
+                <textarea rows="5" cols="28" pInputTextarea formControlName="respuesta"></textarea>
+                <p style="font-size:10px; color:red;" *ngIf="validateFormUpdate('respuesta')">Ingrese una respuesta</p>
+            </div>
+        </div>
 
         <ng-template pTemplate="footer">
-            <p-button icon="pi pi-times" (click)="visibleUpdate = false" label="Cancelar" styleClass="p-button-text"></p-button>
-            <p-button icon="pi pi-check" [disabled]="!FormUpdate.valid || disableUpdate" (click)="update()" label="Aceptar" styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-times" (click)="visibleUpdate = false" label="Cancelar"
+                styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-check" [disabled]="!FormUpdate.valid || disableUpdate" (click)="update()"
+                label="Aceptar" styleClass="p-button-text"></p-button>
         </ng-template>
     </p-dialog>
 
@@ -124,8 +153,10 @@
     <p>Estas a punto de eliminar una pregunta. ¿Quieres continuar?</p>
 
     <ng-template pTemplate="footer">
-        <p-button icon="pi pi-times" (click)="visibleDelete = false" label="Cancelar" styleClass="p-button-text"></p-button>
-        <p-button icon="pi pi-check" [disabled]="disableDelete" (click)="delete()" label="Aceptar" styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-times" (click)="visibleDelete = false" label="Cancelar"
+            styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" [disabled]="disableDelete" (click)="delete()" label="Aceptar"
+            styleClass="p-button-text"></p-button>
     </ng-template>
 </p-dialog>
 
@@ -140,7 +171,9 @@
     <p>Estas a punto de eliminar varias preguntas. ¿Quieres continuar?</p>
 
     <ng-template pTemplate="footer">
-        <p-button icon="pi pi-times" (click)="visibleDelMany = false" label="Cancelar" styleClass="p-button-text"></p-button>
-        <p-button icon="pi pi-check" [disabled]="disableDeleteMany" (click)="deleteSelected()" label="Aceptar" styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-times" (click)="visibleDelMany = false" label="Cancelar"
+            styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" [disabled]="disableDeleteMany" (click)="deleteSelected()" label="Aceptar"
+            styleClass="p-button-text"></p-button>
     </ng-template>
 </p-dialog>
