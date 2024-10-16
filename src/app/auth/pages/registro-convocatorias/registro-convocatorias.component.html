@@ -2,8 +2,8 @@
 
 <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-        <button pButton pRipple label="Agregar Registro" icon="pi pi-plus" class="p-button-success mr-2" (click)="showDialogAdd()"></button>
-        <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDialogDelMany()" [disabled]="!selectedCalls || !selectedCalls.length"></button>
+        <button pButton pRipple label="Agregar Registro" icon="pi pi-plus" class="p-button-success mr-2" (click)="showDialogAdd()" style="right:10px"></button>
+        <button pButton pRipple icon="pi pi-trash" class="p-button-danger" (click)="showDialogDelMany()" [disabled]="!selectedCalls || !selectedCalls.length"></button>
     </ng-template>
 </p-toolbar>
 
