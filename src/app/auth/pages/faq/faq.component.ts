@@ -44,14 +44,16 @@ export class FaqComponent {
   });
 
 
-  constructor(public router: Router, private fb: FormBuilder, public service: ServicioService, private message: MessageService) { }
+  constructor(public router: Router, private fb: FormBuilder, public service: ServicioService, private message: MessageService) {
 
-  ngOnInit() {}
+  }
+
+  ngOnInit() { }
 
   showDialogAdd() {
     this.visibleAdd = true;
   }
-  
+
   showDialogDelMany() {
     this.visibleDelMany = true;
     console.log(this.selectedQuestions);
@@ -77,7 +79,7 @@ export class FaqComponent {
       location.reload();
       this.disableDeleteMany = false;
     }, 3000);
-    
+
   }
 
   delete() {
@@ -99,11 +101,12 @@ export class FaqComponent {
   }
 
   getAll(event: TableLazyLoadEvent) {
-    this.loading = true;
+
+    console.log(event)
+    this.loading = false;
     // this.service.post('faqs', event).subscribe((info: any) => {
     this.service.get('faqs').subscribe((info: any) => {
-      console.log(info);
-      this.questions = info      
+      this.questions = info
 
       // if (info) {
       //   this.questions = info.data;
@@ -122,7 +125,7 @@ export class FaqComponent {
 
     this.service.get('faqs/' + id).subscribe((info: any) => {
 
-      if (info.data) {
+      if (info) {
         this.FormUpdate.patchValue({
           id: info.id,
           pregunta: info.pregunta,
@@ -138,7 +141,7 @@ export class FaqComponent {
 
     console.log(this.FormUpdate.value);
 
-    this.service.patch('faqs' + this.FormUpdate.controls['id'].value, this.FormUpdate.value).subscribe((info: any) => {
+    this.service.patch('faqs/' + this.FormUpdate.controls['id'].value, this.FormUpdate.value).subscribe((info: any) => {
 
       if (info.estatus == true) {
         this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Actualizado con exito' });
@@ -170,7 +173,8 @@ export class FaqComponent {
         setTimeout(() => {
           location.reload();
           this.disableAdd = false;
-        }, 750);      }
+        }, 750);
+      }
       else {
         this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo agregar el registro' });
         this.visibleAdd = false;
