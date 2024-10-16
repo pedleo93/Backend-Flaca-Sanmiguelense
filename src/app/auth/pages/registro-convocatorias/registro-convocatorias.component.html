@@ -1,1 +1,104 @@
 <app-nav></app-nav>
+
+<p-toolbar styleClass="mb-4 gap-2">
+    <ng-template pTemplate="left">
+        <button pButton pRipple label="Agregar Registro" icon="pi pi-plus" class="p-button-success mr-2" (click)="showDialogAdd()"></button>
+        <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDialogDelMany()" [disabled]="!selectedCalls || !selectedCalls.length"></button>
+    </ng-template>
+</p-toolbar>
+
+<p-toast position="top-center"></p-toast>
+<div class="card">
+    <p-table #dt [value]="calls" [loading]="loading" [rows]="10" [paginator]="true" [(selection)]="selectedCalls" dataKey="id" currentPageReportTemplate="Mostrando {first} hasta {last} de {totalRecords} registros" [showCurrentPageReport]="true" [rowHover]="true">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h5 class="m-0">Lista de Registros</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <!-- <input pInputText type="text" placeholder="Buscar registro..." (input)="dt.filterGlobal($event.target.value, 'contains')" /> -->
+                    <input pInputText type="text" placeholder="Buscar registro..." />
+                </span>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="participantes">Participantes
+                    <p-sortIcon field="participantes"></p-sortIcon>
+                </th>
+                <th pSortableColumn="correo">Correo
+                    <p-sortIcon field="correo"></p-sortIcon>
+                </th>
+                <th pSortableColumn="pagado">Pagado
+                    <p-sortIcon field="pagado"></p-sortIcon>
+                </th>
+                <th pSortableColumn="verificado">Verificado
+                    <p-sortIcon field="verificado"></p-sortIcon>
+                </th>
+                <th>Acciones</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-registro>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="registro"></p-tableCheckbox>
+                </td>
+                <td>{{ registro.participantes }}</td>
+                <td>{{ registro.correo }}</td>
+                <td>{{ registro.pagado ? 'Sí' : 'No' }}</td>
+                <td>{{ registro.verificado ? 'Sí' : 'No' }}</td>
+                <td>
+                    <button (click)="editCall(registro)" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" style="right:10px"></button>
+                    <button (click)="deleteCall(registro.id)" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
+
+                </td>
+
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <div class="flex align-items-center justify-content-between">No hay registros</div>
+        </ng-template>
+
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">En total existen {{ calls ? calls.length : 0 }} registros.</div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [responsive]="true" [style]="{width: '800px', height: 'auto'}" [header]="dialogHeader">
+    <form [formGroup]="callForm" (ngSubmit)="saveCall()">
+        <div class="p-fluid">
+            <div class="p-field">
+                <label for="participantes">Participantes</label>
+                <input id="participantes" type="text" pInputText formControlName="participantes" />
+                <small *ngIf="callForm.get('participantes')?.invalid && callForm.get('participantes')?.touched" class="text-danger">Participantes son requeridos.</small>
+            </div>
+
+            <div class="p-field">
+                <label for="correo">Correo</label>
+                <input id="correo" type="email" pInputText formControlName="correo" />
+                <small *ngIf="callForm.get('correo')?.invalid && callForm.get('correo')?.touched" class="text-danger">Correo es requerido.</small>
+            </div>
+
+            <div class="p-field">
+                <label>Pagado</label>
+                <p-toggleButton formControlName="pagado" onLabel="Sí" offLabel="No"></p-toggleButton>
+            </div>
+
+            <div class="p-field">
+                <label>Verificado</label>
+                <p-toggleButton formControlName="verificado" onLabel="Sí" offLabel="No"></p-toggleButton>
+            </div>
+        </div>
+
+        <p-footer>
+            <button pButton type="submit" label="Guardar" icon="pi pi-check" [disabled]="callForm.invalid"></button>
+            <button pButton type="button" label="Cancelar" icon="pi pi-times" (click)="dialogVisible = false" class="p-button-text"></button>
+        </p-footer>
+    </form>
+</p-dialog>

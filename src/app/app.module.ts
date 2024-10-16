@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { ServicioService } from './provider/servicio.service';
 import { HttpClientModule } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 
 
 @NgModule({
@@ -17,7 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [{ provide: ServicioService, useClass: ServicioService }],
+  providers: [{ provide: ServicioService, useClass: ServicioService }, MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
