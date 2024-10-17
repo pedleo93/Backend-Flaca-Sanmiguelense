@@ -46,13 +46,14 @@ export class AgendaComponent {
   });
 
   Formulario2: FormGroup = this.fb.group({
-    id: [],
-    nombre: [, Validators.required],
+    id: [null], // Agrega el campo id aquí
+    lugar: [, Validators.required],
+    evento: [, Validators.required],
     descripcion: [, Validators.required],
-    categoria: [, Validators.required],
-    genero: [, Validators.required],
-    url: [, Validators.required],
+    fecha_inicial: [, Validators.required],
+    fecha_final: [, Validators.required],
   });
+  
 
 
   constructor(public router: Router, private fb: FormBuilder, public service: ServicioService, private message: MessageService) { }
@@ -96,93 +97,21 @@ export class AgendaComponent {
 
   getOne(id: any) {
     this.visibleE = true;
-
-    this.service.get('productos/getOne/' + id).subscribe((dato: any) => {
-
+    this.service.get('agendas/' + id).subscribe((dato: any) => {    
       if (dato.data) {
         this.Formulario2.patchValue({
-          id: dato.data.id,
-          nombre: dato.data.nombre,
+          id: dato.data.id, // Parchamos el valor del id aquí también
+          lugar: dato.data.lugar,
+          evento: dato.data.evento,
           descripcion: dato.data.descripcion,
-          categoria: dato.data.categoria,
-          genero: dato.data.genero,
-          url: dato.data.url
+          fecha_inicial: dato.data.fecha_inicial,
+          fecha_final: dato.data.fecha_final
         });
       }
     });
-
   }
-
-  delete() {
-    this.disableD = true;
-
-    this.service.delete('productos/delete/' + this.IDd).subscribe((dato: any) => {
-
-      if (dato.estatus == true) {
-        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Elimando con exito' });
-        setTimeout(() => {
-          location.reload();
-          this.disableD = false;
-        }, 750);
-      } else {
-        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el registro' });
-        this.disableD = false;
-      }
-    });
-
-  }
-
-  update() {
-    this.disableU = true;
-
-    console.log(this.Formulario2.value);
-
-    this.service.put('productos/update/' + this.Formulario2.controls['id'].value, this.Formulario2.value).subscribe((dato: any) => {
-
-      if (dato.estatus == true) {
-        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Actualizado con exito' });
-        this.visible = false;
-        setTimeout(() => {
-          location.reload();
-          this.disableU = false;
-        }, 750);
-
-      }
-      else {
-        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actializar el registro' });
-        this.visible = false;
-        this.disableU = false;
-      };
-
-    });
-
-  }
-
-  // add() {
-  //   this.disableA = true
-
-  //   console.log(this.Formulario.value);
-
-  //   this.service.post('productos/insert', this.Formulario.value).subscribe((dato: any) => {
-
-  //     if (dato.estatus == true) {
-  //       this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Agregado con exito' });
-  //       this.visible = false;
-  //       setTimeout(() => {
-  //         location.reload();
-  //         this.disableA = false;
-  //       }, 750);      }
-  //     else {
-  //       this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo agregar el registro' });
-  //       this.visible = false;
-  //       this.disableA = false;
-
-  //     };
-
-  //   });
-
-  // }
-
+  
+  
 
   findIndexById(id: string): number {
     let index = -1;
@@ -225,6 +154,16 @@ export class AgendaComponent {
 
     console.log(this.Formulario.value);
 
+    this.Formulario.value.fecha_inicial = this.Formulario.value.fecha_inicial.toISOString().replace(
+      /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):.*/,
+      '$1-$2-$3 $4:$5'
+    );
+
+    this.Formulario.value.fecha_final = this.Formulario.value.fecha_final.toISOString().replace(
+      /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):.*/,
+      '$1-$2-$3 $4:$5'
+    );
+
     this.service.post('agendas', this.Formulario.value).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
@@ -242,7 +181,50 @@ export class AgendaComponent {
       };
 
     });
+  }
 
+  // EDITAR UNA FOCKING AGENDA NUEVA ALV
+  update() {
+    this.disableU = true;
+    console.log(this.Formulario2.value);
+  
+    // Asegúrate de concatenar correctamente la URL de la API
+    const id = this.Formulario2.controls['id'].value;
+    this.service.put('agendas/' + id, this.Formulario2.value).subscribe((dato: any) => {
+  
+      if (dato.estatus == true) {
+        this.message.add({ severity: 'success', summary: 'Éxito!', detail: 'Actualizado con éxito' });
+        this.visibleE = false; // Corrige la variable para cerrar el diálogo
+        setTimeout(() => {
+          location.reload();
+          this.disableU = false;
+        }, 750);
+      } else {
+        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el registro' });
+        this.visibleE = false;
+        this.disableU = false;
+      }
+    });
+  }
+  
+
+  // METODO PARA BORRAR PERRO
+  delete() {
+    this.disableD = true;
+
+    this.service.delete('agendas/' + this.IDd).subscribe((dato: any) => {
+
+      if (dato.estatus == true) {
+        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Elimando con exito' });
+        setTimeout(() => {
+          location.reload();
+          this.disableD = false;
+        }, 750);
+      } else {
+        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el registro' });
+        this.disableD = false;
+      }
+    });
   }
 
   campoValido(campo: string) {
