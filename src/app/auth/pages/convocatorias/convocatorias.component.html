@@ -9,14 +9,13 @@
 
 <p-toast position="top-center"></p-toast>
 <div class="card">
-    <p-table #dt [value]="calls" [loading]="loading" [rows]="10" [paginator]="true" [(selection)]="selectedCalls" dataKey="id" currentPageReportTemplate="Mostrando {first} hasta {last} de {totalRecords} convocatorias" [showCurrentPageReport]="true" [rowHover]="true">
+    <p-table #dt [value]="calls" [loading]="loading" [(selection)]="selectedCalls" dataKey="id" currentPageReportTemplate="Mostrando {first} hasta {last} de {totalRecords} convocatorias" [rowHover]="true">
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
                 <h5 class="m-0">Lista de Convocatorias</h5>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <!-- <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar convocatoria..." /> -->
-                    <input pInputText type="text" placeholder="Buscar convocatoria..." />
+                    <input pInputText type="text" (input)="filterCalls($event)" placeholder="Buscar convocatoria..." />
                 </span>
             </div>
         </ng-template>
@@ -53,9 +52,8 @@
                 <td>{{ convocatoria.costo | currency }}</td>
 
                 <td style="width:10rem">
-                    <button (click)="editCall(convocatoria)" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" style="right:10px"></button>
-                    <button (click)="deleteCall(convocatoria.id)" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
-
+                    <button (click)="editCall(convocatoria)" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-5" style="right:10px"></button>
+                    <button (click)="deleteCall(convocatoria.id)" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"></button>
                 </td>
             </tr>
         </ng-template>
@@ -70,7 +68,7 @@
     </p-table>
 </div>
 
-<p-dialog [(visible)]="dialogVisible" [modal]="true" [responsive]="true" [style]="{width: '800px', height: 'auto'}" [header]="dialogHeader">
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [responsive]="true" [style]="{width: '800px', height: '900px'}" [header]="dialogHeader">
     <form [formGroup]="callForm" (ngSubmit)="saveCall()">
         <div class="p-fluid">
             <div class="p-field">
@@ -81,7 +79,7 @@
 
             <div class="p-field">
                 <label for="reglas">Reglas</label>
-                <textarea id="reglas" pInputTextarea formControlName="reglas"></textarea>
+                <textarea rows="10" id="reglas" pInputTextarea formControlName="reglas"></textarea>
                 <small *ngIf="callForm.get('reglas')?.invalid && callForm.get('reglas')?.touched" class="text-danger">Reglas son requeridas.</small>
             </div>
 
@@ -97,10 +95,13 @@
                 <small *ngIf="callForm.get('costo')?.invalid && callForm.get('costo')?.touched" class="text-danger">Costo es requerido y debe ser mayor o igual a 0.</small>
             </div>
         </div>
-
-        <p-footer>
-            <button pButton type="submit" label="Guardar" icon="pi pi-check" [disabled]="callForm.invalid"></button>
-            <button pButton type="button" label="Cancelar" icon="pi pi-times" (click)="dialogVisible = false" class="p-button-text"></button>
-        </p-footer>
+        <div class="dialog-footer">
+            <p-button icon="pi pi-times" (click)="dialogVisible = false" label="Cancelar" styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-check" [disabled]="callForm.invalid" type="submit" label="Aceptar" styleClass="p-button-text"></p-button>
+        </div>
+        <!-- <ng-template pTemplate="footer">
+            <p-button icon="pi pi-times" (click)="dialogVisible = false" label="Cancelar" styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-check" [disabled]="callForm.invalid" type="submit" label="Aceptar" styleClass="p-button-text"></p-button>
+        </ng-template> -->
     </form>
 </p-dialog>

@@ -15,6 +15,7 @@ export class RegistroConvocatoriasComponent {
   callForm: FormGroup;
   editingCallId: string | null = null;
   selectedCalls: any[] = []; 
+  globalFilterValue: string = '';
   
 
   constructor(private service: ServicioService, private fb: FormBuilder) {
@@ -104,5 +105,8 @@ export class RegistroConvocatoriasComponent {
 
   loadLazyCalls(event: any) {
     this.loadCalls();
+  }
+  applyGlobalFilter(event: any, dt: any) {
+    dt.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 }
