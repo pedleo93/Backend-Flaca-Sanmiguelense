@@ -25,8 +25,8 @@ import { AgendaComponent } from './pages/agenda/agenda.component';
 import { PatrocinadoresComponent } from './pages/patrocinadores/patrocinadores.component';
 import { ConvocatoriasComponent } from './pages/convocatorias/convocatorias.component';
 import { RegistroConvocatoriasComponent } from './pages/registro-convocatorias/registro-convocatorias.component';
-
-import { CalendarModule } from 'primeng/calendar';
+import { CalendarModule } from 'primeng/calendar'
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 @NgModule({
   declarations: [
@@ -59,7 +59,8 @@ import { CalendarModule } from 'primeng/calendar';
     InputTextareaModule,
     PanelModule,
     NavComponent,
-    CalendarModule
+    CalendarModule,
+    ToggleButtonModule
   ]
 })
 export class AuthModule { }
