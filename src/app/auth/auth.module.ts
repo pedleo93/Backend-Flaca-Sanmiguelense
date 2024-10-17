@@ -61,7 +61,6 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
     NavComponent,
     CalendarModule,
     ToggleButtonModule
-    
   ]
 })
 export class AuthModule { }
