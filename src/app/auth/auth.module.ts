@@ -26,6 +26,8 @@ import { PatrocinadoresComponent } from './pages/patrocinadores/patrocinadores.c
 import { ConvocatoriasComponent } from './pages/convocatorias/convocatorias.component';
 import { RegistroConvocatoriasComponent } from './pages/registro-convocatorias/registro-convocatorias.component';
 
+import { CalendarModule } from 'primeng/calendar';
+
 @NgModule({
   declarations: [
     LoginComponent,
@@ -56,7 +58,8 @@ import { RegistroConvocatoriasComponent } from './pages/registro-convocatorias/r
     FileUploadModule,
     InputTextareaModule,
     PanelModule,
-    NavComponent
+    NavComponent,
+    CalendarModule
   ]
 })
 export class AuthModule { }
