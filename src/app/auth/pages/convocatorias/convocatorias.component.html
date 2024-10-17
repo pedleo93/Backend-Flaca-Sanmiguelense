@@ -9,7 +9,7 @@
 
 <p-toast position="top-center"></p-toast>
 <div class="card">
-    <p-table #dt [value]="calls" [loading]="loading" [(selection)]="selectedCalls" dataKey="id" currentPageReportTemplate="Mostrando {first} hasta {last} de {totalRecords} convocatorias" [rowHover]="true">
+    <p-table #dt [value]="filteredCalls" [loading]="loading" [(selection)]="selectedCalls" dataKey="id" [rowHover]="true">
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
                 <h5 class="m-0">Lista de Convocatorias</h5>
@@ -74,25 +74,25 @@
             <div class="p-field">
                 <label for="nombre">Nombre</label>
                 <input id="nombre" type="text" pInputText formControlName="nombre" />
-                <small *ngIf="callForm.get('nombre')?.invalid && callForm.get('nombre')?.touched" class="text-danger">Nombre es requerido.</small>
+                <small style="font-size:10px; color:red;" *ngIf="callForm.get('nombre')?.invalid && callForm.get('nombre')?.touched" class="text-danger">Nombre es requerido.</small>
             </div>
 
             <div class="p-field">
                 <label for="reglas">Reglas</label>
                 <textarea rows="10" id="reglas" pInputTextarea formControlName="reglas"></textarea>
-                <small *ngIf="callForm.get('reglas')?.invalid && callForm.get('reglas')?.touched" class="text-danger">Reglas son requeridas.</small>
+                <small style="font-size:10px; color:red;" *ngIf="callForm.get('reglas')?.invalid && callForm.get('reglas')?.touched" class="text-danger">Reglas son requeridas.</small>
             </div>
 
             <div class="p-field">
                 <label for="fechaCierre">Fecha y Hora de Cierre:</label>
                 <p-calendar formControlName="fecha_cierre" [showTime]="true" hourFormat="12" [inline]="true" placeholder="Selecciona la fecha y hora"></p-calendar>
-                <small *ngIf="fieldInvalid('fecha_cierre')" class="text-danger">Fecha y Hora son requeridas.</small>
+                <small style="font-size:10px; color:red;" *ngIf="fieldInvalid('fecha_cierre')" class="text-danger">Fecha y Hora son requeridas.</small>
             </div>
 
             <div class="p-field">
                 <label for="costo">Costo</label>
                 <input id="costo" type="number" pInputText formControlName="costo" />
-                <small *ngIf="callForm.get('costo')?.invalid && callForm.get('costo')?.touched" class="text-danger">Costo es requerido y debe ser mayor o igual a 0.</small>
+                <small style="font-size:10px; color:red;" *ngIf="callForm.get('costo')?.invalid && callForm.get('costo')?.touched" class="text-danger">Costo es requerido y debe ser mayor o igual a 0.</small>
             </div>
         </div>
         <div class="dialog-footer">

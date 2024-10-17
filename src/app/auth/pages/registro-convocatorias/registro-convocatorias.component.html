@@ -73,13 +73,13 @@
             <div class="p-field">
                 <label for="participantes">Participantes</label>
                 <input id="participantes" type="text" pInputText formControlName="participantes" />
-                <small *ngIf="callForm.get('participantes')?.invalid && callForm.get('participantes')?.touched" class="text-danger">Participantes son requeridos.</small>
+                <small style="font-size:10px; color:red;" *ngIf="callForm.get('participantes')?.invalid && callForm.get('participantes')?.touched" class="text-danger">Participantes son requeridos.</small>
             </div>
 
             <div class="p-field">
                 <label for="correo">Correo</label>
                 <input id="correo" type="email" pInputText formControlName="correo" />
-                <small *ngIf="callForm.get('correo')?.invalid && callForm.get('correo')?.touched" class="text-danger">Correo es requerido.</small>
+                <small style="font-size:10px; color:red;" *ngIf="callForm.get('correo')?.invalid && callForm.get('correo')?.touched" class="text-danger">Correo es requerido.</small>
             </div>
 
             <div class="p-field">
