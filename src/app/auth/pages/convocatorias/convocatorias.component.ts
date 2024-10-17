@@ -16,6 +16,8 @@ export class ConvocatoriasComponent {
   editing: boolean = false;
   selectedCall: any = null;
   selectedCalls: any[] = [];
+  searchQuery: string = '';
+  filteredCalls: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -38,11 +40,21 @@ export class ConvocatoriasComponent {
     this.loading = true;
     this.service.get('convocatorias').subscribe((data: any) => {
       this.calls = data;
+      this.filteredCalls = [...this.calls]; 
       this.loading = false;
     }, error => {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading calls' });
       this.loading = false;
     });
+  }
+
+
+  filterCalls(event: any) {
+    const query = event.target.value.trim().toLowerCase();
+    this.filteredCalls = this.calls.filter(call =>
+      call.nombre.toLowerCase().includes(query) ||
+      call.reglas.toLowerCase().includes(query)
+    );
   }
 
   showDialogAdd() {
@@ -117,7 +129,7 @@ export class ConvocatoriasComponent {
   }
 
   fieldInvalid(field: string) {
-    return this.callForm.controls[field]?.errors && this.callForm.controls[field]?.touched; // Uso de encadenamiento opcional
+    return this.callForm.controls[field]?.errors && this.callForm.controls[field]?.touched;
   }
 
   private formatDate(date: Date): string {

@@ -1,5 +1,4 @@
 <app-nav></app-nav>
-
 <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
         <button pButton pRipple label="Agregar Registro" icon="pi pi-plus" class="p-button-success mr-2" (click)="showDialogAdd()" style="right:10px"></button>
@@ -9,14 +8,15 @@
 
 <p-toast position="top-center"></p-toast>
 <div class="card">
-    <p-table #dt [value]="calls" [loading]="loading" [rows]="10" [paginator]="true" [(selection)]="selectedCalls" dataKey="id" currentPageReportTemplate="Mostrando {first} hasta {last} de {totalRecords} registros" [showCurrentPageReport]="true" [rowHover]="true">
+    <p-table #dt [value]="calls" [loading]="loading" [(selection)]="selectedCalls" dataKey="id" [globalFilterFields]="['participantes', 'correo', 'pagado', 'verificado']" currentPageReportTemplate="Mostrando {first} hasta {last} de {totalRecords} registros"
+        [showCurrentPageReport]="true" [rowHover]="true">
+
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
                 <h5 class="m-0">Lista de Registros</h5>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <!-- <input pInputText type="text" placeholder="Buscar registro..." (input)="dt.filterGlobal($event.target.value, 'contains')" /> -->
-                    <input pInputText type="text" placeholder="Buscar registro..." />
+                    <input pInputText type="text" placeholder="Buscar registro..." (input)="applyGlobalFilter($event, dt)" />
                 </span>
             </div>
         </ng-template>
@@ -52,11 +52,9 @@
                 <td>{{ registro.pagado ? 'Sí' : 'No' }}</td>
                 <td>{{ registro.verificado ? 'Sí' : 'No' }}</td>
                 <td>
-                    <button (click)="editCall(registro)" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" style="right:10px"></button>
-                    <button (click)="deleteCall(registro.id)" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
-
+                    <button (click)="editCall(registro)" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
+                    <button (click)="deleteCall(registro.id)" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"></button>
                 </td>
-
             </tr>
         </ng-template>
 
@@ -69,7 +67,6 @@
         </ng-template>
     </p-table>
 </div>
-
 <p-dialog [(visible)]="dialogVisible" [modal]="true" [responsive]="true" [style]="{width: '800px', height: 'auto'}" [header]="dialogHeader">
     <form [formGroup]="callForm" (ngSubmit)="saveCall()">
         <div class="p-fluid">
@@ -96,9 +93,9 @@
             </div>
         </div>
 
-        <p-footer>
-            <button pButton type="submit" label="Guardar" icon="pi pi-check" [disabled]="callForm.invalid"></button>
-            <button pButton type="button" label="Cancelar" icon="pi pi-times" (click)="dialogVisible = false" class="p-button-text"></button>
-        </p-footer>
+        <div class="dialog-footer">
+            <p-button icon="pi pi-times" (click)="dialogVisible = false" label="Cancelar" styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-check" [disabled]="callForm.invalid" type="submit" label="Aceptar" styleClass="p-button-text"></p-button>
+        </div>
     </form>
 </p-dialog>
