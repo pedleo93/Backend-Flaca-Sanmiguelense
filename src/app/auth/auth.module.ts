@@ -27,6 +27,8 @@ import { ConvocatoriasComponent } from './pages/convocatorias/convocatorias.comp
 import { RegistroConvocatoriasComponent } from './pages/registro-convocatorias/registro-convocatorias.component';
 import { CalendarModule } from 'primeng/calendar'
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { DatePipe } from '@angular/common';
+
 
 @NgModule({
   declarations: [
@@ -60,7 +62,8 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
     PanelModule,
     NavComponent,
     CalendarModule,
-    ToggleButtonModule
+    ToggleButtonModule,
+    DatePipe
   ]
 })
 export class AuthModule { }

@@ -4,17 +4,19 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { TableLazyLoadEvent } from 'primeng/table';
 import { ServicioService } from 'src/app/provider/servicio.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-agenda',
   templateUrl: './agenda.component.html',
   styleUrls: ['./agenda.component.css'],
-  providers: [MessageService]
+  providers: [MessageService, DatePipe]
 })
 
 export class AgendaComponent {
 
   products: any = [];
+  filteredQuestions: any[] = [...this.products];
   productDialog: boolean = false;
   product: any;
   selectedProducts: any = [];
@@ -46,21 +48,19 @@ export class AgendaComponent {
   });
 
   Formulario2: FormGroup = this.fb.group({
-    id: [null], // Agrega el campo id aquí
+    id: [null],
     lugar: [, Validators.required],
     evento: [, Validators.required],
     descripcion: [, Validators.required],
     fecha_inicial: [, Validators.required],
     fecha_final: [, Validators.required],
   });
-  
+  eventTable: any;
 
 
-  constructor(public router: Router, private fb: FormBuilder, public service: ServicioService, private message: MessageService) { }
+  constructor(public router: Router, private fb: FormBuilder, public service: ServicioService, private message: MessageService, private datePipe: DatePipe) { }
 
-  ngOnInit() {   
-
-  }
+  ngOnInit() { this.getInfo() }
 
 
   showDialog() {
@@ -68,10 +68,9 @@ export class AgendaComponent {
   }
   showDVDialog() {
     this.visibleVar = true;
-
     console.log(this.selectedProducts);
-
   }
+  
   showDDialog(id: any) {
     this.visibleDel = true;
     this.IDd = id;
@@ -83,7 +82,7 @@ export class AgendaComponent {
     console.log(this.selectedProducts);
 
     this.selectedProducts.forEach((product: any) => {
-      this.service.delete('productos/delete/' + product.id).subscribe((dato: any) => {
+      this.service.delete('agendas' + product.id).subscribe((dato: any) => {
       });
 
     });
@@ -94,24 +93,6 @@ export class AgendaComponent {
     }, 3000);
     
   }
-
-  getOne(id: any) {
-    this.visibleE = true;
-    this.service.get('agendas/' + id).subscribe((dato: any) => {    
-      if (dato.data) {
-        this.Formulario2.patchValue({
-          id: dato.data.id, // Parchamos el valor del id aquí también
-          lugar: dato.data.lugar,
-          evento: dato.data.evento,
-          descripcion: dato.data.descripcion,
-          fecha_inicial: dato.data.fecha_inicial,
-          fecha_final: dato.data.fecha_final
-        });
-      }
-    });
-  }
-  
-  
 
   findIndexById(id: string): number {
     let index = -1;
@@ -125,21 +106,35 @@ export class AgendaComponent {
   }
 
   filterSearch(event: any) {
-    console.log(this.selectedProducts);
-    return event.target.value;
-    console.log(event.target.value);
+    const searchTerm = event.target.value.toLowerCase();
+
+    if (searchTerm) {
+      this.filteredQuestions = this.products.filter((question: any) =>
+        question.lugar        .toLowerCase().includes(searchTerm) ||
+        question.descripcion  .toLowerCase().includes(searchTerm) ||
+        question.evento       .toLowerCase().includes(searchTerm) ||
+        question.fecha_inicial.toLowerCase().includes(searchTerm) ||
+        question.fecha_final  .toLowerCase().includes(searchTerm)
+      );
+      console.log(this.filterSearch);
+      
+    } else {
+      this.filteredQuestions = [...this.products];
+    }
   }
 
 
 // METODO GET MI PERRO
-  getInfo(event: TableLazyLoadEvent) {
+  getInfo() {    
     this.loading = true;
+
     this.service.get('agendas').subscribe((dato: any) => {
       console.log(dato);
 
       if (dato) {
         this.products = dato;
         this.total = dato.count;
+        this.filteredQuestions = [...this.products];
         this.loading = false;
 
       } else {
@@ -152,17 +147,15 @@ export class AgendaComponent {
   add() {
     this.disableA = true
 
-    console.log(this.Formulario.value);
+    let formValue = { ...this.Formulario.value };
 
-    this.Formulario.value.fecha_inicial = this.Formulario.value.fecha_inicial.toISOString().replace(
-      /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):.*/,
-      '$1-$2-$3 $4:$5'
-    );
-
-    this.Formulario.value.fecha_final = this.Formulario.value.fecha_final.toISOString().replace(
-      /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):.*/,
-      '$1-$2-$3 $4:$5'
-    );
+    if (formValue.fecha_inicial) {
+      formValue.fecha_inicial = this.formatDateToCustom(formValue.fecha_inicial);
+    }
+  
+    if (formValue.fecha_final) {
+      formValue.fecha_final = this.formatDateToCustom(formValue.fecha_final);
+    }
 
     this.service.post('agendas', this.Formulario.value).subscribe((dato: any) => {
 
@@ -170,7 +163,7 @@ export class AgendaComponent {
         this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Agregado con exito' });
         this.visible = false;
         setTimeout(() => {
-          location.reload();
+          this.getInfo();
           this.disableA = false;
         }, 750);      }
       else {
@@ -186,17 +179,27 @@ export class AgendaComponent {
   // EDITAR UNA FOCKING AGENDA NUEVA ALV
   update() {
     this.disableU = true;
-    console.log(this.Formulario2.value);
   
-    // Asegúrate de concatenar correctamente la URL de la API
+    let formValue = { ...this.Formulario2.value };
+
+    if (formValue.fecha_inicial) {
+      formValue.fecha_inicial = this.formatDateToCustom(formValue.fecha_inicial);
+    }
+  
+    if (formValue.fecha_final) {
+      formValue.fecha_final = this.formatDateToCustom(formValue.fecha_final);
+    }
+  
+    console.log(formValue);
+  
     const id = this.Formulario2.controls['id'].value;
-    this.service.put('agendas/' + id, this.Formulario2.value).subscribe((dato: any) => {
   
+    this.service.put('agendas/' + id, formValue).subscribe((dato: any) => {
       if (dato.estatus == true) {
         this.message.add({ severity: 'success', summary: 'Éxito!', detail: 'Actualizado con éxito' });
-        this.visibleE = false; // Corrige la variable para cerrar el diálogo
+        this.visibleE = false;
         setTimeout(() => {
-          location.reload();
+          this.getInfo();
           this.disableU = false;
         }, 750);
       } else {
@@ -206,23 +209,56 @@ export class AgendaComponent {
       }
     });
   }
+
+  formatDateToCustom(date: string): string {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);         
+    const hours = ('0' + d.getHours()).slice(-2);      
+    const minutes = ('0' + d.getMinutes()).slice(-2);  
+  
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  }
+  
   
 
   // METODO PARA BORRAR PERRO
   delete() {
     this.disableD = true;
-
+  
     this.service.delete('agendas/' + this.IDd).subscribe((dato: any) => {
-
-      if (dato.estatus == true) {
-        this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Elimando con exito' });
+      if (dato.estatus === true) {
+        this.message.add({ severity: 'success', summary: 'Éxito!', detail: 'Eliminado con éxito' });
         setTimeout(() => {
-          location.reload();
+          this.getInfo();
           this.disableD = false;
+          this.visibleDel = false;
         }, 750);
       } else {
         this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el registro' });
         this.disableD = false;
+        this.visibleDel = false;
+      }
+    });
+  }
+  
+
+  // OBETENER UNO
+  getOne(id: any) {
+    this.visibleE = true;
+    this.service.get('agendas/' + id).subscribe((dato: any) => {    
+      if (dato.data) {
+        this.Formulario2.patchValue({
+          id: dato.data.id,
+          lugar: dato.data.lugar,
+          evento: dato.data.evento,
+          descripcion: dato.data.descripcion,
+          fecha_inicial: new Date (dato.data.fecha_inicial),
+          fecha_final:new Date (dato.data.fecha_final)
+        });
+        console.log(this.Formulario2.value);
+        
       }
     });
   }
