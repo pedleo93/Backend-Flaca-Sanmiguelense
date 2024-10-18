@@ -113,12 +113,14 @@ export class ConvocatoriasComponent {
     });
   }
   deleteCall(id: string) {
-    this.service.delete(`convocatorias/${id}`).subscribe(() => {
-      this.loadCalls();
-      this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Convocatoria eliminada correctamente' });
-    }, error => {
-      console.log('Error en DELETE:', error);  
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al eliminar la convocatoria' });
+    this.service.delete(`convocatorias/${id}`).subscribe({
+      next: () => {
+        this.loadCalls(); 
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Convocatoria eliminada correctamente' });
+      },
+      error: () => {
+        this.messageService.add({ severity: 'warn', summary: 'Advertencia', detail: 'No se puede eliminar la convocatoria, ya que tiene registros asociados' });
+      }
     });
   }
  
@@ -141,22 +143,42 @@ export class ConvocatoriasComponent {
   deleteSelected() {
     this.disableDeleteMany = true;
   
-    const deleteRequests = this.selectedCalls.map((convocatoria: any) => 
+    const deleteRequests = this.selectedCalls.map((convocatoria: any) =>
       this.service.delete('convocatorias/' + convocatoria.id).toPromise()
     );
   
-    Promise.all(deleteRequests)
-      .then(() => {
-        this.messageService.add({ severity: 'success', summary: 'Éxito!', detail: 'Convocatorias eliminadas correctamente' });
-        this.loadCalls(); 
-      })
-      .catch(() => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al eliminar las convocatorias' });
+    Promise.allSettled(deleteRequests)
+      .then((results) => {
+        let successCount = 0;
+        let errorCount = 0;
+  
+        results.forEach((result, index) => {
+          if (result.status === 'fulfilled') {
+            successCount++;
+          } else {
+            errorCount++;
+            this.messageService.add({
+              severity: 'warn',
+              summary: 'Advertencia',
+              detail: `No se puede eliminar la convocatoria ${this.selectedCalls[index].nombre}, ya que tiene registros asociados`
+            });
+          }
+        });
+  
+        if (successCount > 0) {
+          this.messageService.add({ severity: 'success', summary: 'Éxito', detail: `${successCount} convocatorias eliminadas correctamente` });
+        }
+  
+        if (errorCount > 0) {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: `${errorCount} convocatorias no se pudieron eliminar` });
+        }
+  
+        this.loadCalls(); // Actualizar la lista
       })
       .finally(() => {
         this.disableDeleteMany = false;
         this.visibleDeleteMany = false;
-        this.selectedCalls = []; 
+        this.selectedCalls = [];
       });
   }
 
