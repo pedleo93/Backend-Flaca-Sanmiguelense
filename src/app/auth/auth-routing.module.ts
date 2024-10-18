@@ -21,7 +21,7 @@ const routes: Routes = [
       {path: 'permisos', component: GestorPermisosComponent, canActivate: [AuthGuard]},
 
       {path: 'agenda', component: AgendaComponent, canActivate: [AuthGuard]},
-      {path: 'galeria', component: GaleriaComponent, canActivate: [AuthGuard]},
+      // {path: 'galeria', component: GaleriaComponent, canActivate: [AuthGuard]},
       {path: 'patrocinadores', component: PatrocinadoresComponent, canActivate: [AuthGuard]},
       {path: 'faq', component: FaqComponent, canActivate: [AuthGuard]},
       {path: 'convocatorias', component: ConvocatoriasComponent, canActivate: [AuthGuard]},
