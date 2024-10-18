@@ -104,3 +104,34 @@
         </ng-template> -->
     </form>
 </p-dialog>
+
+<p-dialog header="Confirmación" [(visible)]="visibleDelete" [modal]="true" [closable]="false">
+    <div>
+        <p>¿Está seguro de que desea eliminar esta convocatoria?</p>
+        <p-footer>
+            <button type="button" pButton label="Cancelar" (click)="cancelDelete()" icon="pi pi-times"></button>
+            <button type="button" pButton label="Eliminar" (click)="confirmDelete()" icon="pi pi-check" styleClass="p-button-danger"></button>
+        </p-footer>
+    </div>
+</p-dialog>
+
+
+
+
+<p-dialog [(visible)]="visibleDeleteMany" [modal]="true" header="Confirmación de Eliminación" (onHide)="selectedCalls = []" [closable]="false" [style]="{ width: '30vw' }">
+
+    <div class="p-fluid">
+        <p>¿Estás seguro de que deseas eliminar las convocatorias seleccionadas?</p>
+
+
+        <p-footer>
+            <div class="flex justify-content-end">
+
+                <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDeleteMany = false" styleClass="p-button-text"></p-button>
+
+
+                <p-button label="Eliminar" icon="pi pi-check" [disabled]="disableDeleteMany" (click)="deleteSelected()" styleClass="p-button-danger"></p-button>
+            </div>
+        </p-footer>
+    </div>
+</p-dialog>

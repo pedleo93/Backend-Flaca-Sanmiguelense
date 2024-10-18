@@ -18,6 +18,15 @@ export class ConvocatoriasComponent {
   selectedCalls: any[] = [];
   searchQuery: string = '';
   filteredCalls: any[] = [];
+  disableDeleteMany: boolean = false;
+  selectedQuestions: any;
+  message: any;
+
+  visibleAdd: boolean = false;
+  visibleUpdate: boolean = false;
+  visibleDelete: boolean = false;
+  idDelete: string = '';
+  visibleDeleteMany: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -103,25 +112,54 @@ export class ConvocatoriasComponent {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al actualizar la convocatoria' });
     });
   }
-
   deleteCall(id: string) {
     this.service.delete(`convocatorias/${id}`).subscribe(() => {
       this.loadCalls();
       this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Convocatoria eliminada correctamente' });
     }, error => {
+      console.log('Error en DELETE:', error);  
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al eliminar la convocatoria' });
     });
   }
+ 
   showDialogDelMany() {
-    if (this.selectedCalls.length) {
-      this.selectedCalls.forEach(call => {
-        this.deleteCall(call.id); 
-      });
-      this.selectedCalls = []; 
-    }
+    this.visibleDeleteMany = true;
+    console.log(this.selectedCalls);
   }
 
+  confirmDeleteSelected() {
+    this.message.clear(); 
+    this.message.add({
+      key: 'confirmDelete',
+      severity: 'warn',
+      summary: 'Confirmar',
+      detail: '¿Estás seguro de que deseas eliminar los registros seleccionados?',
+      sticky: true
+    });
+  }
+
+  deleteSelected() {
+    this.disableDeleteMany = true;
   
+    const deleteRequests = this.selectedCalls.map((convocatoria: any) => 
+      this.service.delete('convocatorias/' + convocatoria.id).toPromise()
+    );
+  
+    Promise.all(deleteRequests)
+      .then(() => {
+        this.messageService.add({ severity: 'success', summary: 'Éxito!', detail: 'Convocatorias eliminadas correctamente' });
+        this.loadCalls(); 
+      })
+      .catch(() => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al eliminar las convocatorias' });
+      })
+      .finally(() => {
+        this.disableDeleteMany = false;
+        this.visibleDeleteMany = false;
+        this.selectedCalls = []; 
+      });
+  }
+
   private prepareFormData() {
     const formData = this.callForm.value;
     formData.fecha_cierre = this.formatDate(formData.fecha_cierre);
@@ -144,5 +182,42 @@ export class ConvocatoriasComponent {
 
   get dialogHeader() {
     return this.editing ? 'EDITAR CONVOCATORIA' : 'AGREGAR CONVOCATORIA';
+  }
+
+  getAll() {
+    this.loading = true;
+    this.service.get('convocatorias').subscribe((info: any) => {
+      if (info) {
+        this.calls = info;
+        this.loading = false;
+      } else {
+        this.message.add({ severity: 'warn', summary: 'Ups', detail: 'Tabla vacía' });
+        this.loading = false;
+      }
+    });
+  }
+
+  showDialogDelete(id: string) {
+    this.visibleDelete = true;
+    this.idDelete = id; 
+  }
+
+  confirmDelete() {
+    this.service.delete('convocatorias/' + this.idDelete).subscribe((info: any) => {
+      if (info.estatus == true) {
+        this.message.add({ severity: 'success', summary: 'Éxito!', detail: 'Eliminado con éxito' });
+        this.getAll();
+      } else {
+        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar la convocatoria' });
+      }
+      this.visibleDelete = false; 
+    }, error => {
+      this.message.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al eliminar la convocatoria' });
+      this.visibleDelete = false;
+    });
+  }
+
+  cancelDelete() {
+    this.visibleDelete = false; 
   }
 }
