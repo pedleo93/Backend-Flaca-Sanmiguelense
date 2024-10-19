@@ -1,5 +1,10 @@
-<p-menubar [model]="items">
+<p-menubar [model]="items" [style]="{borderRadius: '0px', margin: '0px'}">
     <ng-template pTemplate="start">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKDhEmIo0nhnHnYrxbHQRNk2gFE7ubyvRCWQ&s" height="40" class="mr-2">
+        <img [style]="{filter: 'invert()'}" src="../../assets/Logo_vertical_flacasanmiguelense_blanco.svg" height="70">
+    </ng-template>
+    <ng-template pTemplate="end">
+        <a routerLink="/login">
+            <i class="pi pi-sign-out" style="font-size: 25px"></i>
+        </a>
     </ng-template>
 </p-menubar>

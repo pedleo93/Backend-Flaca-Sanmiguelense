@@ -12,10 +12,11 @@ import { ServicioService } from 'src/app/provider/servicio.service';
   providers: [MessageService]
 })
 export class PatrocinadoresComponent {
-  products: any = [];
+  patrocinadores: any = [];
+  filteredPatrocinadores: any[] = [...this.patrocinadores];
   productDialog: boolean = false;
-  product: any;
-  selectedProducts: any = [];
+  patrocinador: any;
+  selectedPatrocinadores: any = [];
   submitted: boolean = false;
   loading = false;
   total = 0;
@@ -41,7 +42,7 @@ export class PatrocinadoresComponent {
     imagen_url: [, Validators.required],
     link: [, Validators.required],
     posicion: [, Validators.required],
-    premium: [, ]
+    premium: [,]
   });
 
   Formulario2: FormGroup = this.fb.group({
@@ -51,14 +52,14 @@ export class PatrocinadoresComponent {
     imagen_url: [, Validators.required],
     link: [, Validators.required],
     posicion: [, Validators.required],
-    premium: [, ]
+    premium: [,]
   });
 
 
   constructor(public router: Router, private fb: FormBuilder, public service: ServicioService, private message: MessageService) { }
 
   ngOnInit() {
-
+    this.getAll()
   }
 
 
@@ -68,7 +69,7 @@ export class PatrocinadoresComponent {
   showDVDialog() {
     this.visibleVar = true;
 
-    console.log(this.selectedProducts);
+    console.log(this.selectedPatrocinadores);
 
   }
   showDDialog(id: any) {
@@ -79,19 +80,35 @@ export class PatrocinadoresComponent {
   deleteSelected() {
     this.disableDV = true;
 
-    console.log(this.selectedProducts);
+    const deletePromises = this.selectedPatrocinadores.map((patrocinador: any) => {
+      return this.service.delete('patrocinador/' + patrocinador.id).toPromise();
+    });
 
-    this.selectedProducts.forEach((product: any) => {
-      this.service.delete('productos/delete/' + product.id).subscribe((dato: any) => {
+    Promise.all(deletePromises).then((results: any[]) => {
+      let allSuccess = true;
+
+      results.forEach((info: any) => {
+        if (info.estatus !== true) {
+          allSuccess = false;
+        }
       });
 
-    });
-    this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Eliminados con exito' });
-    setTimeout(() => {
-      location.reload();
-      this.disableDV = false;
-    }, 3000);
+      if (allSuccess) {
+        this.message.add({ severity: 'success', summary: 'Éxito!', detail: 'Eliminados con éxito' });
+        setTimeout(() => {
+          location.reload();
+          this.disableDV = false;
+        }, 1000);
 
+      } else {
+        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron eliminar algunos registros' });
+        this.disableDV = false;
+      }
+
+    }).catch((error) => {
+      this.message.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al eliminar los registros' });
+      this.disableDV = false;
+    });
   }
 
   getOne(id: any) {
@@ -159,7 +176,6 @@ export class PatrocinadoresComponent {
 
   add() {
     this.disableA = true
-
     this.service.post('patrocinador', this.Formulario.value).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
@@ -184,8 +200,8 @@ export class PatrocinadoresComponent {
 
   findIndexById(id: string): number {
     let index = -1;
-    for (let i = 0; i < this.products.length; i++) {
-      if (this.products[i].id === id) {
+    for (let i = 0; i < this.patrocinadores.length; i++) {
+      if (this.patrocinadores[i].id === id) {
         index = i;
         break;
       }
@@ -194,17 +210,26 @@ export class PatrocinadoresComponent {
   }
 
   filterSearch(event: any) {
-    console.log(this.selectedProducts);
-    return event.target.value;
-    console.log(event.target.value);
+    const searchTerm = event.target.value.toLowerCase();
+
+    if (searchTerm) {
+      this.filteredPatrocinadores = this.patrocinadores.filter((patrocinador: any) =>
+        patrocinador.nombre.toLowerCase().includes(searchTerm) ||
+        patrocinador.descripcion.toLowerCase().includes(searchTerm)
+      );
+    } else {
+      this.filteredPatrocinadores = [...this.patrocinadores];
+    }
   }
 
-  getInfo(event: TableLazyLoadEvent) {
+  getAll() {
     this.loading = true;
     this.service.get('patrocinador').subscribe((dato: any) => {
       this.loading = false;
-      if (dato.length > 1) {
-        this.products = dato;
+
+      if (dato.length > 0) {
+        this.filteredPatrocinadores = dato;
+        this.patrocinadores = dato;
         this.total = dato.length;
 
       } else {

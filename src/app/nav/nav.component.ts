@@ -39,12 +39,7 @@ export class NavComponent {
                 label: 'FAQs',
                 replaceUrl: true, 
                 routerLink: '/faq'
-            },
-            {
-                label: 'Salir',
-                replaceUrl: true, 
-                routerLink: '/login'
-            },
+            }
         ];
     }
 }

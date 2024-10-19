@@ -4,7 +4,7 @@
         <button pButton pRipple label="Agregar patrocinador" icon="pi pi-plus" class="p-button-success mr-2" (click)="showDialog()"
             style="right:10px"></button>
         <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDVDialog()"
-            [disabled]="!selectedProducts || !selectedProducts.length"></button>
+            [disabled]="!selectedPatrocinadores || !selectedPatrocinadores.length"></button>
         <!-- <button pButton pRipple label="Ver Permisos" icon="pi pi-star" class="p-button-help ml-2" [routerLink]="['/login/permisos']"  style="left:20px"></button> -->
     </ng-template>
 
@@ -15,17 +15,16 @@
 
 <div class="card">
 
-    <p-table #dt [value]="products" [rows]="5" [paginator]="true" [globalFilterFields]="['nombre', 'descripcion']"
-        [tableStyle]="{ 'min-width': '75rem' }" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id"
-        [lazy]="true" (onLazyLoad)="getInfo($event)" [loading]="loading" [rowHover]="true" [totalRecords]="total"
+    <p-table #dt [value]="filteredPatrocinadores" [rows]="5" [paginator]="true" [globalFilterFields]="['nombre', 'descripcion']"
+        [tableStyle]="{ 'min-width': '75rem' }" [(selection)]="selectedPatrocinadores" [rowHover]="true" dataKey="id"
+        [lazy]="true" (onLazyLoad)="getAll()" [loading]="loading" [rowHover]="true" [totalRecords]="total"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
                 <h5 class="m-0">Administrar Patrocinadores</h5>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="dt.filterGlobal(filterSearch($event), 'contains')"
-                        placeholder="Search..." />
+                    <input pInputText type="text" (input)="filterSearch($event)" placeholder="Search..." />
                 </span>
             </div>
         </ng-template>
@@ -71,7 +70,7 @@
             <div>No hay ningún patrocinador</div>
         </ng-template>
         <ng-template pTemplate="summary">
-            <div class="flex align-items-center justify-content-between">{{ products ? products.length : 0 }}
+            <div class="flex align-items-center justify-content-between">{{ filteredPatrocinadores ? filteredPatrocinadores.length : 0 }}
                 patrocinadores en total</div>
         </ng-template>
     </p-table>
