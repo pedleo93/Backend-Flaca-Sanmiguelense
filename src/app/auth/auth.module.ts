@@ -25,6 +25,8 @@ import { AgendaComponent } from './pages/agenda/agenda.component';
 import { PatrocinadoresComponent } from './pages/patrocinadores/patrocinadores.component';
 import { ConvocatoriasComponent } from './pages/convocatorias/convocatorias.component';
 import { RegistroConvocatoriasComponent } from './pages/registro-convocatorias/registro-convocatorias.component';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,9 @@ import { RegistroConvocatoriasComponent } from './pages/registro-convocatorias/r
     FileUploadModule,
     InputTextareaModule,
     PanelModule,
-    NavComponent
+    NavComponent,
+    InputNumberModule,
+    CheckboxModule
   ]
 })
 export class AuthModule { }

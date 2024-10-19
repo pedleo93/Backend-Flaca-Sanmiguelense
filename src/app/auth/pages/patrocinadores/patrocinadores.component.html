@@ -1,1 +1,229 @@
 <app-nav></app-nav>
+<p-toolbar styleClass="mb-4 gap-2">
+    <ng-template pTemplate="left">
+        <button pButton pRipple label="Agregar patrocinador" icon="pi pi-plus" class="p-button-success mr-2" (click)="showDialog()"
+            style="right:10px"></button>
+        <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDVDialog()"
+            [disabled]="!selectedProducts || !selectedProducts.length"></button>
+        <!-- <button pButton pRipple label="Ver Permisos" icon="pi pi-star" class="p-button-help ml-2" [routerLink]="['/login/permisos']"  style="left:20px"></button> -->
+    </ng-template>
+
+</p-toolbar>
+
+
+<p-toast position="top-center"></p-toast>
+
+<div class="card">
+
+    <p-table #dt [value]="products" [rows]="5" [paginator]="true" [globalFilterFields]="['nombre', 'descripcion']"
+        [tableStyle]="{ 'min-width': '75rem' }" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id"
+        [lazy]="true" (onLazyLoad)="getInfo($event)" [loading]="loading" [rowHover]="true" [totalRecords]="total"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h5 class="m-0">Administrar Patrocinadores</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal(filterSearch($event), 'contains')"
+                        placeholder="Search..." />
+                </span>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
+                <th>Posicion</th>
+                <th>Nombre</th>
+                <th>Imagen</th>
+                <th>Descripcion</th>
+                <th>Premium</th>
+                <th>Link</th>
+                <th>Acciones</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                <td><p-tableCheckbox [value]="product"></p-tableCheckbox></td>
+                <td>{{product.posicion}}</td>
+                <td>{{ product.nombre }}</td>
+                <td><img src={{product.imagen_url}} class="shadow-4" height="70" width="70" style="object-fit: cover;" /></td>
+                <td style="width:30rem">{{ product.descripcion}}</td>
+                <td>
+                    <div *ngIf="product.premium"><i class="pi pi-star-fill" style="font-size: 2rem; color: yellow"></i>
+                    </div>
+                    <div *ngIf="!product.premium"><i class="pi pi-star" style="font-size: 2rem; color: gray"></i></div>
+                </td>
+                <td>
+                    <a [href]="product.link" target="b" pButton pRipple icon="pi pi-link"
+                        class="p-button-rounded p-primary mr-2" style="text-decoration: none;"></a>
+                </td>
+                <td>
+                    <button (click)="getOne(product.id)" pButton pRipple icon="pi pi-pencil"
+                        class="p-button-rounded p-button-success mr-2" style="right:10px"></button>
+                    <button (click)="showDDialog(product.id)" pButton pRipple icon="pi pi-trash"
+                        class="p-button-rounded p-button-warning"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage"class="flex align-items-center justify-content-between">
+            <div>No hay ningún patrocinador</div>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">{{ products ? products.length : 0 }}
+                patrocinadores en total</div>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- -------------------------------------------- Formulario Agregar --------------------------------------------------->
+
+<form [formGroup]="Formulario">
+
+    <p-dialog header="Header" [(visible)]="visible" [style]="{ width: '800px', height:'800px' }"
+        class="flex flex-column flex-wrap">
+
+        <ng-template pTemplate="header">
+            <span class="text-xl font-bold">Agregar patrocinador</span>
+        </ng-template>
+
+        <div class="p-fluid">
+
+            <div class="p-field">
+                <label>Nombre</label><br>
+                <input pInputText formControlName="nombre" />
+                <p style="font-size:10px; color:red;" *ngIf="campoValido('nombre')">Ingrese un nombre</p>
+            </div><br>
+
+            <div class="p-field">
+                <label>Descripcion</label><br>
+                <textarea rows="5" cols="28" pInputTextarea formControlName="descripcion"></textarea>
+                <p style="font-size:10px; color:red;" *ngIf="campoValido('descripcion')">Ingrese una descripcion</p>
+            </div><br>
+
+            <div class="p-field">
+                <label>Imagen</label><br>
+                <input pInputText formControlName="imagen_url" />
+                <p style="font-size:10px; color:red;" *ngIf="campoValido('imagen_url')">Ingrese un link de imagen</p>
+            </div><br>
+
+            <div class="p-field">
+                <label>Link Patrocinador</label><br>
+                <input pInputText formControlName="link" />
+                <p style="font-size:10px; color:red;" *ngIf="campoValido('link')">Ingrese un link de patrocinador</p>
+            </div><br>
+
+            <div class="p-field">
+                <label>Posición</label><br>
+                <p-inputNumber pInputNumber formControlName="posicion" />
+                <p style="font-size:10px; color:red;" *ngIf="campoValido('posicion')">Ingrese la posición</p>
+            </div><br>
+
+            <div class="p-field">
+                <label for="premium" [style]="{marginRight: '10px'}">Premium</label>
+                <p-checkbox formControlName="premium" formControlName="premium" inputId="premium" [binary]="true" />
+                <p style="font-size:10px; color:red;" *ngIf="campoValido('premium')">Ingrese el estatus premium</p>
+            </div><br>
+        </div>
+
+        <ng-template pTemplate="footer">
+            <p-button icon="pi pi-times" (click)="visible = false" label="Cancelar"
+                styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-check" [disabled]="!Formulario.valid || disableA" (click)="add()" label="Aceptar"
+                styleClass="p-button-text"></p-button>
+        </ng-template>
+
+    </p-dialog>
+</form>
+<!-- -------------------------------------------- Formulario actualizar ------------------------------------------------- -->
+
+<form [formGroup]="Formulario2">
+
+    <p-dialog header="Header" [(visible)]="visibleE" [style]="{ width: '800px', height:'800px' }"
+        class="flex flex-column flex-wrap">
+
+        <ng-template pTemplate="header">
+            <span class="text-xl font-bold">Actualizar patrocinador</span>
+        </ng-template>
+
+        <div class="p-fluid">
+            <div class="p-field">
+                <label>Nombre</label><br>
+                <input pInputText formControlName="nombre" />
+                <p style="font-size:10px; color:red;" *ngIf="campoValido2('nombre')">Ingrese un nombre</p>
+            </div><br>
+
+            <div class="p-field">
+                <label>Descripcion</label><br>
+                <textarea rows="5" cols="28" pInputTextarea formControlName="descripcion"></textarea>
+                <p style="font-size:10px; color:red;" *ngIf="campoValido2('descripcion')">Ingrese una descripcion</p>
+            </div><br>
+
+            <div class="p-field">
+                <label>Imagen</label><br>
+                <input pInputText formControlName="imagen_url" />
+                <p style="font-size:10px; color:red;" *ngIf="campoValido2('imagen_url')">Ingrese un link de imagen</p>
+            </div><br>
+
+            <div class="p-field">
+                <label>Link Patrocinador</label><br>
+                <input pInputText formControlName="link" />
+                <p style="font-size:10px; color:red;" *ngIf="campoValido2('link')">Ingrese un link de patrocinador</p>
+            </div><br>
+
+            <div class="p-field">
+                <label>Posición</label><br>
+                <p-inputNumber pInputNumber formControlName="posicion" />
+                <p style="font-size:10px; color:red;" *ngIf="campoValido2('posicion')">Ingrese la posición</p>
+            </div><br>
+
+            <div class="p-field">
+                <label for="premium" [style]="{marginRight: '10px'}">Premium</label>
+                <p-checkbox formControlName="premium" formControlName="premium" inputId="premium" [binary]="true" />
+                <p style="font-size:10px; color:red;" *ngIf="campoValido2('premium')">Ingrese el estatus premium</p>
+            </div><br>
+        </div>
+
+        <ng-template pTemplate="footer" [value]="product">
+            <p-button icon="pi pi-times" (click)="visibleE = false" label="Cancel"
+                styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-check" [disabled]="!Formulario2.valid || disableU" (click)="update()" label="Ok"
+                styleClass="p-button-text"></p-button>
+        </ng-template>
+    </p-dialog>
+
+</form>
+<!-- -------------------------------------------- Dialog Eliminar Uno ------------------------------------------------- -->
+
+<p-dialog header="Header" [(visible)]="visibleDel" [style]="{ width: '25vw'}" class="flex flex-column flex-wrap">
+
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold">Eliminar registro</span>
+    </ng-template>
+
+    <p>Estas a punto de eliminar un registro. ¿Quieres continuar?</p>
+
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-times" (click)="visibleDel = false" label="Cancel" styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" [disabled]="disableD" (click)="delete()" label="Ok"
+            styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>
+
+<!-- -------------------------------------------- Dialog Eliminar varios ------------------------------------------------- -->
+
+<p-dialog header="Header" [(visible)]="visibleVar" [style]="{ width: '25vw'}" class="flex flex-column flex-wrap">
+
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold">Eliminar registro</span>
+    </ng-template>
+
+    <p>Estas a punto de eliminar registros. ¿Quieres continuar?</p>
+
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-times" (click)="visibleVar = false" label="Cancel" styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" [disabled]="disableDV" (click)="deleteSelected()" label="Ok"
+            styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>
