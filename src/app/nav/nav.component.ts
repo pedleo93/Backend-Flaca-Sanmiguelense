@@ -41,11 +41,6 @@ export class NavComponent {
                 routerLink: '/faq'
             },
             {
-                label: 'Galeria',
-                replaceUrl: true,
-                routerLink: '/galeria' 
-            },
-            {
                 label: 'Salir',
                 replaceUrl: true, 
                 routerLink: '/login'

@@ -27,6 +27,10 @@ import { ConvocatoriasComponent } from './pages/convocatorias/convocatorias.comp
 import { RegistroConvocatoriasComponent } from './pages/registro-convocatorias/registro-convocatorias.component';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
+import { CalendarModule } from 'primeng/calendar'
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { DatePipe } from '@angular/common';
+
 
 @NgModule({
   declarations: [
@@ -59,6 +63,9 @@ import { CheckboxModule } from 'primeng/checkbox';
     InputTextareaModule,
     PanelModule,
     NavComponent,
+    CalendarModule,
+    ToggleButtonModule,
+    DatePipe,
     InputNumberModule,
     CheckboxModule
   ]

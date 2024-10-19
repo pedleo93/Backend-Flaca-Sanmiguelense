@@ -1,1 +1,117 @@
 <app-nav></app-nav>
+<p-toolbar styleClass="mb-4 gap-2">
+    <ng-template pTemplate="left">
+        <button pButton pRipple label="Agregar Registro" icon="pi pi-plus" class="p-button-success mr-2" (click)="showDialogAdd()" style="right:10px"></button>
+        <button pButton pRipple icon="pi pi-trash" class="p-button-danger" (click)="showDialogDelMany()" [disabled]="!selectedCalls || !selectedCalls.length"></button>
+    </ng-template>
+</p-toolbar>
+
+<p-toast position="top-center"></p-toast>
+<div class="card">
+    <p-table #dt [value]="calls" [loading]="loading" [(selection)]="selectedCalls" dataKey="id" [globalFilterFields]="['participantes', 'correo', 'pagado', 'verificado']" currentPageReportTemplate="Mostrando {first} hasta {last} de {totalRecords} registros"
+        [showCurrentPageReport]="true" [rowHover]="true">
+
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h5 class="m-0">Lista de Registros</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" placeholder="Buscar registro..." (input)="applyGlobalFilter($event, dt)" />
+                </span>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="convocatoria">Convocatoria</th>
+                <th pSortableColumn="participantes">Participantes</th>
+                <th pSortableColumn="correo">Correo</th>
+                <th pSortableColumn="pagado">Pagado</th>
+                <th pSortableColumn="verificado">Verificado</th>
+                <th>Acciones</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-registro>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="registro"></p-tableCheckbox>
+                </td>
+                <td>{{ registro.convocatoria.nombre}}</td>
+                <td>{{ registro.participantes }}</td>
+                <td>{{ registro.correo }}</td>
+                <td>{{ registro.pagado ? 'Sí' : 'No' }}</td>
+                <td>{{ registro.verificado ? 'Sí' : 'No' }}</td>
+                <td>
+                    <button (click)="editCall(registro)" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
+                    <button (click)="deleteCall(registro.id)" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"></button>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <div class="flex align-items-center justify-content-between">No hay registros</div>
+        </ng-template>
+
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">En total existen {{ calls ? calls.length : 0 }} registros.</div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="dialogVisible" [header]="dialogHeader" [modal]="true" [closable]="false">
+    <form [formGroup]="callForm" (ngSubmit)="saveCall()">
+        <div class="p-fluid">
+            <div class="p-field">
+                <label for="id_convocatoria">Convocatoria</label>
+                <p-dropdown id="id_convocatoria" [options]="convocatorias" formControlName="id_convocatoria" optionLabel="nombre" placeholder="Seleccione una convocatoria" [showClear]="true">
+                </p-dropdown>
+            </div>
+            <div class="p-field">
+                <label for="participantes">Participantes</label>
+                <input id="participantes" type="text" pInputText formControlName="participantes" />
+            </div>
+            <div class="p-field">
+                <label for="correo">Correo</label>
+                <input id="correo" type="text" pInputText formControlName="correo" />
+            </div>
+            <div class="p-field-">
+                <label for="pagado">Pagado</label>
+                <p-toggleButton inputId="pagado" formControlName="pagado" onLabel="Sí" offLabel="No"></p-toggleButton>
+
+            </div>
+            <div class="p-field">
+                <label for="verificado">Verificado</label>
+                <p-toggleButton inputId="verificado" formControlName="verificado" onLabel="Sí" offLabel="No"></p-toggleButton>
+
+            </div>
+        </div>
+        <div class="dialog-footer">
+            <p-button icon="pi pi-times" (click)="dialogVisible = false" label="Cancelar" styleClass="p-button-text"></p-button>
+            <p-button icon="pi pi-check" [disabled]="callForm.invalid" type="submit" label="Aceptar" styleClass="p-button-text"></p-button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog [(visible)]="visibleDelete" [modal]="true" [header]="'Confirmar Eliminación'" (onHide)="idDelete = null" [closable]="false">
+    <div class="p-fluid">
+        <p>¿Estás seguro de que deseas eliminar este registro?</p>
+        <div class="dialog-footer">
+            <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" styleClass="p-button-text"></p-button>
+            <p-button label="Eliminar" icon="pi pi-check" (click)="confirmDelete()" styleClass="p-button-danger"></p-button>
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog [(visible)]="visibleDeleteMany" [modal]="true" [header]="'Confirmación de Eliminación'" (onHide)="selectedCalls = []" [closable]="false">
+    <div class="p-fluid">
+        <p>¿Estás seguro de que deseas eliminar los registros seleccionados?</p>
+        <div class="dialog-footer">
+            <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDeleteMany = false" styleClass="p-button-text"></p-button>
+            <p-button label="Eliminar" icon="pi pi-check" (click)="deleteSelected()" styleClass="p-button-danger"></p-button>
+        </div>
+    </div>
+</p-dialog>

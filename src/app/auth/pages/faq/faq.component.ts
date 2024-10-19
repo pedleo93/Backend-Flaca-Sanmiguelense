@@ -14,6 +14,7 @@ import { ServicioService } from 'src/app/provider/servicio.service';
 export class FaqComponent {
 
   questions: any = [];
+  filteredQuestions: any[] = [...this.questions];
   productDialog: boolean = false;
   question: any;
   selectedQuestions: any = [];
@@ -44,14 +45,16 @@ export class FaqComponent {
   });
 
 
-  constructor(public router: Router, private fb: FormBuilder, public service: ServicioService, private message: MessageService) { }
+  constructor(public router: Router, private fb: FormBuilder, public service: ServicioService, private message: MessageService) {
 
-  ngOnInit() {}
+  }
+
+  ngOnInit() { this.getAll() }
 
   showDialogAdd() {
     this.visibleAdd = true;
   }
-  
+
   showDialogDelMany() {
     this.visibleDelMany = true;
     console.log(this.selectedQuestions);
@@ -62,23 +65,53 @@ export class FaqComponent {
     this.idDelete = id;
   }
 
+  filterSearch(event: any) {
+    const searchTerm = event.target.value.toLowerCase();
+
+    if (searchTerm) {
+      this.filteredQuestions = this.questions.filter((question: any) =>
+        question.pregunta.toLowerCase().includes(searchTerm) ||
+        question.respuesta.toLowerCase().includes(searchTerm)
+      );
+    } else {
+      this.filteredQuestions = [...this.questions];
+    }
+  }
+
   deleteSelected() {
     this.disableDeleteMany = true;
 
-    console.log(this.selectedQuestions);
+    const deletePromises = this.selectedQuestions.map((product: any) => {
+      return this.service.delete('faqs/' + product.id).toPromise();
+    });
 
-    this.selectedQuestions.forEach((product: any) => {
-      this.service.delete('faqs/' + product.id).subscribe((info: any) => {
+    Promise.all(deletePromises).then((results: any[]) => {
+      let allSuccess = true;
+
+      results.forEach((info: any) => {
+        if (info.estatus !== true) {
+          allSuccess = false;
+        }
       });
 
-    });
-    this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Eliminados con exito' });
-    setTimeout(() => {
-      location.reload();
+      if (allSuccess) {
+        this.message.add({ severity: 'success', summary: 'Éxito!', detail: 'Eliminados con éxito' });
+        setTimeout(() => {
+          location.reload();
+          this.disableDeleteMany = false;
+        }, 1000);
+
+      } else {
+        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron eliminar algunos registros' });
+        this.disableDeleteMany = false;
+      }
+
+    }).catch((error) => {
+      this.message.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al eliminar los registros' });
       this.disableDeleteMany = false;
-    }, 3000);
-    
+    });
   }
+
 
   delete() {
     this.disableDelete = true;
@@ -90,7 +123,7 @@ export class FaqComponent {
         setTimeout(() => {
           location.reload();
           this.disableDelete = false;
-        }, 750);
+        }, 1000);
       } else {
         this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el registro' });
         this.disableDelete = false;
@@ -98,35 +131,33 @@ export class FaqComponent {
     });
   }
 
-  getAll(event: TableLazyLoadEvent) {
+  getAll() {
     this.loading = true;
-    // this.service.post('faqs', event).subscribe((info: any) => {
+
     this.service.get('faqs').subscribe((info: any) => {
-      console.log(info);
-      this.questions = info      
-
-      // if (info) {
-      //   this.questions = info.data;
-      //   this.total = info.count;
-      //   this.loading = false;
-
-      // } else {
-      //   this.message.add({ severity: 'warn', summary: 'Ups', detail: 'tabla vacia' });
-      // }
+      if (info) {
+        this.questions = info;
+        this.filteredQuestions = [...this.questions];
+        this.total = info.length;
+        this.loading = false;
+      } else {
+        this.message.add({ severity: 'warn', summary: 'Ups', detail: 'Tabla vacía' });
+        this.loading = false;
+      }
     });
-
   }
+
 
   getOne(id: any) {
     this.visibleUpdate = true;
 
     this.service.get('faqs/' + id).subscribe((info: any) => {
 
-      if (info.data) {
+      if (info) {
         this.FormUpdate.patchValue({
-          id: info.id,
-          pregunta: info.pregunta,
-          respuesta: info.respuesta
+          id: info.data.id,
+          pregunta: info.data.pregunta,
+          respuesta: info.data.respuesta
         });
       }
     });
@@ -138,7 +169,7 @@ export class FaqComponent {
 
     console.log(this.FormUpdate.value);
 
-    this.service.patch('faqs' + this.FormUpdate.controls['id'].value, this.FormUpdate.value).subscribe((info: any) => {
+    this.service.patch('faqs/' + this.FormUpdate.controls['id'].value, this.FormUpdate.value).subscribe((info: any) => {
 
       if (info.estatus == true) {
         this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Actualizado con exito' });
@@ -146,7 +177,7 @@ export class FaqComponent {
         setTimeout(() => {
           location.reload();
           this.disableUpdate = false;
-        }, 750);
+        }, 1000);
 
       }
       else {
@@ -170,7 +201,8 @@ export class FaqComponent {
         setTimeout(() => {
           location.reload();
           this.disableAdd = false;
-        }, 750);      }
+        }, 1000);
+      }
       else {
         this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo agregar el registro' });
         this.visibleAdd = false;
@@ -180,24 +212,6 @@ export class FaqComponent {
 
     });
 
-  }
-
-
-  findIndexById(id: string): number {
-    let index = -1;
-    for (let i = 0; i < this.questions.length; i++) {
-      if (this.questions[i].id === id) {
-        index = i;
-        break;
-      }
-    }
-    return index;
-  }
-
-  filterSearch(event: any) {
-    console.log(this.selectedQuestions);
-    return event.target.value;
-    console.log(event.target.value);
   }
 
 
