@@ -62,7 +62,7 @@
                     <button (click)="getOne(product.id)" pButton pRipple icon="pi pi-pencil"
                         class="p-button-rounded p-button-success mr-2" style="right:10px"></button>
                     <button (click)="showDDialog(product.id)" pButton pRipple icon="pi pi-trash"
-                        class="p-button-rounded p-button-warning"></button>
+                        class="p-button-rounded p-button-danger"></button>
                 </td>
             </tr>
         </ng-template>
@@ -121,7 +121,7 @@
 
             <div class="p-field">
                 <label for="premium" [style]="{marginRight: '10px'}">Premium</label>
-                <p-checkbox formControlName="premium" formControlName="premium" inputId="premium" [binary]="true" />
+                <p-checkbox formControlName="premium" inputId="premium" [binary]="true"/>
                 <p style="font-size:10px; color:red;" *ngIf="campoValido('premium')">Ingrese el estatus premium</p>
             </div><br>
         </div>
@@ -179,7 +179,7 @@
 
             <div class="p-field">
                 <label for="premium" [style]="{marginRight: '10px'}">Premium</label>
-                <p-checkbox formControlName="premium" formControlName="premium" inputId="premium" [binary]="true" />
+                <p-checkbox formControlName="premium" inputId="premium" [binary]="true"/>
                 <p style="font-size:10px; color:red;" *ngIf="campoValido2('premium')">Ingrese el estatus premium</p>
             </div><br>
         </div>

@@ -69,8 +69,6 @@ export class PatrocinadoresComponent {
   showDVDialog() {
     this.visibleVar = true;
 
-    console.log(this.selectedPatrocinadores);
-
   }
   showDDialog(id: any) {
     this.visibleDel = true;
@@ -113,9 +111,9 @@ export class PatrocinadoresComponent {
 
   getOne(id: any) {
     this.visibleE = true;
-    console.log(id);
     this.service.get('patrocinador/' + id).subscribe((dato: any) => {
-
+      console.log(dato);
+      
       if (dato.data) {
         this.Formulario2.patchValue({
           id: dato.data.id,
@@ -124,7 +122,7 @@ export class PatrocinadoresComponent {
           imagen_url: dato.data.imagen_url,
           link: dato.data.link,
           posicion: dato.data.posicion,
-          premium: dato.data.premium
+          premium: dato.data.premium == 1 ? true : false
         });
       }
     });
@@ -152,7 +150,8 @@ export class PatrocinadoresComponent {
 
   update() {
     this.disableU = true;
-
+    let premiumVal = this.Formulario2.controls['premium'].value;
+    this.Formulario2.controls['premium'].setValue(premiumVal == true ? 1 : 0);
     this.service.put('patrocinador/' + this.Formulario2.controls['id'].value, this.Formulario2.value).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
@@ -176,6 +175,8 @@ export class PatrocinadoresComponent {
 
   add() {
     this.disableA = true
+    let premiumVal = this.Formulario.controls['premium'].value;
+    this.Formulario.controls['premium'].setValue(premiumVal == true ? 1 : 0);
     this.service.post('patrocinador', this.Formulario.value).subscribe((dato: any) => {
 
       if (dato.estatus == true) {
