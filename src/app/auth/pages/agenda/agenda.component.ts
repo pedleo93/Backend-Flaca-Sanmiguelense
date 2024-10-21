@@ -63,9 +63,12 @@ export class AgendaComponent {
   ngOnInit() { this.getInfo() }
 
 
-  showDialog() {
+showDialog() {
+    this.Formulario.reset();
     this.visible = true;
-  }
+}
+
+
   showDVDialog() {
     this.visibleVar = true;
     console.log(this.selectedProducts);
@@ -145,10 +148,11 @@ export class AgendaComponent {
 
   // AGREGAR UNA FOCKING AGENDA NUEVA ALV
   add() {
-    this.disableA = true
-
+    this.disableA = true;
+  
     let formValue = { ...this.Formulario.value };
-
+  
+    // Formatear la fecha inicial y fecha final al formato adecuado
     if (formValue.fecha_inicial) {
       formValue.fecha_inicial = this.formatDateToCustom(formValue.fecha_inicial);
     }
@@ -156,25 +160,23 @@ export class AgendaComponent {
     if (formValue.fecha_final) {
       formValue.fecha_final = this.formatDateToCustom(formValue.fecha_final);
     }
-
-    this.service.post('agendas', this.Formulario.value).subscribe((dato: any) => {
-
+  
+    this.service.post('agendas', formValue).subscribe((dato: any) => {
       if (dato.estatus == true) {
         this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Agregado con exito' });
         this.visible = false;
         setTimeout(() => {
           this.getInfo();
           this.disableA = false;
-        }, 750);      }
-      else {
+        }, 750);
+      } else {
         this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo agregar el registro' });
         this.visible = false;
         this.disableA = false;
-
-      };
-
+      }
     });
   }
+  
 
   // EDITAR UNA FOCKING AGENDA NUEVA ALV
   update() {
@@ -210,18 +212,17 @@ export class AgendaComponent {
     });
   }
 
-  formatDateToCustom(date: string): string {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = ('0' + (d.getMonth() + 1)).slice(-2);
-    const day = ('0' + d.getDate()).slice(-2);         
-    const hours = ('0' + d.getHours()).slice(-2);      
-    const minutes = ('0' + d.getMinutes()).slice(-2);  
+  formatDateToCustom(date: Date): string {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Asegurar dos dígitos
+    const day = ('0' + date.getDate()).slice(-2);
+    const hours = ('0' + date.getHours()).slice(-2);
+    const minutes = ('0' + date.getMinutes()).slice(-2);
+    const seconds = ('0' + date.getSeconds()).slice(-2);
   
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
+    // Formato MySQL: YYYY-MM-DD HH:MM:SS
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
-  
-  
 
   // METODO PARA BORRAR PERRO
   delete() {
