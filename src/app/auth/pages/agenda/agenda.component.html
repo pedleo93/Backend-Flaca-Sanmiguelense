@@ -3,8 +3,7 @@
     <ng-template pTemplate="left">
         <button pButton pRipple label="Agregar Evento " icon="pi pi-plus" class="p-button-success mr-2"
             (click)="showDialog()" style="right:10px"></button>
-        <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDVDialog()"
-            [disabled]="!selectedProducts || !selectedProducts.length"></button> -->
+        <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" [disabled]="!selectedProducts || !selectedProducts.length" (click)="deleteSelected()" ></button>
     </ng-template>
 
 </p-toolbar>
@@ -13,12 +12,11 @@
 <p-toast position="top-center"></p-toast>
 
 <div class="card">
-
     <p-table #dt [value]="filteredQuestions" [rows]="5" [paginator]="false"
-        [globalFilterFields]="['lugar', 'descripcion', 'evento', 'fecha_inicial', 'fecha_final']"
-        [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id" [lazy]="true" (onLazyLoad)="getInfo()"
-        [loading]="loading" [rowHover]="true"
-        currentPageReportTemplate="Mostrando {first} hasta {last} de {totalRecords} preguntas"
+        [globalFilterFields]="['lugar', 'descripcion', 'evento', 'fecha_inicial', 'fecha_final']" 
+        [(selection)]="selectedProducts" [tableStyle]="{ 'min-width': '75rem' }" 
+        [rowHover]="true" dataKey="id" [lazy]="true" (onLazyLoad)="getInfo()" 
+        [loading]="loading" currentPageReportTemplate="Mostrando {first} hasta {last} de {totalRecords} preguntas"
         [showCurrentPageReport]="true">
 
         <ng-template pTemplate="caption">
@@ -33,17 +31,19 @@
 
         <ng-template pTemplate="header">
             <tr>
+                <th style="width: 4rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
                 <th pSortableColumn="lugar">Lugar</th>
-                <th pSortableColumn="descripciones">Descripcion</th>
+                <th pSortableColumn="descripcion">Descripcion</th>
                 <th pSortableColumn="evento">Evento</th>
                 <th pSortableColumn="fecha_inicial">Fecha Inicial</th>
                 <th pSortableColumn="fecha_final">Fecha Final</th>
-                <th pSortableColumn="fecha_final">Acciones</th>
+                <th>Acciones</th>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-product>
             <tr>
+                <td><p-tableCheckbox [value]="product"></p-tableCheckbox></td>
                 <td>{{ product.lugar }}</td>
                 <td>{{ product.descripcion }}</td>
                 <td>{{ product.evento }}</td>
@@ -51,26 +51,28 @@
                 <td>{{ product.fecha_final | date:'medium' }}</td>
                 <td style="width:10rem">
                     <button (click)="getOne(product.id)" pButton pRipple icon="pi pi-pencil"
-                        class="p-button-rounded p-button-success mr-2" style="right:10px"></button>
+                        class="p-button-rounded p-button-success mr-2"></button>
                     <button (click)="showDDialog(product.id)" pButton pRipple icon="pi pi-trash"
                         class="p-button-rounded p-button-danger"></button>
                 </td>
             </tr>
         </ng-template>
+
         <ng-template pTemplate="emptymessage">
-            <div class="flex align-items-center justify-content-between">No productos</div>
+            <div class="flex align-items-center justify-content-between">No hay productos</div>
         </ng-template>
+
         <ng-template pTemplate="summary">
-            <div class="flex align-items-center justify-content-between">En total hay {{ products ? products.length : 0
-                }} agendas.</div>
+            <div class="flex align-items-center justify-content-between">En total hay {{ products ? products.length : 0 }} agendas.</div>
         </ng-template>
     </p-table>
 </div>
 
+
 <!-- -------------------------------------------- Formulario Agregar ------------------------------------------------- -->
 
 <p-dialog [(visible)]="visible" [modal]="true" [responsive]="true" [style]="{width: '800px', height: 'auto'}"
-    header="Agregar Evento">
+    header="Agregar Agenda">
     <form [formGroup]="Formulario" (ngSubmit)="add()">
         <div class="p-fluid">
             <div class="p-field">
@@ -107,7 +109,6 @@
             </div>
         </div><br><br>
 
-        <!-- Pie del diálogo con botones alineados a la derecha -->
         <p-footer>
             <div style="display: flex; justify-content: flex-end;">
                 <button pButton icon="pi pi-times" type="button" (click)="visible = false" label="Cancelar"
