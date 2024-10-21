@@ -85,15 +85,15 @@ showDialog() {
     console.log(this.selectedProducts);
 
     this.selectedProducts.forEach((product: any) => {
-      this.service.delete('agendas' + product.id).subscribe((dato: any) => {
+      this.service.delete('agendas/' + product.id).subscribe((dato: any) => {
       });
 
     });
     this.message.add({ severity: 'success', summary: 'Exito!', detail: 'Eliminados con exito' });
     setTimeout(() => {
-      location.reload();
+      this.getInfo();
       this.disableDV = false;
-    }, 3000);
+    }, 750);
     
   }
 
