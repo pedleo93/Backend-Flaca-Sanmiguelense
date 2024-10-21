@@ -16,8 +16,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToastModule } from 'primeng/toast';
 import { PanelModule } from 'primeng/panel';
-import { ListaComponent } from './pages/lista/lista.component';
-import { GestorPermisosComponent } from './pages/gestor-permisos/gestor-permisos.component';
 import { NavComponent } from '../nav/nav.component';
 import { FaqComponent } from './pages/faq/faq.component';
 import { GaleriaComponent } from './pages/galeria/galeria.component';
@@ -35,8 +33,6 @@ import { DatePipe } from '@angular/common';
 @NgModule({
   declarations: [
     LoginComponent,
-    ListaComponent,
-    GestorPermisosComponent,
     FaqComponent,
     GaleriaComponent,
     AgendaComponent,

@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
-import { ListaComponent } from './pages/lista/lista.component';
-import { GestorPermisosComponent } from './pages/gestor-permisos/gestor-permisos.component';
 import { AuthGuard } from './guard/guard.guard';
 import { AgendaComponent } from './pages/agenda/agenda.component';
 import { GaleriaComponent } from './pages/galeria/galeria.component';
@@ -16,10 +14,6 @@ const routes: Routes = [
     path: '',
     children: [
       {path: 'login', component: LoginComponent},
-      
-      {path: 'lista', component: ListaComponent, canActivate: [AuthGuard]},
-      {path: 'permisos', component: GestorPermisosComponent, canActivate: [AuthGuard]},
-
       {path: 'agenda', component: AgendaComponent, canActivate: [AuthGuard]},
       // {path: 'galeria', component: GaleriaComponent, canActivate: [AuthGuard]},
       {path: 'patrocinadores', component: PatrocinadoresComponent, canActivate: [AuthGuard]},
