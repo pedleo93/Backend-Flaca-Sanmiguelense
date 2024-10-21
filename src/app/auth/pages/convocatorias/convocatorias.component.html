@@ -105,33 +105,33 @@
     </form>
 </p-dialog>
 
-<p-dialog header="Confirmación" [(visible)]="visibleDelete" [modal]="true" [closable]="false">
-    <div>
-        <p>¿Está seguro de que desea eliminar esta convocatoria?</p>
-        <p-footer>
-            <button type="button" pButton label="Cancelar" (click)="cancelDelete()" icon="pi pi-times"></button>
-            <button type="button" pButton label="Eliminar" (click)="confirmDelete()" icon="pi pi-check" styleClass="p-button-danger"></button>
-        </p-footer>
-    </div>
+<p-dialog header="Confirmar Eliminación" [(visible)]="visibleDelete" [style]="{ width: '25vw' }" class="flex flex-column flex-wrap">
+
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold">Eliminar Convocatoria</span>
+    </ng-template>
+
+    <p>Estas a punto de eliminar una convocatoria. ¿Quieres continuar?</p>
+
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-times" (click)="visibleDelete = false" label="Cancelar" styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" [disabled]="disableDelete" (click)="confirmDelete()" label="Aceptar" styleClass="p-button-text"></p-button>
+    </ng-template>
+
 </p-dialog>
 
 
 
+<p-dialog header="Confirmar Eliminación" [(visible)]="visibleDelMany" [style]="{ width: '25vw' }" class="flex flex-column flex-wrap">
 
-<p-dialog [(visible)]="visibleDeleteMany" [modal]="true" header="Confirmación de Eliminación" (onHide)="selectedCalls = []" [closable]="false" [style]="{ width: '30vw' }">
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold">Eliminar Convocatorias</span>
+    </ng-template>
 
-    <div class="p-fluid">
-        <p>¿Estás seguro de que deseas eliminar las convocatorias seleccionadas?</p>
+    <p>Estás a punto de eliminar varias convocatorias. ¿Quieres continuar?</p>
 
-
-        <p-footer>
-            <div class="flex justify-content-end">
-
-                <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDeleteMany = false" styleClass="p-button-text"></p-button>
-
-
-                <p-button label="Eliminar" icon="pi pi-check" [disabled]="disableDeleteMany" (click)="deleteSelected()" styleClass="p-button-danger"></p-button>
-            </div>
-        </p-footer>
-    </div>
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-times" (click)="visibleDelMany = false" label="Cancelar" styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" [disabled]="disableDeleteMany" (click)="deleteSelected()" label="Aceptar" styleClass="p-button-text"></p-button>
+    </ng-template>
 </p-dialog>

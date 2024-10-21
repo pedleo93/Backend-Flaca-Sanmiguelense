@@ -96,22 +96,28 @@
     </form>
 </p-dialog>
 
-<p-dialog [(visible)]="visibleDelete" [modal]="true" [header]="'Confirmar Eliminación'" (onHide)="idDelete = null" [closable]="false">
-    <div class="p-fluid">
-        <p>¿Estás seguro de que deseas eliminar este registro?</p>
-        <div class="dialog-footer">
-            <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDelete = false" styleClass="p-button-text"></p-button>
-            <p-button label="Eliminar" icon="pi pi-check" (click)="confirmDelete()" styleClass="p-button-danger"></p-button>
-        </div>
-    </div>
+<p-dialog header="Eliminar Registro" [(visible)]="visibleDelete" [style]="{ width: '25vw' }" class="flex flex-column flex-wrap">
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold">Eliminar Registro</span>
+    </ng-template>
+
+    <p>Estás a punto de eliminar este registro. ¿Quieres continuar?</p>
+
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-times" (click)="visibleDelete = false" label="Cancelar" styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" [disabled]="disableDelete" (click)="confirmDelete()" label="Aceptar" styleClass="p-button-text"></p-button>
+    </ng-template>
 </p-dialog>
 
-<p-dialog [(visible)]="visibleDeleteMany" [modal]="true" [header]="'Confirmación de Eliminación'" (onHide)="selectedCalls = []" [closable]="false">
-    <div class="p-fluid">
-        <p>¿Estás seguro de que deseas eliminar los registros seleccionados?</p>
-        <div class="dialog-footer">
-            <p-button label="Cancelar" icon="pi pi-times" (click)="visibleDeleteMany = false" styleClass="p-button-text"></p-button>
-            <p-button label="Eliminar" icon="pi pi-check" (click)="deleteSelected()" styleClass="p-button-danger"></p-button>
-        </div>
-    </div>
+<p-dialog header="Eliminar Registros" [(visible)]="visibleDeleteMany" [style]="{ width: '25vw' }" class="flex flex-column flex-wrap">
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold">Eliminar Registros</span>
+    </ng-template>
+
+    <p>Estás a punto de eliminar varios registros. ¿Quieres continuar?</p>
+
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-times" (click)="visibleDeleteMany = false" label="Cancelar" styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" [disabled]="disableDeleteMany" (click)="deleteSelected()" label="Aceptar" styleClass="p-button-text"></p-button>
+    </ng-template>
 </p-dialog>

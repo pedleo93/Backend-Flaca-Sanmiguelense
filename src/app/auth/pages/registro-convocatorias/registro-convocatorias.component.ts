@@ -21,8 +21,10 @@ export class RegistroConvocatoriasComponent {
   selectedCall: any;
 
   visibleDelete: boolean = false;
-visibleDeleteMany: boolean = false;
-idDelete: string | null = null;
+  visibleDeleteMany: boolean = false;
+  idDelete: string | null = null;
+  disableDeleteMany: boolean = true;
+  disableDelete: boolean = true;
 
 convocatorias: any;
   selectedConvocatoria: any;
@@ -121,13 +123,10 @@ editCall(call: any) {
   this.editingCallId = call.id;
 }
 
-  deleteCall(callId: string) {
-    this.service.delete(`registro-convocatorias/${callId}`).subscribe(
-      () => {
-        this.loadCalls(); 
-      }
-    );
-  }
+deleteCall(registro: any) {
+  this.selectedCall = registro;  
+  this.visibleDelete = true;  
+}
 
   deleteSelectedCalls() {
     const deleteCallsObservables = this.selectedCalls.map(call => 
@@ -143,49 +142,50 @@ editCall(call: any) {
   }
 
 
-showDialogDelete(id: string) {
-  this.visibleDelete = true;
-  this.idDelete = id;
-}
-
-
-confirmDelete() {
-  this.service.delete(`registro-convocatorias/${this.idDelete}`).subscribe(
-    () => {
-      this.loadCalls();
-      this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registro eliminado correctamente' });
-    },
-    error => {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al eliminar el registro' });
-    }
-  );
-  this.visibleDelete = false;
-}
-
-
-showDialogDelMany() {
-  if (this.selectedCalls.length > 0) {
-    this.visibleDeleteMany = true;
+  showDialogDelete(id: string) {
+    this.visibleDelete = true;
+    this.idDelete = id;
   }
-}
 
 
-deleteSelected() {
-  const deleteRequests = this.selectedCalls.map(call => 
-    this.service.delete(`registro-convocatorias/${call.id}`).toPromise()
-  );
+  confirmDelete() {
+    if (this.idDelete) {
+      this.service.delete(`registro-convocatorias/${this.idDelete}`).subscribe(
+        () => {
+          this.loadCalls();
+          this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registro eliminado correctamente' });
+          this.visibleDelete = false;
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al eliminar el registro' });
+        }
+      );
+    }
+  }
 
-  Promise.all(deleteRequests)
-    .then(() => {
-      this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registros eliminados correctamente' });
-      this.loadCalls();
-    })
-    .catch(() => {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al eliminar los registros' });
-    })
-    .finally(() => {
-      this.visibleDeleteMany = false;
-      this.selectedCalls = [];
-    });
-}
+  showDialogDelMany() {
+    if (this.selectedCalls.length > 0) {
+      this.visibleDeleteMany = true;
+    } else {
+      this.messageService.add({ severity: 'info', summary: 'Info', detail: 'No hay registros seleccionados' });
+    }
+  }
+
+
+  deleteSelected() {
+    const deleteRequests = this.selectedCalls.map(call => 
+      this.service.delete(`registro-convocatorias/${call.id}`).toPromise()
+    );
+
+    Promise.all(deleteRequests)
+      .then(() => {
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registros eliminados correctamente' });
+        this.loadCalls();
+        this.visibleDeleteMany = false;
+        this.selectedCalls = [];
+      })
+      .catch(() => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al eliminar los registros' });
+      });
+  }
 }
