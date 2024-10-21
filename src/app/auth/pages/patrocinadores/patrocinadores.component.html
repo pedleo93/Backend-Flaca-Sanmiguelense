@@ -15,16 +15,16 @@
 
 <div class="card">
 
-    <p-table #dt [value]="filteredPatrocinadores" [rows]="5" [paginator]="true" [globalFilterFields]="['nombre', 'descripcion']"
+    <p-table #dt [value]="filteredPatrocinadores" [rows]="5" [paginator]="false" [globalFilterFields]="['nombre', 'descripcion']"
         [tableStyle]="{ 'min-width': '75rem' }" [(selection)]="selectedPatrocinadores" [rowHover]="true" dataKey="id"
         [lazy]="true" (onLazyLoad)="getAll()" [loading]="loading" [rowHover]="true" [totalRecords]="total"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
-                <h5 class="m-0">Administrar Patrocinadores</h5>
+                <h5 class="m-0">Lista de patrocinadores</h5>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="filterSearch($event)" placeholder="Search..." />
+                    <input pInputText type="text" (input)="filterSearch($event)" placeholder="Buscar patrocinador..." />
                 </span>
             </div>
         </ng-template>
@@ -185,9 +185,9 @@
         </div>
 
         <ng-template pTemplate="footer" [value]="product">
-            <p-button icon="pi pi-times" (click)="visibleE = false" label="Cancel"
+            <p-button icon="pi pi-times" (click)="visibleE = false" label="Cancelar"
                 styleClass="p-button-text"></p-button>
-            <p-button icon="pi pi-check" [disabled]="!Formulario2.valid || disableU" (click)="update()" label="Ok"
+            <p-button icon="pi pi-check" [disabled]="!Formulario2.valid || disableU" (click)="update()" label="Aceptar"
                 styleClass="p-button-text"></p-button>
         </ng-template>
     </p-dialog>
@@ -204,8 +204,8 @@
     <p>Estas a punto de eliminar un registro. ¿Quieres continuar?</p>
 
     <ng-template pTemplate="footer">
-        <p-button icon="pi pi-times" (click)="visibleDel = false" label="Cancel" styleClass="p-button-text"></p-button>
-        <p-button icon="pi pi-check" [disabled]="disableD" (click)="delete()" label="Ok"
+        <p-button icon="pi pi-times" (click)="visibleDel = false" label="Cancelar" styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" [disabled]="disableD" (click)="delete()" label="Aceptar"
             styleClass="p-button-text"></p-button>
     </ng-template>
 </p-dialog>
@@ -221,8 +221,8 @@
     <p>Estas a punto de eliminar registros. ¿Quieres continuar?</p>
 
     <ng-template pTemplate="footer">
-        <p-button icon="pi pi-times" (click)="visibleVar = false" label="Cancel" styleClass="p-button-text"></p-button>
-        <p-button icon="pi pi-check" [disabled]="disableDV" (click)="deleteSelected()" label="Ok"
+        <p-button icon="pi pi-times" (click)="visibleVar = false" label="Cancelar" styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" [disabled]="disableDV" (click)="deleteSelected()" label="Aceptar"
             styleClass="p-button-text"></p-button>
     </ng-template>
 </p-dialog>

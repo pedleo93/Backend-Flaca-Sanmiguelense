@@ -1,7 +1,7 @@
 <app-nav></app-nav>
 <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-        <button pButton pRipple label="Agregar Agenda" icon="pi pi-plus" class="p-button-success mr-2"
+        <button pButton pRipple label="Agregar Evento " icon="pi pi-plus" class="p-button-success mr-2"
             (click)="showDialog()" style="right:10px"></button>
         <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDVDialog()"
             [disabled]="!selectedProducts || !selectedProducts.length"></button> -->
@@ -23,10 +23,10 @@
 
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
-                <h5 class="m-0">Agendas</h5>
+                <h5 class="m-0">Lista de eventos</h5>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="filterSearch($event)" placeholder="Buscar Agenda..." />
+                    <input pInputText type="text" (input)="filterSearch($event)" placeholder="Buscar evento..." />
                 </span>
             </div>
         </ng-template>
@@ -70,7 +70,7 @@
 <!-- -------------------------------------------- Formulario Agregar ------------------------------------------------- -->
 
 <p-dialog [(visible)]="visible" [modal]="true" [responsive]="true" [style]="{width: '800px', height: 'auto'}"
-    header="Agregar Agenda">
+    header="Agregar Evento">
     <form [formGroup]="Formulario" (ngSubmit)="add()">
         <div class="p-fluid">
             <div class="p-field">
@@ -124,7 +124,7 @@
 <!-- -------------------------------------------- Formulario actualizar ------------------------------------------------- -->
 
 <form [formGroup]="Formulario2">
-    <p-dialog header="Actualizar Agenda" [(visible)]="visibleE" [style]="{width: '800px', height: 'auto'}"
+    <p-dialog header="Actualizar Evento" [(visible)]="visibleE" [style]="{width: '800px', height: 'auto'}"
         class="flex flex-column flex-wrap">
 
         <div class="p-fluid">

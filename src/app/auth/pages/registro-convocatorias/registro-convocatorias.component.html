@@ -13,7 +13,7 @@
 
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
-                <h5 class="m-0">Lista de Registros</h5>
+                <h5 class="m-0">Lista de registros</h5>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input pInputText type="text" placeholder="Buscar registro..." (input)="applyGlobalFilter($event, dt)" />
@@ -46,7 +46,7 @@
                 <td>{{ registro.pagado ? 'Sí' : 'No' }}</td>
                 <td>{{ registro.verificado ? 'Sí' : 'No' }}</td>
                 <td>
-                    <button (click)="editCall(registro)" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
+                    <button style="right:10px" (click)="editCall(registro)" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
                     <button (click)="deleteCall(registro.id)" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"></button>
                 </td>
             </tr>
