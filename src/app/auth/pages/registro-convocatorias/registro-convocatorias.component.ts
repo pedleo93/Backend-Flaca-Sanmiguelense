@@ -20,13 +20,14 @@ export class RegistroConvocatoriasComponent {
   globalFilterValue: string = '';
   selectedCall: any;
 
+
+
   visibleDelete: boolean = false;
   visibleDeleteMany: boolean = false;
   idDelete: string | null = null;
   disableDeleteMany: boolean = true;
   disableDelete: boolean = true;
-
-convocatorias: any;
+  convocatorias: any;
   selectedConvocatoria: any;
   
 
@@ -123,9 +124,10 @@ editCall(call: any) {
   this.editingCallId = call.id;
 }
 
-deleteCall(registro: any) {
-  this.selectedCall = registro;  
-  this.visibleDelete = true;  
+deleteCall(id: number) {
+  this.selectedCall = this.calls.find(call => call.id === id);
+  this.visibleDelete = true;
+  this.disableDelete = false; 
 }
 
   deleteSelectedCalls() {
@@ -164,12 +166,9 @@ deleteCall(registro: any) {
   }
 
   showDialogDelMany() {
-    if (this.selectedCalls.length > 0) {
-      this.visibleDeleteMany = true;
-    } else {
-      this.messageService.add({ severity: 'info', summary: 'Info', detail: 'No hay registros seleccionados' });
-    }
-  }
+    this.visibleDeleteMany = true; 
+    this.disableDeleteMany = this.selectedCalls.length === 0; 
+}
 
 
   deleteSelected() {
