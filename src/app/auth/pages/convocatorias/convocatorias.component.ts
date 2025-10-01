@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { ServicioService } from 'src/app/provider/servicio.service';
 
 @Component({
@@ -31,18 +32,34 @@ export class ConvocatoriasComponent {
   disableDelete: boolean = false;
 
   selectedCallId: number | undefined;
-  visibleDelMany: boolean = false; 
+  visibleDelMany: boolean = false;
+
+  registerForm: FormGroup;
+  selectedConvocatoria: any;
+  visibleRegister: boolean = false;
+  visibleRegisters = false;
+  currentRegisters: any[] = [];
+  isEditMode: boolean = false;
+  editingRegisterId: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private service: ServicioService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) {
     this.callForm = this.fb.group({
       nombre: ['', Validators.required],
       reglas: ['', Validators.required],
       fecha_cierre: [null, Validators.required],
       costo: ['', [Validators.required, Validators.min(0)]]
+    });
+    this.registerForm = this.fb.group({
+      id_convocatoria: [null, Validators.required],
+      participantes: ['', Validators.required],
+      correo: ['', [Validators.required, Validators.email]],
+      pagado: [false],
+      verificado: [false]
     });
   }
 
@@ -54,7 +71,7 @@ export class ConvocatoriasComponent {
     this.loading = true;
     this.service.get('convocatorias').subscribe((data: any) => {
       this.calls = data;
-      this.filteredCalls = [...this.calls]; 
+      this.filteredCalls = [...this.calls];
       this.loading = false;
     }, error => {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading calls' });
@@ -84,13 +101,13 @@ export class ConvocatoriasComponent {
     this.callForm.patchValue({
       nombre: call.nombre,
       reglas: call.reglas,
-      fecha_cierre: this.formatDate(new Date(call.fecha_cierre)), 
+      fecha_cierre: this.formatDate(new Date(call.fecha_cierre)),
       costo: call.costo
     });
   }
 
   saveCall() {
-    if (this.callForm.invalid) return; 
+    if (this.callForm.invalid) return;
     this.editing ? this.updateCall() : this.addCall();
   }
 
@@ -118,18 +135,18 @@ export class ConvocatoriasComponent {
     });
   }
   deleteCall(callId: number) {
-    this.selectedCallId = callId; 
-    this.visibleDelete = true; 
-}
- 
+    this.selectedCallId = callId;
+    this.visibleDelete = true;
+  }
+
   showDialogDelMany() {
     this.visibleDelMany = true;
     console.log(this.selectedCalls);
-}
+  }
 
 
   confirmDeleteSelected() {
-    this.message.clear(); 
+    this.message.clear();
     this.message.add({
       key: 'confirmDelete',
       severity: 'warn',
@@ -140,45 +157,45 @@ export class ConvocatoriasComponent {
   }
 
   deleteSelected() {
-    this.disableDeleteMany = true; 
+    this.disableDeleteMany = true;
     const deleteRequests = this.selectedCalls.map((convocatoria: any) =>
-        this.service.delete(`convocatorias/${convocatoria.id}`).toPromise()
+      this.service.delete(`convocatorias/${convocatoria.id}`).toPromise()
     );
 
     Promise.allSettled(deleteRequests)
-        .then((results) => {
-            let successCount = 0;
-            let errorCount = 0;
+      .then((results) => {
+        let successCount = 0;
+        let errorCount = 0;
 
-            results.forEach((result, index) => {
-                if (result.status === 'fulfilled') {
-                    successCount++;
-                } else {
-                    errorCount++;
-                    this.messageService.add({
-                        severity: 'warn',
-                        summary: 'Advertencia',
-                        detail: `No se puede eliminar la convocatoria ${this.selectedCalls[index].nombre}, ya que tiene registros asociados`
-                    });
-                }
+        results.forEach((result, index) => {
+          if (result.status === 'fulfilled') {
+            successCount++;
+          } else {
+            errorCount++;
+            this.messageService.add({
+              severity: 'warn',
+              summary: 'Advertencia',
+              detail: `No se puede eliminar la convocatoria ${this.selectedCalls[index].nombre}, ya que tiene registros asociados`
             });
-
-            if (successCount > 0) {
-                this.messageService.add({ severity: 'success', summary: 'Éxito', detail: `${successCount} convocatorias eliminadas correctamente` });
-            }
-
-            if (errorCount > 0) {
-                this.messageService.add({ severity: 'error', summary: 'Error', detail: `${errorCount} convocatorias no se pudieron eliminar` });
-            }
-
-            this.loadCalls(); 
-        })
-        .finally(() => {
-            this.disableDeleteMany = false; 
-            this.visibleDelMany = false; 
-            this.selectedCalls = []; 
+          }
         });
-}
+
+        if (successCount > 0) {
+          this.messageService.add({ severity: 'success', summary: 'Éxito', detail: `${successCount} convocatorias eliminadas correctamente` });
+        }
+
+        if (errorCount > 0) {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: `${errorCount} convocatorias no se pudieron eliminar` });
+        }
+
+        this.loadCalls();
+      })
+      .finally(() => {
+        this.disableDeleteMany = false;
+        this.visibleDelMany = false;
+        this.selectedCalls = [];
+      });
+  }
 
   private prepareFormData() {
     const formData = this.callForm.value;
@@ -192,11 +209,11 @@ export class ConvocatoriasComponent {
 
   private formatDate(date: Date): string {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
-    
+
     return `${year}-${month}-${day} ${hours}:${minutes}:00`;
   }
 
@@ -219,19 +236,132 @@ export class ConvocatoriasComponent {
 
   showDialogDelete(id: string) {
     this.visibleDelete = true;
-    this.idDelete = id; 
+    this.idDelete = id;
   }
 
 
 
-confirmDelete() {
+  confirmDelete() {
 
-  this.service.delete(`convocatorias/${this.selectedCallId}`).subscribe(() => {
-      this.visibleDelete = false; 
-      this.loadCalls(); 
-  });
-}
+    this.service.delete(`convocatorias/${this.selectedCallId}`).subscribe(() => {
+      this.visibleDelete = false;
+      this.loadCalls();
+    });
+  }
   cancelDelete() {
-    this.visibleDelete = false; 
+    this.visibleDelete = false;
   }
+
+  addRegister(call: any) {
+    this.isEditMode = false;
+    this.editingRegisterId = null;
+    this.visibleRegister = true;
+    this.registerForm.reset();
+    this.registerForm.patchValue({
+      id_convocatoria: call.id
+    });
+    this.selectedConvocatoria = call;
+  }
+
+  saveRegsiter() {
+    if (this.registerForm.invalid) return;
+    const formData = { ...this.registerForm.value };
+
+    formData.pagado = formData.pagado ? 1 : 0;
+    formData.verificado = formData.verificado ? 1 : 0;
+
+    if (this.isEditMode && this.editingRegisterId) {
+      this.service.put(`registro-convocatorias/${this.editingRegisterId}`, formData).subscribe(() => {
+        this.visibleRegister = false;
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registro actualizado correctamente' });
+        this.viewRegisters(formData.id_convocatoria);
+      }, error => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el registro' });
+      });
+
+    } else {
+      this.service.post('registro-convocatorias', formData).subscribe(() => {
+        this.visibleRegister = false;
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registro agregado correctamente' });
+      }, error => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo agregar el registro' });
+      });
+    }
+  }
+
+  viewRegisters(call: any) {
+    this.service.get('registro-convocatorias').subscribe(
+      (data: any) => {
+        this.currentRegisters = data
+          .filter((reg: { id_convocatoria: any; }) => reg.id_convocatoria === call)
+          .map((reg: { pagado: number; verificado: number; }) => ({
+            ...reg,
+            pagado: reg.pagado === 1,
+            verificado: reg.verificado === 1
+          }));
+
+        if (this.currentRegisters.length === 0) {
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Sin registros',
+            detail: 'Esta convocatoria aún no tiene registros'
+          });
+        } else {
+          this.visibleRegisters = true;
+        }
+      },
+      error => {
+        console.error('Error cargando registros:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudieron cargar los registros'
+        });
+      }
+    );
+  }
+
+  editRegister(call: any) {
+    this.isEditMode = true;
+    this.editingRegisterId = call.id;
+    this.visibleRegister = true;
+
+    this.registerForm.patchValue({
+      id_convocatoria: call.id_convocatoria,
+      participantes: call.participantes,
+      correo: call.correo,
+      pagado: call.pagado === 1,
+      verificado: call.verificado === 1
+    });
+  }
+
+  deleteRegister(call: any) {
+    const registerId = call;
+    this.confirmationService.confirm({
+      message: '¿Está seguro de eliminar este registro?',
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí, eliminar',
+      rejectLabel: 'Cancelar',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-text',
+      accept: () => {
+        this.service.delete(`registro-convocatorias/${registerId}`).subscribe(() => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Eliminado',
+            detail: 'Registro eliminado correctamente'
+          });
+          this.currentRegisters = this.currentRegisters.filter(r => r.id !== registerId);
+        }, error => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudo eliminar el registro'
+          });
+        });
+      }
+    });
+  }
+
 }
