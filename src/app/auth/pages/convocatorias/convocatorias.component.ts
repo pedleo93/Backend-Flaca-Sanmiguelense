@@ -22,6 +22,8 @@ export class ConvocatoriasComponent {
   disableDeleteMany: boolean = false;
   selectedQuestions: any;
   message: any;
+  records: any[] = [];
+  totalMoney: number = 0;
 
   visibleAdd: boolean = false;
   visibleUpdate: boolean = false;
@@ -45,7 +47,8 @@ export class ConvocatoriasComponent {
   constructor(
     private fb: FormBuilder,
     private service: ServicioService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) {
     this.callForm = this.fb.group({
       nombre: ['', Validators.required],
