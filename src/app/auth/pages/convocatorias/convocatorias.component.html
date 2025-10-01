@@ -4,6 +4,18 @@
     <ng-template pTemplate="left">
         <button pButton pRipple label="Agregar Convocatoria" icon="pi pi-plus" class="p-button-success mr-2" (click)="showDialogAdd()" style="right:10px"></button>
         <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDialogDelMany()" [disabled]="!selectedCalls || !selectedCalls.length"></button>
+            <p-card header="Total de convocatorias" class="ml-3">
+                <p class="m-0">
+                    {{ calls ? calls.length : 0 }}
+                </p>
+            </p-card>
+            <p-card header="Total de registros ">
+                <p class="m-0">{{ records ? records.length : 0 }}</p>
+            </p-card>
+            <p-card header="Total de ingresos">
+                <p class="m-0"> {{ this.totalMoney | currency:"MX"}} </p>
+            </p-card>
+
     </ng-template>
 </p-toolbar>
 
