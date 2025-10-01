@@ -28,7 +28,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { CalendarModule } from 'primeng/calendar'
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DatePipe } from '@angular/common';
-
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [
@@ -63,7 +63,8 @@ import { DatePipe } from '@angular/common';
     ToggleButtonModule,
     DatePipe,
     InputNumberModule,
-    CheckboxModule
+    CheckboxModule,
+    ConfirmDialogModule
   ]
 })
 export class AuthModule { }
