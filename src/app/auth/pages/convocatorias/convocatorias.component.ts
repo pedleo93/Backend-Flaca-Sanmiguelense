@@ -31,7 +31,7 @@ export class ConvocatoriasComponent {
   disableDelete: boolean = false;
 
   selectedCallId: number | undefined;
-  visibleDelMany: boolean = false; 
+  visibleDelMany: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -49,25 +49,56 @@ export class ConvocatoriasComponent {
   ngOnInit() {
     this.loadCalls();
   }
-
+  
   loadCalls() {
     this.loading = true;
     this.service.get('convocatorias').subscribe((data: any) => {
-      this.calls = data;
-      this.filteredCalls = [...this.calls]; 
-      this.loading = false;
-    }, error => {
+        this.calls = data;
+        this.filteredCalls = [...this.calls];
+        this.loading = false;
+      }, error => { 
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading calls' });
       this.loading = false;
-    });
-  }
+      });
+    
+// Registros
+    this.service.get('registro-convocatorias').subscribe(
+      (data: any) => {
+        this.records = data;
 
+        const paidCalls = this.calls.filter((call) =>
+          this.records.some(
+            (record) => record.pagado == 1 && record.id_convocatoria === call.id
+          )
+        );
+        this.totalMoney = this.records
+          .filter((record) => record.pagado == 1)
+          .reduce((sum, record) => {
+            const call = this.calls.find(
+              (c) => c.id === record.id_convocatoria
+            );
+            return call ? sum + call.costo : sum;
+          }, 0);
+
+
+        this.loading = false;
+      },
+      (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error loading records',
+        });
+        this.loading = false;
+      }
+    );
+  }
 
   filterCalls(event: any) {
     const query = event.target.value.trim().toLowerCase();
     this.filteredCalls = this.calls.filter(call =>
-      call.nombre.toLowerCase().includes(query) ||
-      call.reglas.toLowerCase().includes(query)
+        call.nombre.toLowerCase().includes(query) ||
+        call.reglas.toLowerCase().includes(query)
     );
   }
 
@@ -84,13 +115,13 @@ export class ConvocatoriasComponent {
     this.callForm.patchValue({
       nombre: call.nombre,
       reglas: call.reglas,
-      fecha_cierre: this.formatDate(new Date(call.fecha_cierre)), 
+      fecha_cierre: this.formatDate(new Date(call.fecha_cierre)),
       costo: call.costo
     });
   }
 
   saveCall() {
-    if (this.callForm.invalid) return; 
+    if (this.callForm.invalid) return;
     this.editing ? this.updateCall() : this.addCall();
   }
 
@@ -98,8 +129,8 @@ export class ConvocatoriasComponent {
     const formData = this.prepareFormData();
 
     this.service.post('convocatorias', formData).subscribe(() => {
-      this.dialogVisible = false;
-      this.loadCalls();
+        this.dialogVisible = false;
+        this.loadCalls();
       this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Convocatoria agregada correctamente' });
     }, error => {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al agregar la convocatoria' });
@@ -110,26 +141,26 @@ export class ConvocatoriasComponent {
     const formData = this.prepareFormData();
 
     this.service.patch(`convocatorias/${this.selectedCall.id}`, formData).subscribe(() => {
-      this.dialogVisible = false;
-      this.loadCalls();
+          this.dialogVisible = false;
+          this.loadCalls();
       this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Convocatoria actualizada correctamente' });
     }, error => {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al actualizar la convocatoria' });
     });
   }
   deleteCall(callId: number) {
-    this.selectedCallId = callId; 
-    this.visibleDelete = true; 
-}
- 
+    this.selectedCallId = callId;
+    this.visibleDelete = true;
+  }
+
   showDialogDelMany() {
     this.visibleDelMany = true;
     console.log(this.selectedCalls);
-}
+  }
 
 
   confirmDeleteSelected() {
-    this.message.clear(); 
+    this.message.clear();
     this.message.add({
       key: 'confirmDelete',
       severity: 'warn',
@@ -140,45 +171,45 @@ export class ConvocatoriasComponent {
   }
 
   deleteSelected() {
-    this.disableDeleteMany = true; 
+    this.disableDeleteMany = true;
     const deleteRequests = this.selectedCalls.map((convocatoria: any) =>
-        this.service.delete(`convocatorias/${convocatoria.id}`).toPromise()
+      this.service.delete(`convocatorias/${convocatoria.id}`).toPromise()
     );
 
     Promise.allSettled(deleteRequests)
-        .then((results) => {
-            let successCount = 0;
-            let errorCount = 0;
+      .then((results) => {
+        let successCount = 0;
+        let errorCount = 0;
 
-            results.forEach((result, index) => {
-                if (result.status === 'fulfilled') {
-                    successCount++;
-                } else {
-                    errorCount++;
-                    this.messageService.add({
-                        severity: 'warn',
-                        summary: 'Advertencia',
+        results.forEach((result, index) => {
+          if (result.status === 'fulfilled') {
+            successCount++;
+          } else {
+            errorCount++;
+            this.messageService.add({
+              severity: 'warn',
+              summary: 'Advertencia',
                         detail: `No se puede eliminar la convocatoria ${this.selectedCalls[index].nombre}, ya que tiene registros asociados`
-                    });
-                }
             });
-
-            if (successCount > 0) {
-                this.messageService.add({ severity: 'success', summary: 'Éxito', detail: `${successCount} convocatorias eliminadas correctamente` });
-            }
-
-            if (errorCount > 0) {
-                this.messageService.add({ severity: 'error', summary: 'Error', detail: `${errorCount} convocatorias no se pudieron eliminar` });
-            }
-
-            this.loadCalls(); 
-        })
-        .finally(() => {
-            this.disableDeleteMany = false; 
-            this.visibleDelMany = false; 
-            this.selectedCalls = []; 
+          }
         });
-}
+
+        if (successCount > 0) {
+                this.messageService.add({ severity: 'success', summary: 'Éxito', detail: `${successCount} convocatorias eliminadas correctamente` });
+        }
+
+        if (errorCount > 0) {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: `${errorCount} convocatorias no se pudieron eliminar` });
+        }
+
+        this.loadCalls();
+      })
+      .finally(() => {
+        this.disableDeleteMany = false;
+        this.visibleDelMany = false;
+        this.selectedCalls = [];
+      });
+  }
 
   private prepareFormData() {
     const formData = this.callForm.value;
@@ -192,11 +223,11 @@ export class ConvocatoriasComponent {
 
   private formatDate(date: Date): string {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
-    
+
     return `${year}-${month}-${day} ${hours}:${minutes}:00`;
   }
 
@@ -219,19 +250,19 @@ export class ConvocatoriasComponent {
 
   showDialogDelete(id: string) {
     this.visibleDelete = true;
-    this.idDelete = id; 
+    this.idDelete = id;
   }
 
 
 
-confirmDelete() {
+  confirmDelete() {
 
   this.service.delete(`convocatorias/${this.selectedCallId}`).subscribe(() => {
-      this.visibleDelete = false; 
-      this.loadCalls(); 
-  });
-}
+        this.visibleDelete = false;
+        this.loadCalls();
+      });
+  }
   cancelDelete() {
-    this.visibleDelete = false; 
+    this.visibleDelete = false;
   }
 }
