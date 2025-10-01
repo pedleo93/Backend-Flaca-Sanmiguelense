@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { ServicioService } from './provider/servicio.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
-
+import { ConfirmationService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,7 @@ import { MessageService } from 'primeng/api';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [{ provide: ServicioService, useClass: ServicioService }, MessageService],
+  providers: [{ provide: ServicioService, useClass: ServicioService }, MessageService, ConfirmationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
