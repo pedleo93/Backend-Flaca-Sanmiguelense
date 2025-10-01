@@ -64,11 +64,15 @@
         <td>{{ convocatoria.fecha_cierre | date: 'short' }}</td>
         <td>{{ convocatoria.costo | currency }}</td>
 
-        <td style="width:10rem">
+        <td style="white-space: nowrap;">
           <button (click)="editCall(convocatoria)" pButton pRipple icon="pi pi-pencil"
-            class="p-button-rounded p-button-success mr-5" style="right:10px"></button>
-          <button (click)="deleteCall(convocatoria.id)" pButton pRipple icon="pi pi-trash"
-            class="p-button-rounded p-button-danger"></button>
+            class="p-button-rounded p-button-success  p-mr-4"></button>
+          <!-- <button (click)="deleteCall(convocatoria.id)" pButton pRipple icon="pi pi-trash"
+            class="p-button-rounded p-button-danger"></button> -->
+          <button (click)="viewRegisters(convocatoria.id)" icon="pi pi-eye" pButton pRipple
+            class="p-button-rounded p-mr-4"></button>
+          <button (click)="addRegister(convocatoria)" icon="pi pi-user-plus" pButton pRipple
+            class="p-button-rounded p-button-secondary"></button>
         </td>
       </tr>
     </ng-template>
