@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 
 export class ServicioService {
-  public api = 'https://fsws.bananasoft.mx/api/';
+  public api = 'https://fsws.bananasoft.com.mx/api/';
 
   public httpOptions = {
     headers: new HttpHeaders({
