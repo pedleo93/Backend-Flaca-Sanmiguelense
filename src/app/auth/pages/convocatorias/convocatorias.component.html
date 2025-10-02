@@ -102,7 +102,7 @@
 
       <div class="p-field">
         <label for="reglas">Reglas</label>
-        <textarea rows="10" id="reglas" pInputTextarea formControlName="reglas"></textarea>
+        <p-editor  id="reglas" pInputTextarea formControlName="reglas"></p-editor>
         <small style="font-size:10px; color:red;"
           *ngIf="callForm.get('reglas')?.invalid && callForm.get('reglas')?.touched" class="text-danger">Reglas son
           requeridas.</small>
