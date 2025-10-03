@@ -32,7 +32,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
 import { DividerModule } from 'primeng/divider';
-
+import { EditorModule } from 'primeng/editor';
 
 
 @NgModule({
@@ -72,7 +72,8 @@ import { DividerModule } from 'primeng/divider';
     ConfirmDialogModule,
     CardModule,
     ChipModule,
-    DividerModule
+    DividerModule,
+    EditorModule
   ]
 })
 export class AuthModule { }
