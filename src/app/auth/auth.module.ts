@@ -30,6 +30,11 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DatePipe } from '@angular/common';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CardModule } from 'primeng/card';
+import { ChipModule } from 'primeng/chip';
+import { DividerModule } from 'primeng/divider';
+
+
+
 @NgModule({
   declarations: [
     LoginComponent,
@@ -65,7 +70,9 @@ import { CardModule } from 'primeng/card';
     InputNumberModule,
     CheckboxModule,
     ConfirmDialogModule,
-    CardModule
+    CardModule,
+    ChipModule,
+    DividerModule
   ]
 })
 export class AuthModule { }

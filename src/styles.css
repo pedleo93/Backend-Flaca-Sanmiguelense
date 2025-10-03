@@ -6,3 +6,9 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+button.p-ripple.p-element.p-button.p-component{
+  background-color: black;
+  border: 1px solid #D2A837;
+}

@@ -14,16 +14,17 @@ body {
     height: 100vh;
     width: 100vw;
     text-align: center;
-    background-image: url('../../../../assets/papelPicado.jpg');
+    background-image: url('../../../../assets/fondoi.png');
     background-size: cover;
     background-position: center;
     background-repeat:space;
+    background-color: rgb(0, 0, 0, 0.4);
 }
 
 
 .app-logo {
     width: 100px;
-    height: 100px;
+    height: 130px;
 }
 
 .app-name {
@@ -34,17 +35,17 @@ body {
 .login-panel {
     width: 350px;
     padding: 15px;
-    background-color: white;
+    background-color: #BB8833;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
-.login-form {
+/* .login-form {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
+} */
 
 .p-field {
     margin-bottom: 20px;
@@ -53,7 +54,7 @@ body {
 
 .p-field label {
     display: block;
-    text-align: center;
+    text-align: left;
     margin-bottom: 5px;
 }
 
@@ -63,4 +64,9 @@ body {
 
 button {
     width: 100%;
+    /* background-color: black; */
+}
+
+.error{
+  color: white;
 }

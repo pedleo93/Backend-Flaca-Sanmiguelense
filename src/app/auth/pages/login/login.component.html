@@ -1,30 +1,52 @@
-<form [formGroup]="Formulario" (ngSubmit)="login()" role="form">
-    <p-toast position="top-center"></p-toast>
+<form [formGroup]="Formulario" (ngSubmit)="onSubmit()" role="form">
+  <p-toast position="top-center"></p-toast>
 
-    <div class="login-container">
-
-        <div class="login-panel">
-
-            <div class="login-form">
-
-                <div class="p-field">
-                    <img src="assets/logo.svg" alt="Flaca Sanmiguelense" class="app-logo" />
-                    <h2 class="app-name">Flaca Sanmiguelense</h2>
-                    <h3>Inicio de sesión</h3>
-                </div>
-
-                <div class="p-field">
-                    <label>Correo Electrónico</label>
-                    <input type="email" pInputText placeholder="Ingresa tu correo" formControlName="email" />
-                </div>
-
-                <div class="p-field">
-                    <label>Contraseña</label>
-                    <input type="password" pInputText placeholder="Ingresa tu contraseña" formControlName="password" />
-                </div>
-                <button pButton pRipple label="Ingresar" class="p-button-help" type="submit"></button>
-            </div>
-
+  <div class="login-container">
+    <div class="login-panel">
+      <div class="login-form">
+        <div class="p-field">
+          <img
+            src="assets/logoi.png"
+            alt="Flaca Sanmiguelense"
+            class="app-logo"
+          />
+          <h2 class="app-name">Flaca Sanmiguelense</h2>
+          <!-- <h3>Inicio de sesión</h3> -->
         </div>
+
+        <div class="p-field">
+          <label class="">Correo Electrónico</label>
+          <input
+            type="email"
+            pInputText
+            placeholder="Ingresa tu correo"
+            formControlName="email"
+          />
+          <small *ngIf="campoValido('email')" class="error"
+            >Correo Invalido</small
+          >
+        </div>
+
+        <div class="p-field">
+          <label>Contraseña</label>
+          <input
+            type="password"
+            pInputText
+            placeholder="Ingresa tu contraseña"
+            formControlName="password"
+          />
+          <small *ngIf="campoValido('password')" class="error"
+            >Contraseña Invalida</small
+          >
+        </div>
+        <p-button
+          label="Ingresar"
+          severity="contrast"
+          type="submit"
+          icon="pi pi-sign-in"
+        />
+        <!-- <button pButton pRipple label="Ingresar" class="p-button-help" type="submit"></button> -->
+      </div>
     </div>
+  </div>
 </form>
