@@ -26,11 +26,11 @@
   <p-table #dt [value]="filteredCalls" [loading]="loading" [(selection)]="selectedCalls" dataKey="id" [rowHover]="true">
     <ng-template pTemplate="caption">
       <div class="flex align-items-center justify-content-between">
-        <h5 class="m-0">Lista de convocatorias</h5>
         <span class="p-input-icon-left">
           <i class="pi pi-search"></i>
           <input pInputText type="text" (input)="filterCalls($event)" placeholder="Buscar convocatoria..." />
         </span>
+        <h5 class="m-0">Lista de convocatorias</h5>
       </div>
     </ng-template>
 
@@ -42,13 +42,10 @@
         <th pSortableColumn="nombre">Nombre
         </th>
         <th pSortableColumn="reglas">Reglas
-
         </th>
         <th pSortableColumn="fecha_cierre">Fecha de Cierre
-
         </th>
         <th pSortableColumn="costo">Costo
-
         </th>
         <th>Acciones</th>
       </tr>
@@ -60,19 +57,17 @@
           <p-tableCheckbox [value]="convocatoria"></p-tableCheckbox>
         </td>
         <td>{{ convocatoria.nombre }}</td>
-        <td>{{ convocatoria.reglas }}</td>
+        <td [innerHTML]="convocatoria.reglas"></td>
         <td>{{ convocatoria.fecha_cierre | date: 'short' }}</td>
         <td>{{ convocatoria.costo | currency }}</td>
 
         <td style="white-space: nowrap;">
           <button (click)="editCall(convocatoria)" pButton pRipple icon="pi pi-pencil"
             class="p-button-rounded p-button-success  p-mr-4"></button>
-          <!-- <button (click)="deleteCall(convocatoria.id)" pButton pRipple icon="pi pi-trash"
-            class="p-button-rounded p-button-danger"></button> -->
+          <button (click)="deleteCall(convocatoria.id)" pButton pRipple icon="pi pi-trash"
+            class="p-button-rounded p-button-danger"></button>
           <button (click)="viewRegisters(convocatoria.id)" icon="pi pi-eye" pButton pRipple
             class="p-button-rounded p-mr-4"></button>
-          <button (click)="addRegister(convocatoria)" icon="pi pi-user-plus" pButton pRipple
-            class="p-button-rounded p-button-secondary"></button>
         </td>
       </tr>
     </ng-template>
@@ -102,7 +97,7 @@
 
       <div class="p-field">
         <label for="reglas">Reglas</label>
-        <p-editor  id="reglas" pInputTextarea formControlName="reglas"></p-editor>
+        <p-editor id="reglas" pInputTextarea formControlName="reglas"></p-editor>
         <small style="font-size:10px; color:red;"
           *ngIf="callForm.get('reglas')?.invalid && callForm.get('reglas')?.touched" class="text-danger">Reglas son
           requeridas.</small>
@@ -122,6 +117,13 @@
         <small style="font-size:10px; color:red;"
           *ngIf="callForm.get('costo')?.invalid && callForm.get('costo')?.touched" class="text-danger">Costo es
           requerido y debe ser mayor o igual a 0.</small>
+      </div>
+      <div class="p-field">
+        <label for="imagen">Imagen</label>
+        <input id="imagen" type="text" pInputText formControlName="imagen" />
+        <small style="font-size:10px; color:red;"
+          *ngIf="callForm.get('imagen')?.invalid && callForm.get('imagen')?.touched" class="text-danger">La imagen es
+          requerida.</small>
       </div>
     </div>
     <div class="dialog-footer">
@@ -154,8 +156,6 @@
 
 </p-dialog>
 
-
-
 <p-dialog header="Confirmar Eliminación" [(visible)]="visibleDelMany" [style]="{ width: '25vw' }"
   class="flex flex-column flex-wrap">
 
@@ -176,23 +176,25 @@
 <p-dialog [(visible)]="visibleRegister" [responsive]="true" [modal]="true" [closable]="true" [style]="{width: '450px'}"
   [breakpoints]="{'960px': '95vw'}" [draggable]="false" [resizable]="false">
   <ng-template pTemplate="header">
-    {{ isEditMode ? 'Editar Registro' : 'Agregar Registro' }}
+    Editar Registro
   </ng-template>
 
   <form [formGroup]="registerForm" (ngSubmit)="saveRegsiter()" class="p-fluid">
     <div class="p-fluid text-center">
-      <h3 class="m-0 text-primary" for="participantes">{{selectedConvocatoria?.nombre}}</h3>
+      <label for="nombre_equipo">Nombre del equipo</label>
+      <input id="nombre_equipo" type="text" pInputText formControlName="nombre_equipo" />
+
       <label for="participantes">Participantes</label>
       <input id="participantes" type="text" pInputText formControlName="participantes" />
+
+      <label for="tipo_participante">Tipo de participante</label>
+      <input id="tipo_participante" type="text" pInputText formControlName="tipo_participante" />
 
       <label for="correo">Correo</label>
       <input id="correo" type="text" pInputText formControlName="correo" />
 
-      <label for="pagado">Pagado</label>
-      <p-toggleButton inputId="pagado" formControlName="pagado" onLabel="Sí" offLabel="No"></p-toggleButton>
-
-      <label for="verificado">Verificado</label>
-      <p-toggleButton inputId="verificado" formControlName="verificado" onLabel="Sí" offLabel="No"></p-toggleButton>
+      <label for="procedencia">Procedencia</label>
+      <input id="procedencia" type="text" pInputText formControlName="procedencia" />
 
     </div>
     <div class="dialog-footer">
@@ -212,8 +214,8 @@
       <tr>
         <th>Participante</th>
         <th>Correo</th>
-        <th>Pagado</th>
-        <th>Verificado</th>
+        <th>Codigo</th>
+        <th>Estado del pago</th>
         <th>Acciones</th>
       </tr>
     </ng-template>
@@ -221,8 +223,11 @@
       <tr>
         <td>{{ registro.participantes }}</td>
         <td>{{ registro.correo }}</td>
-        <td>{{ registro.pagado ? 'Sí' : 'No' }}</td>
-        <td>{{ registro.verificado ? 'Sí' : 'No' }}</td>
+        <td>{{ registro.codigo }}</td>
+        <td>
+          {{ registro.pagado === 0 ? 'No pagado' : registro.pagado === 1 ? 'Pagado' : 'Devuelto' }}
+        </td>
+
         <td>
           <button (click)="editRegister(registro)" pButton icon="pi pi-pencil"
             class="p-button-rounded p-button-success"></button>

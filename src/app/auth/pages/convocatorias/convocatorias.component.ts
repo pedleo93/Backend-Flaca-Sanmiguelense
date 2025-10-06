@@ -54,37 +54,39 @@ export class ConvocatoriasComponent {
       nombre: ['', Validators.required],
       reglas: ['', Validators.required],
       fecha_cierre: [null, Validators.required],
-      costo: ['', [Validators.required, Validators.min(0)]]
+      costo: ['', [Validators.required, Validators.min(0)]],
+      imagen: ['', Validators.required]
     });
     this.registerForm = this.fb.group({
       id_convocatoria: [null, Validators.required],
+      nombre_equipo: ['', Validators.required],
       participantes: ['', Validators.required],
+      tipo_participante: ['', Validators.required],
       correo: ['', [Validators.required, Validators.email]],
-      pagado: [false],
-      verificado: [false]
+      procedencia: ['', Validators.required]
     });
   }
 
   ngOnInit() {
     this.loadCalls();
   }
-  
+
   loadCalls() {
     this.loading = true;
+    // Convocatorias
     this.service.get('convocatorias').subscribe((data: any) => {
-        this.calls = data;
-        this.filteredCalls = [...this.calls];
-        this.loading = false;
-      }, error => { 
+      this.calls = data;
+      this.filteredCalls = [...this.calls];
+      this.loading = false;
+    }, error => {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading calls' });
       this.loading = false;
-      });
-    
-// Registros
+    });
+
+    // Registros
     this.service.get('registro-convocatorias').subscribe(
       (data: any) => {
         this.records = data;
-
         const paidCalls = this.calls.filter((call) =>
           this.records.some(
             (record) => record.pagado == 1 && record.id_convocatoria === call.id
@@ -101,8 +103,7 @@ export class ConvocatoriasComponent {
 
 
         this.loading = false;
-      },
-      (error) => {
+      }, error => {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -116,8 +117,8 @@ export class ConvocatoriasComponent {
   filterCalls(event: any) {
     const query = event.target.value.trim().toLowerCase();
     this.filteredCalls = this.calls.filter(call =>
-        call.nombre.toLowerCase().includes(query) ||
-        call.reglas.toLowerCase().includes(query)
+      call.nombre.toLowerCase().includes(query) ||
+      call.reglas.toLowerCase().includes(query)
     );
   }
 
@@ -135,7 +136,8 @@ export class ConvocatoriasComponent {
       nombre: call.nombre,
       reglas: call.reglas,
       fecha_cierre: this.formatDate(new Date(call.fecha_cierre)),
-      costo: call.costo
+      costo: call.costo,
+      imagen: call.imagen
     });
   }
 
@@ -148,8 +150,8 @@ export class ConvocatoriasComponent {
     const formData = this.prepareFormData();
 
     this.service.post('convocatorias', formData).subscribe(() => {
-        this.dialogVisible = false;
-        this.loadCalls();
+      this.dialogVisible = false;
+      this.loadCalls();
       this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Convocatoria agregada correctamente' });
     }, error => {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al agregar la convocatoria' });
@@ -159,9 +161,9 @@ export class ConvocatoriasComponent {
   updateCall() {
     const formData = this.prepareFormData();
 
-    this.service.patch(`convocatorias/${this.selectedCall.id}`, formData).subscribe(() => {
-          this.dialogVisible = false;
-          this.loadCalls();
+    this.service.put(`convocatorias/${this.selectedCall.id}`, formData).subscribe(() => {
+      this.dialogVisible = false;
+      this.loadCalls();
       this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Convocatoria actualizada correctamente' });
     }, error => {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al actualizar la convocatoria' });
@@ -208,7 +210,7 @@ export class ConvocatoriasComponent {
             this.messageService.add({
               severity: 'warn',
               summary: 'Advertencia',
-                        detail: `No se puede eliminar la convocatoria ${this.selectedCalls[index].nombre}, ya que tiene registros asociados`
+              detail: `No se puede eliminar la convocatoria ${this.selectedCalls[index].nombre}, ya que tiene registros asociados`
             });
           }
         });
@@ -241,11 +243,12 @@ export class ConvocatoriasComponent {
   }
 
   private formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
 
     return `${year}-${month}-${day} ${hours}:${minutes}:00`;
   }
@@ -256,7 +259,7 @@ export class ConvocatoriasComponent {
 
   getAll() {
     this.loading = true;
-    this.service.get('convocatorias').subscribe((info: any) => {
+    this.service.get('registro-convocatorias').subscribe((info: any) => {
       if (info) {
         this.calls = info;
         this.loading = false;
@@ -272,8 +275,6 @@ export class ConvocatoriasComponent {
     this.idDelete = id;
   }
 
-
-
   confirmDelete() {
 
     this.service.delete(`convocatorias/${this.selectedCallId}`).subscribe(() => {
@@ -285,54 +286,24 @@ export class ConvocatoriasComponent {
     this.visibleDelete = false;
   }
 
-  addRegister(call: any) {
-    this.isEditMode = false;
-    this.editingRegisterId = null;
-    this.visibleRegister = true;
-    this.registerForm.reset();
-    this.registerForm.patchValue({
-      id_convocatoria: call.id
-    });
-    this.selectedConvocatoria = call;
-  }
-
   saveRegsiter() {
     if (this.registerForm.invalid) return;
     const formData = { ...this.registerForm.value };
 
-    formData.pagado = formData.pagado ? 1 : 0;
-    formData.verificado = formData.verificado ? 1 : 0;
+    this.service.patch(`registro-convocatorias/${this.editingRegisterId}`, formData).subscribe(() => {
+      this.visibleRegister = false;
+      this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registro actualizado correctamente' });
+      this.viewRegisters(formData.id_convocatoria);
+    }, error => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el registro' });
+    });
 
-    if (this.isEditMode && this.editingRegisterId) {
-      this.service.put(`registro-convocatorias/${this.editingRegisterId}`, formData).subscribe(() => {
-        this.visibleRegister = false;
-        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registro actualizado correctamente' });
-        this.viewRegisters(formData.id_convocatoria);
-      }, error => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo actualizar el registro' });
-      });
-
-    } else {
-      this.service.post('registro-convocatorias', formData).subscribe(() => {
-        this.visibleRegister = false;
-        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Registro agregado correctamente' });
-      }, error => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo agregar el registro' });
-      });
-    }
   }
 
-  viewRegisters(call: any) {
-    this.service.get('registro-convocatorias').subscribe(
+  viewRegisters(call: string) {
+    this.service.get(`convocatorias/registros/${call}`).subscribe(
       (data: any) => {
-        this.currentRegisters = data
-          .filter((reg: { id_convocatoria: any; }) => reg.id_convocatoria === call)
-          .map((reg: { pagado: number; verificado: number; }) => ({
-            ...reg,
-            pagado: reg.pagado === 1,
-            verificado: reg.verificado === 1
-          }));
-
+        this.currentRegisters = data;
         if (this.currentRegisters.length === 0) {
           this.messageService.add({
             severity: 'info',
@@ -361,11 +332,16 @@ export class ConvocatoriasComponent {
 
     this.registerForm.patchValue({
       id_convocatoria: call.id_convocatoria,
+      nombre_equipo: call.nombre_equipo,
       participantes: call.participantes,
       correo: call.correo,
-      pagado: call.pagado === 1,
-      verificado: call.verificado === 1
+      tipo_participante: call.tipo_participante,
+      procedencia: call.procedencia
     });
+
+    this.registerForm.get('tipo_participante')?.disable();
+    this.registerForm.get('correo')?.disable();
+    this.registerForm.get('procedencia')?.disable();
   }
 
   deleteRegister(call: any) {

@@ -26,7 +26,7 @@ export class ServicioService {
   }
 
   patch(model: string, data: any) {
-    return this.http.put(this.api + model, data);
+    return this.http.patch(this.api + model, data);
   }
 
   get(model: string) {
