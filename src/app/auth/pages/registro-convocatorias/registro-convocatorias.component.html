@@ -32,7 +32,7 @@
     responsiveLayout="stack"
     breakpoint="960px"
     [globalFilterFields]="[
-      'id',
+      'codigo',
       'participantes',
       'correo',
       'pagado',
@@ -63,7 +63,7 @@
         <th style="width: 4rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pSortableColumn="id">ID</th>
+        <th pSortableColumn="id">Codigo</th>
         <th pSortableColumn="convocatoria">Convocatoria</th>
         <th pSortableColumn="participantes">Participantes</th>
         <th pSortableColumn="correo">Correo</th>
@@ -78,7 +78,7 @@
         <td>
           <p-tableCheckbox [value]="registro"></p-tableCheckbox>
         </td>
-        <td>{{ registro.id }}</td>
+        <td>{{ registro.codigo }}</td>
         <td>{{ registro.convocatoria.nombre }}</td>
         <td>{{ registro.participantes }}</td>
         <td>{{ registro.correo }}</td>
@@ -262,7 +262,7 @@
   <ng-template pTemplate="content">
     <div class="flex align-items-center justify-content-between mb-3">
       <p-chip
-        [label]="selectedCall?.id"
+        [label]="selectedCall?.codigo"
         icon="pi pi-hashtag"
         class="chip-id"
       ></p-chip>

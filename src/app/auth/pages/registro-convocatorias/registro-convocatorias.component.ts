@@ -51,7 +51,7 @@ export class RegistroConvocatoriasComponent {
   }
 
   loadConvocatorias() {
-    this.service.get('convocatorias').subscribe(
+    this.service.get('registro-convocatorias').subscribe(
       (data) => {
         this.convocatorias = data;
       },
@@ -264,30 +264,36 @@ export class RegistroConvocatoriasComponent {
   }
 
   updatePago() {
-    if (!this.selectedCall?.id || this.pago === null) return;
+  if (!this.selectedCall?.id || this.pago === null) return;
 
-    const id = this.selectedCall.id;
-    const body = { pagado: this.pago };
+  const id  = this.selectedCall.id;
+  const url = `registro-convocatorias/pago/${id}`;
 
-    this.service.put(`registro-convocatorias/${id}`, body).subscribe({
-      next: () => {
-        this.selectedCall.pagado = this.pago;
-        const idx = this.calls.findIndex((c) => c.id === id);
-        if (idx !== -1) this.calls[idx].pagado = this.pago;
+  const req$ = this.pago === 1
+    ? this.service.patch(url, {})
+    : this.pago === 2
+    ? this.service.put(url, {})
+    : this.service.delete(url);
 
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Pago actualizado',
-          detail: `Estado: ${this.statusPago(this.pago)}`,
-        });
-      },
-      error: () => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'No se pudo actualizar el pago',
-        });
-      },
-    });
-  }
+  req$.subscribe({
+    next: () => {
+      this.selectedCall.pagado = this.pago;
+      const i = this.calls.findIndex(c => c.id === id);
+      if (i !== -1) this.calls[i].pagado = this.pago;
+
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Pago actualizado',
+        detail: `Estado: ${this.statusPago(this.pago)}`
+      });
+    },
+    error: (err) => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: err?.error?.message || 'No se pudo actualizar el pago'
+      });
+    },
+  });
+}
 }
