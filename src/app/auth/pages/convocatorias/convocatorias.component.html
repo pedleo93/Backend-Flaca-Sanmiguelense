@@ -2,34 +2,50 @@
 
 <p-toolbar styleClass="mb-4 gap-2">
   <ng-template pTemplate="left">
-    <button pButton pRipple label="Agregar Convocatoria" icon="pi pi-plus" class="p-button-success mr-2"
-      (click)="showDialogAdd()" style="right:10px"></button>
-    <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDialogDelMany()"
-      [disabled]="!selectedCalls || !selectedCalls.length"></button>
-    <p-card header="Total de convocatorias" class="ml-3">
-      <p class="m-0">
-        {{ calls ? calls.length : 0 }}
-      </p>
-    </p-card>
-    <p-card header="Total de registros ">
-      <p class="m-0">{{ stats?.total_registros || 0 }}</p>
-    </p-card>
-    <p-card header="Total de ingresos">
-      <p class="m-0"> {{ stats?.monto_total || 0 | currency:"MX"}} </p>
-    </p-card>
+<p-card 
+  header="Total de convocatorias" 
+  [ngStyle]="{'display': 'inline-block', 'margin': '0 8px'}">
+  <p class="m-0">{{ calls ? calls.length : 0 }}</p>
+</p-card>
+
+<p-card 
+  header="Total de registros" 
+  [ngStyle]="{'display': 'inline-block', 'margin': '0 8px'}">
+  <p class="m-0">{{ stats?.total_registros || 0 }}</p>
+</p-card>
+
+<p-card 
+  header="Total de ingresos" 
+  [ngStyle]="{'display': 'inline-block', 'margin': '0 8px'}">
+  <p class="m-0">{{ stats?.monto_total || 0 | currency:'MX' }}</p>
+</p-card>
 
   </ng-template>
 </p-toolbar>
+
+
+
 
 <p-toast position="top-center"></p-toast>
 <div class="card">
   <p-table #dt [value]="filteredCalls" [loading]="loading" [(selection)]="selectedCalls" dataKey="id" [rowHover]="true">
     <ng-template pTemplate="caption">
+
       <div class="flex align-items-center justify-content-between">
-        <span class="p-input-icon-left">
+        <span>
+           <button pButton pRipple label="Agregar Convocatoria" icon="pi pi-plus" class="p-button-success mr-2"
+      (click)="showDialogAdd()" style="right:10px"></button>
+        </span>
+        <span>
+           <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDialogDelMany()"
+      [disabled]="!selectedCalls || !selectedCalls.length"></button>
+        </span>
+
+        <span class="p-input-icon-left inputText">
           <i class="pi pi-search"></i>
           <input pInputText type="text" (input)="filterCalls($event)" placeholder="Buscar convocatoria..." />
         </span>
+        
         <h5 class="m-0">Lista de convocatorias</h5>
       </div>
     </ng-template>
