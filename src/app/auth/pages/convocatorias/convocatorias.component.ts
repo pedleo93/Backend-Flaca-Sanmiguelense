@@ -23,7 +23,7 @@ export class ConvocatoriasComponent {
   selectedQuestions: any;
   message: any;
   totalMoney: number = 0;
-  stats: any =  {};
+  stats: any = {};
   total_registros: number = 0
 
   visibleAdd: boolean = false;
@@ -44,6 +44,9 @@ export class ConvocatoriasComponent {
   currentRegisters: any[] = [];
   isEditMode: boolean = false;
   editingRegisterId: string | null = null;
+  totalRegisters: number = 0;
+  numberRegisters: number = 0;
+  totalAmount: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -281,6 +284,13 @@ export class ConvocatoriasComponent {
   }
 
   viewRegisters(call: string) {
+    this.service.get(`convocatorias/estadisticas/${call}`).subscribe(
+      (data: any) => {
+        this.totalRegisters = data.total_registros;
+        this.numberRegisters = data.pagados;
+        this.totalAmount = data.monto_total;
+      }
+    );
     this.service.get(`convocatorias/registros/${call}`).subscribe(
       (data: any) => {
         this.currentRegisters = data;

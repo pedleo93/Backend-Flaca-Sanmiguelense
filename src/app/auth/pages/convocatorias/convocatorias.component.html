@@ -2,23 +2,17 @@
 
 <p-toolbar styleClass="mb-4 gap-2">
   <ng-template pTemplate="left">
-<p-card 
-  header="Total de convocatorias" 
-  [ngStyle]="{'display': 'inline-block', 'margin': '0 8px'}">
-  <p class="m-0">{{ calls ? calls.length : 0 }}</p>
-</p-card>
+    <p-card header="Total de convocatorias" [ngStyle]="{'display': 'inline-block', 'margin': '0 8px'}">
+      <p class="m-0">{{ calls ? calls.length : 0 }}</p>
+    </p-card>
 
-<p-card 
-  header="Total de registros" 
-  [ngStyle]="{'display': 'inline-block', 'margin': '0 8px'}">
-  <p class="m-0">{{ stats?.total_registros || 0 }}</p>
-</p-card>
+    <p-card header="Total de registros" [ngStyle]="{'display': 'inline-block', 'margin': '0 8px'}">
+      <p class="m-0">{{ stats?.total_registros || 0 }}</p>
+    </p-card>
 
-<p-card 
-  header="Total de ingresos" 
-  [ngStyle]="{'display': 'inline-block', 'margin': '0 8px'}">
-  <p class="m-0">{{ stats?.monto_total || 0 | currency:'MX' }}</p>
-</p-card>
+    <p-card header="Total de ingresos" [ngStyle]="{'display': 'inline-block', 'margin': '0 8px'}">
+      <p class="m-0">{{ stats?.monto_total || 0 | currency:'MX' }}</p>
+    </p-card>
 
   </ng-template>
 </p-toolbar>
@@ -33,19 +27,19 @@
 
       <div class="flex align-items-center justify-content-between">
         <span>
-           <button pButton pRipple label="Agregar Convocatoria" icon="pi pi-plus" class="p-button-success mr-2"
-      (click)="showDialogAdd()" style="right:10px"></button>
+          <button pButton pRipple label="Agregar Convocatoria" icon="pi pi-plus" class="p-button-success mr-2"
+            (click)="showDialogAdd()" style="right:10px"></button>
         </span>
         <span>
-           <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDialogDelMany()"
-      [disabled]="!selectedCalls || !selectedCalls.length"></button>
+          <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDialogDelMany()"
+            [disabled]="!selectedCalls || !selectedCalls.length"></button>
         </span>
 
         <span class="p-input-icon-left inputText">
           <i class="pi pi-search"></i>
           <input pInputText type="text" (input)="filterCalls($event)" placeholder="Buscar convocatoria..." />
         </span>
-        
+
         <h5 class="m-0">Lista de convocatorias</h5>
       </div>
     </ng-template>
@@ -225,6 +219,16 @@
 <p-confirmDialog [style]="{width: '400px'}"></p-confirmDialog>
 <p-dialog header="Registros de Convocatoria" [(visible)]="visibleRegisters" [modal]="true" [responsive]="true"
   [closable]="true">
+  <div style="display: flex; justify-content: space-between; margin-bottom: 5rem;">
+    <p-card header="Registros completados"
+      [ngStyle]="{ 'flex': '1', 'margin-right': '8px', 'padding': '0.5rem', 'text-align': 'center', 'height': '80px' }">
+      <p style="margin: 0; font-size: 1.2rem;">{{ numberRegisters }}/{{ totalRegisters }}</p>
+    </p-card>
+    <p-card header="Monto total"
+      [ngStyle]="{ 'flex': '1', 'margin-left': '8px', 'padding': '0.5rem', 'text-align': 'center', 'height': '80px' }">
+      <p style="margin: 0; font-size: 1.2rem;">{{ totalAmount | currency:'MXN' }}</p>
+    </p-card>
+  </div>
   <p-table [value]="currentRegisters">
     <ng-template pTemplate="header">
       <tr>
