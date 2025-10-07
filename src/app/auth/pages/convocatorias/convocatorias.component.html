@@ -12,10 +12,10 @@
       </p>
     </p-card>
     <p-card header="Total de registros ">
-      <p class="m-0">{{ records ? records.length : 0 }}</p>
+      <p class="m-0">{{ stats?.total_registros || 0 }}</p>
     </p-card>
     <p-card header="Total de ingresos">
-      <p class="m-0"> {{ this.totalMoney | currency:"MX"}} </p>
+      <p class="m-0"> {{ stats?.monto_total || 0 | currency:"MX"}} </p>
     </p-card>
 
   </ng-template>

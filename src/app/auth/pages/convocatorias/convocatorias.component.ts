@@ -22,8 +22,9 @@ export class ConvocatoriasComponent {
   disableDeleteMany: boolean = false;
   selectedQuestions: any;
   message: any;
-  records: any[] = [];
   totalMoney: number = 0;
+  stats: any =  {};
+  total_registros: number = 0
 
   visibleAdd: boolean = false;
   visibleUpdate: boolean = false;
@@ -77,41 +78,20 @@ export class ConvocatoriasComponent {
     this.service.get('convocatorias').subscribe((data: any) => {
       this.calls = data;
       this.filteredCalls = [...this.calls];
-      this.loading = false;
     }, error => {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading calls' });
       this.loading = false;
     });
 
-    // Registros
-    this.service.get('registro-convocatorias').subscribe(
-      (data: any) => {
-        this.records = data;
-        const paidCalls = this.calls.filter((call) =>
-          this.records.some(
-            (record) => record.pagado == 1 && record.id_convocatoria === call.id
-          )
-        );
-        this.totalMoney = this.records
-          .filter((record) => record.pagado == 1)
-          .reduce((sum, record) => {
-            const call = this.calls.find(
-              (c) => c.id === record.id_convocatoria
-            );
-            return call ? sum + call.costo : sum;
-          }, 0);
+    this.service.get('registro-convocatorias').subscribe((data: any) => {
+      this.stats = data;
+      this.loading = false;
+      console.log(this.stats)
+    }, error => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading stats' });
+    });
+    this.loading = false;
 
-
-        this.loading = false;
-      }, error => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Error loading records',
-        });
-        this.loading = false;
-      }
-    );
   }
 
   filterCalls(event: any) {
