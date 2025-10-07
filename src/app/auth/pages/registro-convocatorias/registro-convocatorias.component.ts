@@ -64,8 +64,10 @@ export class RegistroConvocatoriasComponent {
     this.loading = true;
     this.service.get('registro-convocatorias').subscribe(
       (data: any) => {
-        this.calls = data.map((call: { id_convocatoria: any }) => {
-          const convocatoria = this.convocatorias.find(
+        const registros = Array.isArray(data.registros) ? data.registros : [];
+
+        this.calls = registros.map((call: { id_convocatoria: any }) => {
+          const convocatoria = this.convocatorias?.find(
             (c: { id: any }) => c.id === call.id_convocatoria
           );
           return {
@@ -73,6 +75,7 @@ export class RegistroConvocatoriasComponent {
             convocatoria: convocatoria || { nombre: 'Sin Convocatoria' },
           };
         });
+
         this.loading = false;
       },
       (error) => {
@@ -264,36 +267,37 @@ export class RegistroConvocatoriasComponent {
   }
 
   updatePago() {
-  if (!this.selectedCall?.id || this.pago === null) return;
+    if (!this.selectedCall?.id || this.pago === null) return;
 
-  const id  = this.selectedCall.id;
-  const url = `registro-convocatorias/pago/${id}`;
+    const id = this.selectedCall.id;
+    const url = `registro-convocatorias/pago/${id}`;
 
-  const req$ = this.pago === 1
-    ? this.service.patch(url, {})
-    : this.pago === 2
-    ? this.service.put(url, {})
-    : this.service.delete(url);
+    const req$ =
+      this.pago === 1
+        ? this.service.patch(url, {})
+        : this.pago === 2
+        ? this.service.put(url, {})
+        : this.service.delete(url);
 
-  req$.subscribe({
-    next: () => {
-      this.selectedCall.pagado = this.pago;
-      const i = this.calls.findIndex(c => c.id === id);
-      if (i !== -1) this.calls[i].pagado = this.pago;
+    req$.subscribe({
+      next: () => {
+        this.selectedCall.pagado = this.pago;
+        const i = this.calls.findIndex((c) => c.id === id);
+        if (i !== -1) this.calls[i].pagado = this.pago;
 
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Pago actualizado',
-        detail: `Estado: ${this.statusPago(this.pago)}`
-      });
-    },
-    error: (err) => {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: err?.error?.message || 'No se pudo actualizar el pago'
-      });
-    },
-  });
-}
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Pago actualizado',
+          detail: `Estado: ${this.statusPago(this.pago)}`,
+        });
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: err?.error?.message || 'No se pudo actualizar el pago',
+        });
+      },
+    });
+  }
 }
