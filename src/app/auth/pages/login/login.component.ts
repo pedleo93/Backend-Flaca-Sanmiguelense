@@ -35,7 +35,7 @@ export class LoginComponent  {
         localStorage.setItem('user', JSON.stringify(response.user));
 
         setTimeout(() => {
-          this.router.navigate(['/convocatorias']);
+          this.router.navigate(['/admin/convocatorias']);
         }, 1000);
 
       },

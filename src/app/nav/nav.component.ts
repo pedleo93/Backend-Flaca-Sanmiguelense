@@ -18,27 +18,27 @@ export class NavComponent {
             {
                 label: 'Convocatorias',
                 replaceUrl: true,
-                routerLink: '/convocatorias'
+                routerLink: '/admin/convocatorias'
             },
             {
                 label: 'Agenda',
                 replaceUrl: true, 
-                routerLink: '/agenda'
+                routerLink: '/admin/agenda'
             },
             {
                 label: 'Registros',
                 replaceUrl: true,
-                routerLink: '/registro-convocatorias' 
+                routerLink: '/admin/registro-convocatorias' 
             },
             {
                 label: 'Patrocinadores',
                 replaceUrl: true,
-                routerLink: '/patrocinadores' 
+                routerLink: '/admin/patrocinadores' 
             },
             {
                 label: 'FAQs',
                 replaceUrl: true, 
-                routerLink: '/faq'
+                routerLink: '/admin/faq'
             }
         ];
     }
