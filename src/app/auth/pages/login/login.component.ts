@@ -13,6 +13,8 @@ import { ServicioService } from '../../../provider/servicio.service';
 export class LoginComponent  {
   Formulario: FormGroup;
 
+  showPass = false;
+
   constructor(private formBuilder: FormBuilder, private router:Router, public service: ServicioService,private messageService: MessageService){
     this.Formulario = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],

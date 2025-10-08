@@ -2,42 +2,71 @@
 
 <p-toolbar styleClass="mb-4 gap-2">
   <ng-template pTemplate="left">
-    <p-card header="Total de convocatorias" [ngStyle]="{'display': 'inline-block', 'margin': '0 8px'}">
+    <p-card
+      header="Total de convocatorias"
+      [ngStyle]="{ display: 'inline-block', margin: '0 8px' }"
+    >
       <p class="m-0">{{ calls ? calls.length : 0 }}</p>
     </p-card>
 
-    <p-card header="Total de registros" [ngStyle]="{'display': 'inline-block', 'margin': '0 8px'}">
+    <p-card
+      header="Total de registros"
+      [ngStyle]="{ display: 'inline-block', margin: '0 8px' }"
+    >
       <p class="m-0">{{ stats?.total_registros || 0 }}</p>
     </p-card>
 
-    <p-card header="Total de ingresos" [ngStyle]="{'display': 'inline-block', 'margin': '0 8px'}">
-      <p class="m-0">{{ stats?.monto_total || 0 | currency:'MX' }}</p>
+    <p-card
+      header="Total de ingresos"
+      [ngStyle]="{ display: 'inline-block', margin: '0 8px' }"
+    >
+      <p class="m-0">{{ stats?.monto_total || 0 | currency : "MX" }}</p>
     </p-card>
-
   </ng-template>
 </p-toolbar>
 
-
-
-
 <p-toast position="top-center"></p-toast>
 <div class="card">
-  <p-table #dt [value]="filteredCalls" [loading]="loading" [(selection)]="selectedCalls" dataKey="id" [rowHover]="true">
+  <p-table
+    #dt
+    [value]="filteredCalls"
+    [loading]="loading"
+    [(selection)]="selectedCalls"
+    dataKey="id"
+    [rowHover]="true"
+  >
     <ng-template pTemplate="caption">
-
       <div class="flex align-items-center justify-content-between">
         <span>
-          <button pButton pRipple label="Agregar Convocatoria" icon="pi pi-plus" class="p-button-success mr-2"
-            (click)="showDialogAdd()" style="right:10px"></button>
+          <button
+            pButton
+            pRipple
+            label="Agregar Convocatoria"
+            icon="pi pi-plus"
+            class="p-button-success mr-2"
+            (click)="showDialogAdd()"
+            style="right: 10px"
+          ></button>
         </span>
         <span>
-          <button pButton pRipple icon="pi pi-trash" class="p-button-danger ml-2" (click)="showDialogDelMany()"
-            [disabled]="!selectedCalls || !selectedCalls.length"></button>
+          <button
+            pButton
+            pRipple
+            icon="pi pi-trash"
+            class="p-button-danger ml-2"
+            (click)="showDialogDelMany()"
+            [disabled]="!selectedCalls || !selectedCalls.length"
+          ></button>
         </span>
 
         <span class="p-input-icon-left inputText">
           <i class="pi pi-search"></i>
-          <input pInputText type="text" (input)="filterCalls($event)" placeholder="Buscar convocatoria..." />
+          <input
+            pInputText
+            type="text"
+            (input)="filterCalls($event)"
+            placeholder="Buscar convocatoria..."
+          />
         </span>
 
         <h5 class="m-0">Lista de convocatorias</h5>
@@ -49,14 +78,10 @@
         <th style="width: 4rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pSortableColumn="nombre">Nombre
-        </th>
-        <th pSortableColumn="reglas">Reglas
-        </th>
-        <th pSortableColumn="fecha_cierre">Fecha de Cierre
-        </th>
-        <th pSortableColumn="costo">Costo
-        </th>
+        <th pSortableColumn="nombre">Nombre</th>
+        <th pSortableColumn="reglas">Reglas</th>
+        <th pSortableColumn="fecha_cierre">Fecha de Cierre</th>
+        <th pSortableColumn="costo">Costo</th>
         <th>Acciones</th>
       </tr>
     </ng-template>
@@ -68,79 +93,144 @@
         </td>
         <td>{{ convocatoria.nombre }}</td>
         <td [innerHTML]="convocatoria.reglas"></td>
-        <td>{{ convocatoria.fecha_cierre | date: 'short' }}</td>
+        <td>{{ convocatoria.fecha_cierre | date : "short" }}</td>
         <td>{{ convocatoria.costo | currency }}</td>
 
-        <td style="white-space: nowrap;">
-          <button (click)="editCall(convocatoria)" pButton pRipple icon="pi pi-pencil"
-            class="p-button-rounded p-button-success  p-mr-4"></button>
-          <button (click)="deleteCall(convocatoria.id)" pButton pRipple icon="pi pi-trash"
-            class="p-button-rounded p-button-danger"></button>
-          <button (click)="viewRegisters(convocatoria.id)" icon="pi pi-eye" pButton pRipple
-            class="p-button-rounded p-mr-4"></button>
+        <td style="white-space: nowrap">
+          <button
+            (click)="editCall(convocatoria)"
+            pButton
+            pRipple
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-success p-mr-4"
+          ></button>
+          <button
+            (click)="deleteCall(convocatoria.id)"
+            pButton
+            pRipple
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-danger"
+          ></button>
+          <button
+            (click)="viewRegisters(convocatoria.id)"
+            icon="pi pi-eye"
+            pButton
+            pRipple
+            class="p-button-rounded p-mr-4"
+          ></button>
         </td>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="emptymessage">
-      <div class="flex align-items-center justify-content-between">No hay convocatorias</div>
+      <div class="flex align-items-center justify-content-between">
+        No hay convocatorias
+      </div>
     </ng-template>
 
     <ng-template pTemplate="summary">
-      <div class="flex align-items-center justify-content-between">En total existen {{ calls ? calls.length : 0 }}
-        convocatorias.</div>
+      <div class="flex align-items-center justify-content-between">
+        En total existen {{ calls ? calls.length : 0 }} convocatorias.
+      </div>
     </ng-template>
   </p-table>
 </div>
 
-<p-dialog [(visible)]="dialogVisible" [modal]="true" [responsive]="true" [style]="{width: '800px', height: '900px'}"
-  [header]="dialogHeader">
+<p-dialog
+  [(visible)]="dialogVisible"
+  [modal]="true"
+  [responsive]="true"
+  [style]="{ width: '800px', height: '900px' }"
+  [header]="dialogHeader"
+>
   <form [formGroup]="callForm" (ngSubmit)="saveCall()">
     <div class="p-fluid">
       <div class="p-field">
         <label for="nombre">Nombre</label>
         <input id="nombre" type="text" pInputText formControlName="nombre" />
-        <small style="font-size:10px; color:red;"
-          *ngIf="callForm.get('nombre')?.invalid && callForm.get('nombre')?.touched" class="text-danger">Nombre es
-          requerido.</small>
+        <small
+          style="font-size: 10px; color: red"
+          *ngIf="
+            callForm.get('nombre')?.invalid && callForm.get('nombre')?.touched
+          "
+          class="text-danger"
+          >Nombre es requerido.</small
+        >
       </div>
 
       <div class="p-field">
         <label for="reglas">Reglas</label>
-        <p-editor id="reglas" pInputTextarea formControlName="reglas"></p-editor>
-        <small style="font-size:10px; color:red;"
-          *ngIf="callForm.get('reglas')?.invalid && callForm.get('reglas')?.touched" class="text-danger">Reglas son
-          requeridas.</small>
+        <p-editor
+          id="reglas"
+          pInputTextarea
+          formControlName="reglas"
+        ></p-editor>
+        <small
+          style="font-size: 10px; color: red"
+          *ngIf="
+            callForm.get('reglas')?.invalid && callForm.get('reglas')?.touched
+          "
+          class="text-danger"
+          >Reglas son requeridas.</small
+        >
       </div>
 
       <div class="p-field">
         <label for="fechaCierre">Fecha y Hora de Cierre:</label>
-        <p-calendar formControlName="fecha_cierre" [showTime]="true" hourFormat="12" [inline]="true"
-          placeholder="Selecciona la fecha y hora"></p-calendar>
-        <small style="font-size:10px; color:red;" *ngIf="fieldInvalid('fecha_cierre')" class="text-danger">Fecha y Hora
-          son requeridas.</small>
+        <p-calendar
+          formControlName="fecha_cierre"
+          [showTime]="true"
+          hourFormat="12"
+          [inline]="true"
+          placeholder="Selecciona la fecha y hora"
+        ></p-calendar>
+        <small
+          style="font-size: 10px; color: red"
+          *ngIf="fieldInvalid('fecha_cierre')"
+          class="text-danger"
+          >Fecha y Hora son requeridas.</small
+        >
       </div>
 
       <div class="p-field">
         <label for="costo">Costo</label>
         <input id="costo" type="number" pInputText formControlName="costo" />
-        <small style="font-size:10px; color:red;"
-          *ngIf="callForm.get('costo')?.invalid && callForm.get('costo')?.touched" class="text-danger">Costo es
-          requerido y debe ser mayor o igual a 0.</small>
+        <small
+          style="font-size: 10px; color: red"
+          *ngIf="
+            callForm.get('costo')?.invalid && callForm.get('costo')?.touched
+          "
+          class="text-danger"
+          >Costo es requerido y debe ser mayor o igual a 0.</small
+        >
       </div>
       <div class="p-field">
         <label for="imagen">Imagen</label>
         <input id="imagen" type="text" pInputText formControlName="imagen" />
-        <small style="font-size:10px; color:red;"
-          *ngIf="callForm.get('imagen')?.invalid && callForm.get('imagen')?.touched" class="text-danger">La imagen es
-          requerida.</small>
+        <small
+          style="font-size: 10px; color: red"
+          *ngIf="
+            callForm.get('imagen')?.invalid && callForm.get('imagen')?.touched
+          "
+          class="text-danger"
+          >La imagen es requerida.</small
+        >
       </div>
     </div>
     <div class="dialog-footer">
-      <p-button icon="pi pi-times" (click)="dialogVisible = false" label="Cancelar"
-        styleClass="p-button-text"></p-button>
-      <p-button icon="pi pi-check" [disabled]="callForm.invalid" type="submit" label="Aceptar"
-        styleClass="p-button-text"></p-button>
+      <p-button
+        icon="pi pi-times"
+        (click)="dialogVisible = false"
+        label="Cancelar"
+        styleClass="p-button-text"
+      ></p-button>
+      <p-button
+        icon="pi pi-check"
+        [disabled]="callForm.invalid"
+        type="submit"
+        label="Aceptar"
+        styleClass="p-button-text"
+      ></p-button>
     </div>
     <!-- <ng-template pTemplate="footer">
             <p-button icon="pi pi-times" (click)="dialogVisible = false" label="Cancelar" styleClass="p-button-text"></p-button>
@@ -149,9 +239,12 @@
   </form>
 </p-dialog>
 
-<p-dialog header="Confirmar Eliminación" [(visible)]="visibleDelete" [style]="{ width: '25vw' }"
-  class="flex flex-column flex-wrap">
-
+<p-dialog
+  header="Confirmar Eliminación"
+  [(visible)]="visibleDelete"
+  [style]="{ width: '25vw' }"
+  class="flex flex-column flex-wrap"
+>
   <ng-template pTemplate="header">
     <span class="text-xl font-bold">Eliminar convocatoria</span>
   </ng-template>
@@ -159,16 +252,28 @@
   <p>Estas a punto de eliminar una convocatoria. ¿Quieres continuar?</p>
 
   <ng-template pTemplate="footer">
-    <p-button icon="pi pi-times" (click)="visibleDelete = false" label="Cancelar" styleClass="p-button-text"></p-button>
-    <p-button icon="pi pi-check" [disabled]="disableDelete" (click)="confirmDelete()" label="Aceptar"
-      styleClass="p-button-text"></p-button>
+    <p-button
+      icon="pi pi-times"
+      (click)="visibleDelete = false"
+      label="Cancelar"
+      styleClass="p-button-text"
+    ></p-button>
+    <p-button
+      icon="pi pi-check"
+      [disabled]="disableDelete"
+      (click)="confirmDelete()"
+      label="Aceptar"
+      styleClass="p-button-text"
+    ></p-button>
   </ng-template>
-
 </p-dialog>
 
-<p-dialog header="Confirmar Eliminación" [(visible)]="visibleDelMany" [style]="{ width: '25vw' }"
-  class="flex flex-column flex-wrap">
-
+<p-dialog
+  header="Confirmar Eliminación"
+  [(visible)]="visibleDelMany"
+  [style]="{ width: '25vw' }"
+  class="flex flex-column flex-wrap"
+>
   <ng-template pTemplate="header">
     <span class="text-xl font-bold">Eliminar convocatorias</span>
   </ng-template>
@@ -176,57 +281,186 @@
   <p>Estás a punto de eliminar varias convocatorias. ¿Quieres continuar?</p>
 
   <ng-template pTemplate="footer">
-    <p-button icon="pi pi-times" (click)="visibleDelMany = false" label="Cancelar"
-      styleClass="p-button-text"></p-button>
-    <p-button icon="pi pi-check" [disabled]="disableDeleteMany" (click)="deleteSelected()" label="Aceptar"
-      styleClass="p-button-text"></p-button>
+    <p-button
+      icon="pi pi-times"
+      (click)="visibleDelMany = false"
+      label="Cancelar"
+      styleClass="p-button-text"
+    ></p-button>
+    <p-button
+      icon="pi pi-check"
+      [disabled]="disableDeleteMany"
+      (click)="deleteSelected()"
+      label="Aceptar"
+      styleClass="p-button-text"
+    ></p-button>
   </ng-template>
 </p-dialog>
 
-<p-dialog [(visible)]="visibleRegister" [responsive]="true" [modal]="true" [closable]="true" [style]="{width: '450px'}"
-  [breakpoints]="{'960px': '95vw'}" [draggable]="false" [resizable]="false">
-  <ng-template pTemplate="header">
-    Editar Registro
-  </ng-template>
+<p-dialog
+  [(visible)]="visibleRegister"
+  [responsive]="true"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '450px' }"
+  [breakpoints]="{ '960px': '95vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <ng-template pTemplate="header"> Editar Registro </ng-template>
 
   <form [formGroup]="registerForm" (ngSubmit)="saveRegsiter()" class="p-fluid">
     <div class="p-fluid text-center">
       <label for="nombre_equipo">Nombre del equipo</label>
-      <input id="nombre_equipo" type="text" pInputText formControlName="nombre_equipo" />
+      <input
+        id="nombre_equipo"
+        type="text"
+        pInputText
+        formControlName="nombre_equipo"
+      />
 
       <label for="participantes">Participantes</label>
-      <input id="participantes" type="text" pInputText formControlName="participantes" />
-
-      <label for="tipo_participante">Tipo de participante</label>
-      <input id="tipo_participante" type="text" pInputText formControlName="tipo_participante" />
+      <input
+        id="participantes"
+        type="text"
+        pInputText
+        formControlName="participantes"
+      />
 
       <label for="correo">Correo</label>
       <input id="correo" type="text" pInputText formControlName="correo" />
 
-      <label for="procedencia">Procedencia</label>
-      <input id="procedencia" type="text" pInputText formControlName="procedencia" />
+      <p-divider></p-divider>
 
+      <div class="field mt-3">
+        <label>Pago actual</label>
+        <div class="mt-1">
+          <p-tag
+            [severity]="statusPagoStyle(selectedCall?.pagado)"
+            [value]="statusPago(selectedCall?.pagado)"
+          ></p-tag>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="row-line">
+          <span class="label">Cambiar pago</span>
+          <span class="value">
+            <div class="flex align-items-center gap-4">
+              <div class="flex align-items-center">
+                <p-radioButton
+                  name="pagado"
+                  inputId="pag0"
+                  [value]="0"
+                  formControlName="pagado"
+                  (onClick)="updatePago(0)"
+                ></p-radioButton>
+                <label for="pag0" class="ml-2">No pagado</label>
+              </div>
+
+              <div class="flex align-items-center">
+                <p-radioButton
+                  name="pagado"
+                  inputId="pag1"
+                  [value]="1"
+                  formControlName="pagado"
+                  (onClick)="updatePago(1)"
+                ></p-radioButton>
+                <label for="pag1" class="ml-2">Pagado</label>
+              </div>
+
+              <div class="flex align-items-center">
+                <p-radioButton
+                  name="pagado"
+                  inputId="pag2"
+                  [value]="2"
+                  formControlName="pagado"
+                  (onClick)="updatePago(2)"
+                ></p-radioButton>
+                <label for="pag2" class="ml-2">Devuelto</label>
+              </div>
+            </div>
+          </span>
+        </div>
+      </div>
+
+      <p-divider></p-divider>
+
+      <div class="field mt-3">
+        <label>Fechas</label>
+        <div class="grid mt-2">
+          <div class="col-12 md:col-6">
+            <span class="font-bold">Inscripción:</span>
+            <span>
+              {{ selectedCall?.created_at | date : "dd/MM/yyyy" }}
+            </span>
+          </div>
+          <div class="col-12 md:col-6">
+            <span class="font-bold">Pago:</span>
+            <span>
+              {{ fechaPago | date : "dd/MM/yyyy" }}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="dialog-footer">
-      <p-button icon="pi pi-times" (click)="visibleRegister = false" label="Cancelar"
-        styleClass="p-button-outlined p-button-danger"></p-button>
-      <p-button icon="pi pi-check" [disabled]="registerForm.invalid" type="submit"
-        [label]="isEditMode ? 'Actualizar' : 'Agregar'" styleClass="p-button-success"></p-button>
+      <p-button
+        icon="pi pi-times"
+        (click)="visibleRegister = false"
+        label="Cancelar"
+        styleClass="p-button-outlined p-button-danger"
+      ></p-button>
+      <p-button
+        icon="pi pi-check"
+        [disabled]="registerForm.invalid"
+        type="submit"
+        [label]="isEditMode ? 'Actualizar' : 'Agregar'"
+        styleClass="p-button-success"
+        [disabled]="!botonActualizar"
+      ></p-button>
     </div>
   </form>
 </p-dialog>
 
-<p-confirmDialog [style]="{width: '400px'}"></p-confirmDialog>
-<p-dialog header="Registros de Convocatoria" [(visible)]="visibleRegisters" [modal]="true" [responsive]="true"
-  [closable]="true">
-  <div style="display: flex; justify-content: space-between; margin-bottom: 5rem;">
-    <p-card header="Registros completados"
-      [ngStyle]="{ 'flex': '1', 'margin-right': '8px', 'padding': '0.5rem', 'text-align': 'center', 'height': '80px' }">
-      <p style="margin: 0; font-size: 1.2rem;">{{ numberRegisters }}/{{ totalRegisters }}</p>
+<p-confirmDialog [style]="{ width: '400px' }"></p-confirmDialog>
+<p-dialog
+  header="Registros de Convocatoria"
+  [(visible)]="visibleRegisters"
+  [modal]="true"
+  [responsive]="true"
+  [closable]="true"
+>
+  <div
+    style="display: flex; justify-content: space-between; margin-bottom: 5rem"
+  >
+    <p-card
+      header="Registros completados"
+      [ngStyle]="{
+        flex: '1',
+        'margin-right': '8px',
+        padding: '0.5rem',
+        'text-align': 'center',
+        height: '80px'
+      }"
+    >
+      <p style="margin: 0; font-size: 1.2rem">
+        {{ numberRegisters }}/{{ totalRegisters }}
+      </p>
     </p-card>
-    <p-card header="Monto total"
-      [ngStyle]="{ 'flex': '1', 'margin-left': '8px', 'padding': '0.5rem', 'text-align': 'center', 'height': '80px' }">
-      <p style="margin: 0; font-size: 1.2rem;">{{ totalAmount | currency:'MXN' }}</p>
+    <p-card
+      header="Monto total"
+      [ngStyle]="{
+        flex: '1',
+        'margin-left': '8px',
+        padding: '0.5rem',
+        'text-align': 'center',
+        height: '80px'
+      }"
+    >
+      <p style="margin: 0; font-size: 1.2rem">
+        {{ totalAmount | currency : "MXN" }}
+      </p>
     </p-card>
   </div>
   <p-table [value]="currentRegisters">
@@ -245,15 +479,29 @@
         <td>{{ registro.correo }}</td>
         <td>{{ registro.codigo }}</td>
         <td>
-          {{ registro.pagado === 0 ? 'No pagado' : registro.pagado === 1 ? 'Pagado' : 'Devuelto' }}
+          {{
+            registro.pagado === 0
+              ? "No pagado"
+              : registro.pagado === 1
+              ? "Pagado"
+              : "Devuelto"
+          }}
         </td>
 
         <td>
-          <button (click)="editRegister(registro)" pButton icon="pi pi-pencil"
-            class="p-button-rounded p-button-success"></button>
+          <button
+            (click)="editRegister(registro)"
+            pButton
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-success"
+          ></button>
 
-          <button (click)="deleteRegister(registro.id)" pButton icon="pi pi-trash"
-            class="p-button-rounded p-button-danger"></button>
+          <button
+            (click)="deleteRegister(registro.id)"
+            pButton
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-danger"
+          ></button>
         </td>
       </tr>
     </ng-template>

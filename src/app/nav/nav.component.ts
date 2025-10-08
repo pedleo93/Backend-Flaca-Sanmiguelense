@@ -22,22 +22,22 @@ export class NavComponent {
             },
             {
                 label: 'Agenda',
-                replaceUrl: true, 
+                replaceUrl: true,
                 routerLink: '/admin/agenda'
             },
-            {
-                label: 'Registros',
-                replaceUrl: true,
-                routerLink: '/admin/registro-convocatorias' 
-            },
+            // {
+            //     label: 'Registros',
+            //     replaceUrl: true,
+            //     routerLink: '/admin/registro-convocatorias'
+            // },
             {
                 label: 'Patrocinadores',
                 replaceUrl: true,
-                routerLink: '/admin/patrocinadores' 
+                routerLink: '/admin/patrocinadores'
             },
             {
                 label: 'FAQs',
-                replaceUrl: true, 
+                replaceUrl: true,
                 routerLink: '/admin/faq'
             }
         ];

@@ -70,3 +70,35 @@ button {
 .error{
   color: white;
 }
+
+.p-wrapper {
+  position: relative;
+  display: block;
+}
+
+.p-input {
+  width: 100%;
+  padding-right: 2.5rem;
+}
+
+.p-icon {
+  position: absolute;
+  right: .75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  padding: 0;
+  height: 2rem;
+  width: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color-secondary);
+  cursor: pointer;
+  z-index: 1;
+}
+
+.p-icon:hover {
+  color: var(--text-color);
+}
