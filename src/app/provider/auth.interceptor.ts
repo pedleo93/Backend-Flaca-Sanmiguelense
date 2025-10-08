@@ -21,7 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (err.status === 401 || err.status === 403) {
           localStorage.removeItem('token');
           localStorage.removeItem('user');
-          this.router.navigate(['/admin/login'], { queryParams: { returnUrl: location.pathname } });
+          this.router.navigate(['/login'], { queryParams: { returnUrl: location.pathname } });
         }
         return throwError(() => err);
       })

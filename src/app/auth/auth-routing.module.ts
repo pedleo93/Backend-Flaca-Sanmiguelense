@@ -11,7 +11,7 @@ import { RegistroConvocatoriasComponent } from './pages/registro-convocatorias/r
 
 const routes: Routes = [
   {
-    path: 'admin',
+    path: '',
     children: [
       {path: 'login', component: LoginComponent},
       {path: 'agenda', component: AgendaComponent, canActivate: [AuthGuard]},
