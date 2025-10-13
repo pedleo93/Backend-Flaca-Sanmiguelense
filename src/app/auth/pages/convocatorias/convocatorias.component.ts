@@ -2,12 +2,14 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
+import { finalize } from 'rxjs';
 import { ServicioService } from 'src/app/provider/servicio.service';
 
 @Component({
   selector: 'app-convocatorias',
   templateUrl: './convocatorias.component.html',
   styleUrls: ['./convocatorias.component.css'],
+  providers: [ConfirmationService, MessageService],
 })
 export class ConvocatoriasComponent {
   calls: any[] = [];
@@ -52,6 +54,10 @@ export class ConvocatoriasComponent {
   saving: boolean = false;
   fechaPago: Date | null = null;
 
+  codigoBusqueda: string = '';
+  buscando: boolean = false;
+  registroEncontrado: any = null;
+  mensajeError: string = '';
   constructor(
     private fb: FormBuilder,
     private service: ServicioService,
@@ -78,6 +84,35 @@ export class ConvocatoriasComponent {
 
   ngOnInit() {
     this.loadCalls();
+  }
+
+  buscarRegistro(): void {
+    if (!this.codigoBusqueda.trim()) {
+      return;
+    }
+    this.buscando = true;
+    this.registroEncontrado = null;
+    this.mensajeError = '';
+    const codigo = this.codigoBusqueda.toUpperCase().trim();
+    const url = `registro-convocatorias/${codigo}`;
+    this.service
+      .get(url)
+      .pipe(
+        finalize(() => {
+          this.buscando = false;
+        })
+      )
+      .subscribe({
+        next: (respuesta) => {
+          this.registroEncontrado = respuesta;
+        },
+        error: (err) => {
+          this.mensajeError =
+            err.status === 404
+              ? err.error.message || 'El código de registro no fue encontrado.'
+              : 'Ocurrió un error inesperado al realizar la búsqueda.';
+        },
+      });
   }
 
   loadCalls() {
@@ -482,11 +517,6 @@ export class ConvocatoriasComponent {
     result.setDate(result.getDate() + days);
     return result;
   }
-  statusPago(value: number | null | undefined): string {
-    if (value === 1) return 'Pagado';
-    if (value === 2) return 'Devuelto';
-    return 'No pagado';
-  }
 
   statusPagoStyle(
     value: number | null | undefined
@@ -541,5 +571,88 @@ export class ConvocatoriasComponent {
         }
       },
     });
+  }
+
+  onChangeStatus(registro: any, event: Event) {
+    const nextStatus = (registro.pagado + 1) % 3;
+    const nextStatusValue = this.statusPago(nextStatus);
+
+    this.confirmationService.confirm({
+      target: event.target as EventTarget,
+      message: `¿Estás seguro de que quieres cambiar el estado a "${nextStatusValue}"?`,
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sí, cambiar',
+      rejectLabel: 'No',
+      accept: () => {
+        // Al aceptar, llamamos a la nueva función que contiene tu lógica
+        this.updatePaymentStatus(registro, nextStatus);
+      },
+    });
+  }
+
+  updatePaymentStatus(registro: any, newStatus: number) {
+    if (!registro?.id) return; // Verificación de seguridad
+
+    const id = registro.id;
+    const url = `registro-convocatorias/pago/${id}`;
+
+    // 1. Usamos tu lógica para elegir el método HTTP correcto
+    const req$ =
+      newStatus === 1
+        ? this.service.patch(url, {}) // Marcar como Pagado
+        : newStatus === 2
+        ? this.service.put(url, {}) // Marcar como Devuelto
+        : this.service.delete(url); // Marcar como No pagado
+
+    req$.subscribe({
+      next: () => {
+        // 2. Actualizamos el objeto local para que la tabla se refresque
+        registro.pagado = newStatus;
+
+        // Opcional: Si necesitas actualizar otro array, hazlo aquí también
+        // const i = this.calls.findIndex((c) => c.id === id);
+        // if (i !== -1) this.calls[i].pagado = p;
+
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Pago actualizado',
+          detail: `Estado: ${this.statusPago(newStatus)}`,
+        });
+      },
+      error: (err) => {
+        // 3. En caso de error, mostramos una notificación
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: err?.error?.message || 'No se pudo actualizar el pago',
+        });
+      },
+    });
+  }
+
+  statusPago(status: number): string {
+    switch (status) {
+      case 0:
+        return 'No pagado';
+      case 1:
+        return 'Pagado';
+      case 2:
+        return 'Devuelto';
+      default:
+        return 'Desconocido';
+    }
+  }
+
+  getStatusSeverity(status: number): string {
+    switch (status) {
+      case 0:
+        return 'danger';
+      case 1:
+        return 'success';
+      case 2:
+        return 'warning';
+      default:
+        return 'info';
+    }
   }
 }

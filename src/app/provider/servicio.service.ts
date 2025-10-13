@@ -2,20 +2,18 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class ServicioService {
   public api = 'https://fsws.bananasoft.com.mx/api/private/';
 
   public httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded'
-    })
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }),
   };
 
-  constructor(public http: HttpClient) {
-  }
+  constructor(public http: HttpClient) {}
 
   post(model: string, data: any) {
     return this.http.post(this.api + model, data);
@@ -36,5 +34,4 @@ export class ServicioService {
   delete(model: string) {
     return this.http.delete(this.api + model);
   }
-
 }

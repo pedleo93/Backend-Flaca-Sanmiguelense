@@ -8,3 +8,13 @@
 .inputText{
     margin-left: 10px;
 }
+
+:host ::ng-deep .card-compact .p-card-content {
+  /* Mantiene el padding horizontal (1.25rem) pero reduce el vertical a la mitad (0.5rem) */
+  padding: 0.5rem 1.25rem; 
+}
+:host ::ng-deep .p-card img {
+  width: 100%;
+  height: 2rem; /* La altura que ya tenías definida */
+  object-fit: cover; /* <-- Esta es la línea clave */
+}

@@ -25,7 +25,7 @@ import { ConvocatoriasComponent } from './pages/convocatorias/convocatorias.comp
 import { RegistroConvocatoriasComponent } from './pages/registro-convocatorias/registro-convocatorias.component';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
-import { CalendarModule } from 'primeng/calendar'
+import { CalendarModule } from 'primeng/calendar';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DatePipe } from '@angular/common';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -33,8 +33,11 @@ import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
 import { DividerModule } from 'primeng/divider';
 import { EditorModule } from 'primeng/editor';
-
-
+import { TooltipModule } from 'primeng/tooltip';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { FieldsetModule } from 'primeng/fieldset';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -44,7 +47,7 @@ import { EditorModule } from 'primeng/editor';
     AgendaComponent,
     PatrocinadoresComponent,
     ConvocatoriasComponent,
-    RegistroConvocatoriasComponent
+    RegistroConvocatoriasComponent,
   ],
   imports: [
     CommonModule,
@@ -74,7 +77,13 @@ import { EditorModule } from 'primeng/editor';
     CardModule,
     ChipModule,
     DividerModule,
-    EditorModule
+    EditorModule,
+    TooltipModule,
+    ConfirmPopupModule,
+    FieldsetModule,
+    ProgressBarModule
+  ],
+  providers:[MessageService, ConfirmationService
   ]
 })
-export class AuthModule { }
+export class AuthModule {}
