@@ -247,4 +247,24 @@ export class PatrocinadoresComponent {
   campoValido2(campo: string) {
     return this.Formulario2.controls[campo].errors && this.Formulario2.controls[campo].touched;
   }
+
+  subirImagen(event: any, formulario: FormGroup) {
+    const archivo = event.files?.[0];
+    if (!archivo) return;
+
+    const formData = new FormData();
+    formData.append('archivo', archivo);
+    formData.append('carpeta', 'patrocinadores');
+
+    this.service.subirImagen(formData).subscribe((dato: any) => {
+      if (dato.estatus == true) {
+        formulario.controls['imagen_url'].setValue(dato.url);
+        this.message.add({ severity: 'success', summary: 'Éxito!', detail: 'Imagen subida correctamente' });
+      } else {
+        this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo subir la imagen' });
+      }
+    }, (error) => {
+      this.message.add({ severity: 'error', summary: 'Error', detail: 'No se pudo subir la imagen' });
+    });
+  }
 }

@@ -174,7 +174,8 @@
       </div>
       <div class="p-field">
         <label for="imagen">Imagen</label>
-        <input id="imagen" type="text" pInputText formControlName="imagen" />
+        <p-fileUpload name="archivo" [customUpload]="true" (uploadHandler)="subirImagen($event)" mode="basic" [auto]="true" accept="image/*" [maxFileSize]="4194304" chooseLabel="Subir imagen"></p-fileUpload>
+        <img *ngIf="callForm.get('imagen')?.value" [src]="callForm.get('imagen')?.value" class="shadow-4 mt-2" height="70" width="70" style="object-fit: cover;" />
         <small style="font-size: 10px; color: red" *ngIf="
             callForm.get('imagen')?.invalid && callForm.get('imagen')?.touched
           " class="text-danger">La imagen es requerida.</small>

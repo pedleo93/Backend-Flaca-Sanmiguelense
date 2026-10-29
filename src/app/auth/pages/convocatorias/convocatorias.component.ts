@@ -314,6 +314,26 @@ export class ConvocatoriasComponent {
     );
   }
 
+  subirImagen(event: any) {
+    const archivo = event.files?.[0];
+    if (!archivo) return;
+
+    const formData = new FormData();
+    formData.append('archivo', archivo);
+    formData.append('carpeta', 'convocatorias');
+
+    this.service.subirImagen(formData).subscribe((dato: any) => {
+      if (dato.estatus == true) {
+        this.callForm.controls['imagen'].setValue(dato.url);
+        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Imagen subida correctamente' });
+      } else {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo subir la imagen' });
+      }
+    }, (error) => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo subir la imagen' });
+    });
+  }
+
   private formatDate(date: Date): string {
     const d = new Date(date);
     const year = d.getFullYear();

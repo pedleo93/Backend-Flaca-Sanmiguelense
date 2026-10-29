@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServicioService {
-  public api = 'https://fsws.bananasoft.com.mx/api/private/';
+  // Local en desarrollo (ng serve) y producción en build, vía environments
+  public api = environment.apiUrl;
 
   public httpOptions = {
     headers: new HttpHeaders({
@@ -29,6 +31,10 @@ export class ServicioService {
 
   get(model: string) {
     return this.http.get(this.api + model);
+  }
+
+  subirImagen(formData: FormData) {
+    return this.http.post(this.api + 'imagenes', formData);
   }
 
   delete(model: string) {

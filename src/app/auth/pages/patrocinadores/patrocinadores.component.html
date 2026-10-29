@@ -98,8 +98,9 @@
 
             <div class="p-field">
                 <label>Imagen</label><br>
-                <input pInputText formControlName="imagen_url" />
-                <p style="font-size:10px; color:red;" *ngIf="campoValido('imagen_url')">Ingrese un link de imagen</p>
+                <p-fileUpload name="archivo" [customUpload]="true" (uploadHandler)="subirImagen($event, Formulario)" mode="basic" [auto]="true" accept="image/*" [maxFileSize]="4194304" chooseLabel="Subir imagen"></p-fileUpload>
+                <img *ngIf="Formulario.controls['imagen_url'].value" [src]="Formulario.controls['imagen_url'].value" class="shadow-4" height="70" width="70" style="object-fit: cover;" />
+                <p style="font-size:10px; color:red;" *ngIf="campoValido('imagen_url')">Suba una imagen</p>
             </div><br>
 
             <div class="p-field">
@@ -153,8 +154,9 @@
 
             <div class="p-field">
                 <label>Imagen</label><br>
-                <input pInputText formControlName="imagen_url" />
-                <p style="font-size:10px; color:red;" *ngIf="campoValido2('imagen_url')">Ingrese un link de imagen</p>
+                <p-fileUpload name="archivo" [customUpload]="true" (uploadHandler)="subirImagen($event, Formulario2)" mode="basic" [auto]="true" accept="image/*" [maxFileSize]="4194304" chooseLabel="Subir imagen"></p-fileUpload>
+                <img *ngIf="Formulario2.controls['imagen_url'].value" [src]="Formulario2.controls['imagen_url'].value" class="shadow-4" height="70" width="70" style="object-fit: cover;" />
+                <p style="font-size:10px; color:red;" *ngIf="campoValido2('imagen_url')">Suba una imagen</p>
             </div><br>
 
             <div class="p-field">
